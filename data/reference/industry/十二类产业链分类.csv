@@ -1,0 +1,13 @@
+产业链ID,产业链名称,二级行业代码
+agriculture-food,农业食品,A01 A02 A03 A04 A05 C13 C14 C15
+textile-consumer,纺织鞋服与消费品,C16 C17 C18 C19 C22 C23 C24 C41
+petro-pharma-material,石化医药与新材料,C25 C26 C27 C28 C29 C31 C32
+building-home,建材家居,C20 C21 C30 C33
+equipment,先进装备制造,C34 C35 C36 C37 C38 C43
+digital,电子信息与数字,C39 C40 I63 I64 I65
+energy-eco,能源资源与生态公用,B06 B07 B08 B09 B10 B11 B12 C42 D44 D45 D46 N76 N77 N78 N79
+construction-realestate,建筑与房地产,E47 E48 E49 E50 K70
+commerce-logistics,商贸物流,F51 F52 G53 G54 G55 G56 G57 G58 G59 G60
+finance-business,金融商务与租赁,J66 J67 J68 J69 L71 L72
+science-edu-health,科技教育医疗,M73 M74 M75 P83 Q84
+life-tourism-social,生活文旅与社会服务,H61 H62 O80 O81 O82 Q85 R86 R87 R88 R89 R90 S91 S92 S93 S94 S95 S96 T97

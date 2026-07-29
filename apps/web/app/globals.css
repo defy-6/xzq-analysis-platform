@@ -1,0 +1,234 @@
+@import "tailwindcss";
+:root{--ink:#152421;--muted:#66736f;--line:#dce4df;--paper:#f5f7f3;--card:#fff;--green:#173f38}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif}button,select{font:inherit}main{max-width:1540px;margin:auto;padding:30px 38px}header{display:flex;justify-content:space-between;align-items:flex-end;padding:12px 4px 28px;border-bottom:1px solid #ccd7d0}.eyebrow{font:600 11px/1.2 ui-monospace;letter-spacing:.19em;color:#70807a;margin:0 0 11px}h1{font-family:Georgia,"Songti SC",serif;font-weight:500;font-size:38px;letter-spacing:.02em;margin:0}.sub{color:var(--muted);margin:9px 0 0}.source{text-align:right;display:grid;gap:4px}.source span,.source small{font-size:12px;color:var(--muted)}.source strong{font-size:14px}.controls{display:grid;grid-template-columns:190px minmax(440px,1fr) 240px;gap:12px;padding:20px 0;align-items:stretch}.controls label{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:11px;color:var(--muted)}select{display:block;width:100%;border:0;background:transparent;color:var(--ink);font-weight:600;outline:0;margin-top:4px}.toggle{display:flex;background:#e7ece8;padding:4px;border-radius:10px}.toggle button{flex:1;border:0;background:transparent;border-radius:7px;color:var(--muted);cursor:pointer}.toggle button.active{background:#fff;color:var(--ink);box-shadow:0 1px 5px #173f3815}.toggle button:disabled{opacity:.35}.industryTree{position:relative;background:#fff;border:1px solid var(--line);border-radius:10px;min-width:0}.industryTree>summary{list-style:none;padding:8px 12px;cursor:pointer;display:grid;gap:4px}.industryTree>summary::-webkit-details-marker{display:none}.industryTree>summary:after{content:"⌄";position:absolute;right:12px;top:17px}.industryTree>summary span{font-size:11px;color:var(--muted)}.industryTree>summary strong{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:24px}.treePanel{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:20;max-height:460px;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px;box-shadow:0 18px 50px #173f3830}.treePanel details{margin-left:10px;border-left:1px solid #dce7e1}.treePanel summary{cursor:pointer;padding-left:6px}.treePanel button{border:0;background:transparent;text-align:left;width:calc(100% - 4px);padding:7px 9px;border-radius:6px;color:#334a44;cursor:pointer;font-size:12px}.treePanel details>div{margin-left:15px}.treePanel button:hover,.treePanel button.chosen{background:#e5f0eb;color:#123f35;font-weight:700}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}.stats article{background:var(--green);color:#fff;padding:18px 20px;border-radius:12px;min-height:108px;display:flex;flex-direction:column}.stats span,.stats small{font-size:11px;color:#b8cbc5}.stats strong{font:500 30px/1.3 Georgia,serif;margin:auto 0 0}.stats .industryName{font-family:inherit;font-size:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:12px}.mapCard,aside{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}.cardHead{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #edf0ed}.cardHead h2{font:600 15px/1.2 inherit;margin:0}.cardHead p{font-size:11px;color:var(--muted);margin:5px 0 0}.cardHead select{width:auto;border:1px solid var(--line);border-radius:7px;padding:6px 9px;margin:0}.map{width:100%;height:600px;background:radial-gradient(circle at 45% 47%,#f9fbf8,#eff4ef)}.county{fill:#e2ebe5;stroke:#fff;stroke-width:1.5;vector-effect:non-scaling-stroke}.flow{fill:none;stroke-linecap:round;cursor:pointer;vector-effect:non-scaling-stroke;transition:opacity .2s}.flow:hover{opacity:1!important}.map circle{fill:#173f38}.map text{font-size:10px;fill:#37554d;paint-order:stroke;stroke:#f6f8f5;stroke-width:3px}.legend{display:flex;align-items:center;gap:5px;position:absolute;margin:-48px 0 0 22px;background:#ffffffed;border:1px solid #e3e9e5;border-radius:20px;padding:8px 12px;font-size:10px}.legend i{display:block;width:22px;height:7px;border-radius:2px}.legend span:first-child{margin-right:4px;font-weight:700}.legend span:last-child{margin-left:4px;color:var(--muted)}.ranking{padding:5px 14px 14px;max-height:655px;overflow:auto}.ranking button{width:100%;display:grid;grid-template-columns:30px 1fr auto;gap:8px;align-items:center;text-align:left;padding:12px 5px;border:0;border-bottom:1px solid #edf0ed;background:#fff;cursor:pointer}.ranking button:hover{background:#f6f8f5}.ranking b{font:500 12px Georgia;color:#9aa6a1}.ranking span{display:grid}.ranking strong{font-size:12px}.ranking small{font-size:10px;color:var(--muted);margin-top:3px}.ranking em{font:600 13px Georgia;color:#173f38}.detail{position:fixed;right:28px;bottom:28px;width:360px;background:#122f2a;color:#fff;border-radius:16px;padding:22px;box-shadow:0 20px 60px #071b1755;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;z-index:5}.detail>button{position:absolute;right:12px;top:10px;border:0;background:transparent;color:#fff;font-size:25px}.detail>span,.detail h3,.detail p{grid-column:1/-1}.detail>span{font-size:10px;color:#aac3bc}.detail h3{margin:0;font-size:20px}.detail p{margin:-8px 0 3px;color:#aac3bc;font-size:12px}.detail div{display:grid}.detail div strong{font:500 18px Georgia}.detail div small{font-size:9px;color:#aac3bc;margin-top:4px}footer{display:flex;justify-content:space-between;color:#7c8985;font-size:10px;padding:17px 3px}.loading{height:100vh;display:grid;place-items:center;color:#60716b}@media(max-width:900px){main{padding:18px}.controls{grid-template-columns:1fr}.industryTree,.toggle{grid-column:1}.stats{grid-template-columns:1fr 1fr}.workspace{grid-template-columns:1fr}.map{height:500px}header{align-items:flex-start}.source{display:none}h1{font-size:30px}}
+/* Hierarchical industry picker overrides */
+.treePanel summary{cursor:pointer;padding:8px 7px;color:#263f38;font-size:12px;font-weight:650}
+.treePanel button.levelChoice{margin-left:15px;width:calc(100% - 20px);font-size:11px;color:#74847f}
+.mapWrap{position:relative;overflow:hidden;background:radial-gradient(circle at 45% 47%,#f9fbf8,#eff4ef)}
+.mapWrap .map{display:block;background:transparent;touch-action:none;cursor:grab;user-select:none}
+.mapWrap .map:active{cursor:grabbing}
+.mapTools{position:absolute;right:18px;top:18px;display:grid;gap:6px}
+.mapTools button{min-width:38px;height:38px;border:1px solid #d9e3dd;border-radius:9px;background:#fffffff2;color:#173f38;font-weight:700;cursor:pointer;box-shadow:0 3px 12px #173f3815}
+.mapTools button:last-child{font-size:11px}
+.mapHint{position:absolute;right:18px;bottom:18px;padding:6px 9px;border-radius:14px;background:#ffffffdb;color:#66736f;font-size:10px}
+.flowHit{fill:none;stroke:transparent;cursor:pointer;pointer-events:stroke}
+.map circle,.map text{pointer-events:none}
+.detail{width:min(540px,calc(100vw - 36px));grid-template-columns:1fr 1fr}
+.detail .direction{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:14px;border:1px solid #ffffff20;border-radius:11px;background:#ffffff09}
+.detail .direction.reverse{background:#ffffff04}
+.detail .direction h4{grid-column:1/-1;margin:0 0 3px;font-size:14px}
+.detail .direction em{grid-column:1/-1;color:#aac3bc;font-size:10px;font-style:normal}
+@media(max-width:620px){.detail{grid-template-columns:1fr}.detail .direction{grid-column:1/-1}}
+.controls{grid-template-columns:170px 210px minmax(360px,1fr) 240px}
+@media(max-width:1100px){.controls{grid-template-columns:1fr 1fr}.industryTree,.toggle{grid-column:auto}}
+@media(max-width:700px){.controls{grid-template-columns:1fr}.industryTree,.toggle{grid-column:1}}
+.patentDetail .direction{grid-column:1/-1}
+
+/* Live development log */
+.source{position:relative;display:flex;align-items:flex-end;gap:18px}
+.dataStatus{display:grid;gap:4px;text-align:right}
+.devLog{position:relative;text-align:left}
+.devLog>summary{list-style:none;display:flex;align-items:center;gap:7px;border:1px solid #d6e0da;border-radius:9px;background:#fff;padding:8px 11px;cursor:pointer;color:#29483f;font-size:12px;font-weight:700;box-shadow:0 2px 8px #173f380a}
+.devLog>summary::-webkit-details-marker{display:none}
+.devLog>summary i{width:7px;height:7px;border-radius:50%;background:#42a874;box-shadow:0 0 0 4px #42a87418;animation:livePulse 1.8s ease-out infinite}
+.devLog>summary b{font-size:9px;color:#36855f;background:#e7f5ed;border-radius:8px;padding:2px 5px}
+.devLogPanel{position:absolute;right:0;top:calc(100% + 9px);z-index:50;width:min(430px,calc(100vw - 36px));max-height:520px;overflow:auto;background:#fff;border:1px solid #dbe4df;border-radius:14px;padding:15px;box-shadow:0 22px 65px #102f2740}
+.devLogHead{display:flex;justify-content:space-between;align-items:flex-start;padding:1px 2px 12px;border-bottom:1px solid #e7ece9}
+.devLogHead>div{display:grid;gap:3px}.devLogHead strong{font-size:15px}.devLogHead small,.devLogHead time{font-size:10px;color:#71807b}
+.devLogList article{padding:12px 4px 11px;border-bottom:1px solid #edf1ef}
+.devLogList article>div{display:flex;align-items:center;gap:6px;margin-bottom:5px}.devLogList article>div i{width:6px;height:6px;border-radius:50%;background:#62a98a}.devLogList article.log-data>div i{background:#df8a45}.devLogList article.log-server>div i{background:#5f8fbd}
+.devLogList time{font-size:10px;color:#7c8985}.devLogList em{font-size:9px;font-style:normal;color:#71807b;background:#f0f4f1;border-radius:7px;padding:1px 5px}
+.devLogList article>strong{display:block;font-size:12px;color:#203a33}.devLogList p{font-size:11px;line-height:1.55;color:#66736f;margin:4px 0 0}
+.devLogPanel>a{display:block;text-align:center;margin-top:11px;color:#356d5d;font-size:10px;text-decoration:none}
+@keyframes livePulse{0%{box-shadow:0 0 0 0 #42a87455}70%{box-shadow:0 0 0 7px #42a87400}100%{box-shadow:0 0 0 0 #42a87400}}
+@media(max-width:900px){.source{display:flex}.dataStatus{display:none}.devLogPanel{position:fixed;right:18px;top:88px}}
+
+/* Township drill-down */
+.detail .townAction{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid #ffffff18;padding-top:13px}
+.townAction button{border:0;border-radius:9px;background:#f3c76d;color:#17342d;padding:9px 13px;font-size:11px;font-weight:750;cursor:pointer}
+.townAction small{color:#9eb8b1;font-size:9px}
+.townOverlay{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:28px;background:#0c211dcc;backdrop-filter:blur(5px)}
+.townPanel{position:relative;width:min(1080px,100%);max-height:min(820px,calc(100vh - 56px));overflow:hidden;display:flex;flex-direction:column;background:#f8faf7;border:1px solid #ffffff30;border-radius:19px;box-shadow:0 28px 90px #04110e80;color:#18332c}
+.townClose{position:absolute;right:18px;top:16px;z-index:2;width:34px;height:34px;border:1px solid #dbe4df;border-radius:50%;background:#fff;color:#24483e;font-size:23px;line-height:1;cursor:pointer}
+.townHeader{padding:26px 30px 19px;background:#163f37;color:#fff}
+.townHeader>span{font-size:10px;letter-spacing:.08em;color:#a9c9bf}.townHeader h2{font:500 25px/1.2 Georgia,"Songti SC",serif;margin:7px 0}.townHeader p{font-size:11px;color:#b8cec8;margin:0}
+.townSummary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 18px 0}
+.townSummary article{display:grid;gap:3px;background:#fff;border:1px solid #e1e8e4;border-radius:11px;padding:12px 14px}.townSummary span,.townSummary small{font-size:10px;color:#77847f}.townSummary strong{font:500 22px Georgia,serif;color:#173f38}
+.townToolbar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 20px 10px}.townToolbar>div:first-child{display:grid;gap:3px}.townToolbar strong{font-size:13px}.townToolbar span{font-size:10px;color:#77847f}
+.townToggle{display:flex;background:#e7ece8;padding:3px;border-radius:8px}.townToggle button{border:0;background:transparent;border-radius:6px;padding:6px 11px;color:#6b7a75;font-size:10px;cursor:pointer}.townToggle button.active{background:#fff;color:#173f38;box-shadow:0 1px 4px #173f3818}.townToggle button:disabled{opacity:.35}
+.townTable{margin:0 18px;overflow:auto;border:1px solid #dfe7e2;border-radius:11px;background:#fff}
+.townTableHead,.townTable article{display:grid;grid-template-columns:45px minmax(145px,1.2fr) 50px minmax(145px,1.2fr) 100px 155px;align-items:center;column-gap:10px;padding:10px 13px}
+.townTableHead{position:sticky;top:0;z-index:1;background:#eef3ef;color:#65756f;font-size:9px;font-weight:700;letter-spacing:.03em}
+.townTable article{border-top:1px solid #edf1ee;min-height:59px}.townTable article:hover{background:#f7faf7}.townTable article>b{font:500 11px Georgia;color:#9aa6a1}.townTable article>div{display:grid;gap:3px}.townTable article strong{font-size:12px}.townTable article small{font-size:9px;color:#7d8a85}.townTable article>i{text-align:center;color:#70a897;font-style:normal}.townTable article>em{text-align:right;font:600 14px Georgia;color:#1c5848}.townValue{text-align:right}.townValue strong{font-family:Georgia,serif!important}.townState{margin:8px 18px 20px;padding:44px;text-align:center;border:1px dashed #ccd8d1;border-radius:11px;color:#6c7c76;font-size:12px}.townState.error{color:#a54b42;background:#fff5f3}
+.townNote{padding:11px 21px 17px;color:#7b8984;font-size:9px}.townNote code{font-family:ui-monospace,SFMono-Regular,monospace;color:#365f53}
+@media(max-width:760px){.townOverlay{padding:10px}.townPanel{max-height:calc(100vh - 20px)}.townHeader{padding:22px 18px 16px}.townHeader h2{font-size:21px}.townSummary{grid-template-columns:1fr 1fr}.townSummary article:last-child{grid-column:1/-1}.townToolbar{align-items:flex-start}.townTable{overflow:auto}.townTableHead,.townTable article{min-width:760px}.detail .townAction{align-items:flex-start;flex-direction:column}}
+
+/* Dynamic strength legend and township boundary map */
+.legend small{margin-left:7px;color:#7b8984;font-size:8px}
+.townPanel{width:min(1180px,100%);max-height:calc(100vh - 56px);overflow:auto}
+.townNetworkMap{position:relative;flex:0 0 auto;margin:14px 18px 0;border:1px solid #dce5df;border-radius:12px;overflow:hidden;background:radial-gradient(circle at 45% 50%,#fbfcfa,#eef3ef)}
+.townMapCaption{display:flex;justify-content:space-between;align-items:flex-start;padding:11px 14px;border-bottom:1px solid #e2e9e5;background:#ffffffd9}.townMapCaption>div{display:grid;gap:3px}.townMapCaption strong{font-size:12px}.townMapCaption span,.townMapCaption small{font-size:9px;color:#75847f}
+.townNetworkMap svg{display:block;width:100%;height:310px}.townBoundary{fill:#e7ece9;stroke:#fff;stroke-width:.65;opacity:.48;vector-effect:non-scaling-stroke}.townBoundary.selected{opacity:.95;stroke:#f9fbf9;stroke-width:1.05}.townBoundary.selected.sideA{fill:#a9cec3}.townBoundary.selected.sideB{fill:#ecd39b}.townFlow{fill:none;stroke-linecap:round;vector-effect:non-scaling-stroke}.townNetworkMap text{font-size:7px;fill:#274a40;paint-order:stroke;stroke:#f8faf7;stroke-width:2px;pointer-events:none}
+.townCountyBackground{fill:#e8eeea;stroke:#fff;stroke-width:1.05;opacity:.82;vector-effect:non-scaling-stroke}
+.townMapLegend{position:absolute;left:12px;bottom:10px;display:flex;align-items:center;gap:11px;padding:6px 9px;border:1px solid #dde6e1;border-radius:16px;background:#ffffffeb;color:#64736e;font-size:9px}.townMapLegend>span{display:flex;align-items:center;gap:5px}.townMapLegend>span>i{display:block;width:11px;height:8px;border-radius:2px}.townMapLegend i.sideA{background:#a9cec3}.townMapLegend i.sideB{background:#ecd39b}.townMapLegend .townStrengthLegend{gap:3px;margin-left:3px}.townStrengthLegend i{width:13px!important;height:5px!important}
+.townSummary,.townToolbar,.townTable,.townNote{flex:0 0 auto}.townTable{max-height:330px}.townState.townLoadingState{margin-top:24px;margin-bottom:24px}
+@media(max-width:760px){.townNetworkMap svg{height:260px}.townMapCaption{display:grid;gap:4px}.townMapLegend{right:8px;left:8px;overflow:auto}}
+.townNetworkMap svg{height:auto;aspect-ratio:900/520}
+@media(max-width:760px){.townNetworkMap svg{height:auto}}
+
+/* Top-level analysis modules */
+.moduleSwitch{display:flex;gap:8px;padding:14px 0 0}.moduleSwitch button{display:grid;gap:2px;min-width:170px;padding:10px 14px;border:1px solid #d8e1dc;border-radius:10px;background:#fff;color:#60716b;text-align:left;cursor:pointer}.moduleSwitch button span{font-size:13px;font-weight:750}.moduleSwitch button small{font-size:9px;color:#85918d}.moduleSwitch button.active{border-color:#285c4e;background:#173f38;color:#fff;box-shadow:0 7px 20px #173f3820}.moduleSwitch button.active small{color:#b8ccc6}
+.platformSwitch{display:grid;grid-template-columns:1.35fr repeat(2,1fr);gap:10px;padding:16px 0 0}.platformSwitch button{display:grid;gap:4px;padding:13px 16px;border:1px solid var(--line);border-radius:11px;background:#fff;color:#51665f;text-align:left}.platformSwitch button span{font-size:13px;font-weight:750}.platformSwitch button small{font-size:9px;color:#87938e}.platformSwitch button.active{border-color:#173f38;background:#173f38;color:#fff;box-shadow:0 8px 24px #173f3820}.platformSwitch button.active small{color:#b8cbc5}.platformSwitch button:disabled{opacity:.56}
+
+/* Population flow analysis */
+.populationModule{padding-top:16px}.populationLoading{min-height:580px;display:grid;place-items:center;color:#687872}
+.populationControls{display:grid;grid-template-columns:150px 170px 1fr 1fr;gap:10px;margin-bottom:12px}.populationControls label{padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--muted);font-size:10px}.populationControls select{font-size:12px}
+.populationStats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}.populationStats article{display:flex;min-height:104px;flex-direction:column;padding:17px 19px;border-radius:12px;background:#173f38;color:#fff}.populationStats span,.populationStats small{font-size:10px;color:#b7cbc5}.populationStats strong{margin:auto 0 0;font:500 28px/1.25 Georgia,serif}.populationStats .populationTopName{font:700 16px/1.3 inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.populationWorkspace{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:12px}.populationMapCard,.populationRanking{overflow:hidden;border:1px solid var(--line);border-radius:14px;background:#fff}.populationMapWrap{position:relative;overflow:hidden;background:radial-gradient(circle at 45% 48%,#fbfcfa,#edf3ef)}.populationMap{display:block;width:100%;height:600px;touch-action:none;cursor:grab;user-select:none}.populationMap:active{cursor:grabbing}.populationCounty{fill:#e4ebe7;stroke:#fff;stroke-width:1.25;vector-effect:non-scaling-stroke}.populationTown{fill:#dfe9e3;stroke:#fff;stroke-width:.45;opacity:.86;vector-effect:non-scaling-stroke}.populationFlow{fill:none;stroke-linecap:round;cursor:pointer;vector-effect:non-scaling-stroke;transition:opacity .2s}.populationFlow:hover{opacity:1!important}.populationFlowHit{fill:none;stroke:transparent;cursor:pointer;pointer-events:stroke}.populationMap text{font-size:8px;fill:#274b41;paint-order:stroke;stroke:#f7faf7;stroke-width:2.5px;pointer-events:none}.populationMapLoading{position:absolute;inset:0;display:grid;place-items:center;background:#eff4f0dd;color:#49685f;font-size:12px}.populationLegend{display:flex;align-items:center;gap:5px;position:absolute;margin:-48px 0 0 22px;padding:8px 12px;border:1px solid #e0e8e3;border-radius:20px;background:#ffffffed;color:#66736f;font-size:9px}.populationLegend strong{margin-right:5px;color:#273e37;font-size:10px}.populationLegend i{display:block;width:22px;height:7px;border-radius:2px}.populationLegend span{margin-left:4px}.populationLegend small{margin-left:5px;color:#84908c;font-size:8px}
+.populationDetail{position:fixed;right:28px;bottom:28px;z-index:65;display:grid;grid-template-columns:1fr 1fr;gap:12px;width:min(560px,calc(100vw - 36px));padding:22px;border-radius:16px;background:#122f2a;color:#fff;box-shadow:0 20px 60px #071b1755}.populationDetail>button{position:absolute;right:12px;top:10px;border:0;background:transparent;color:#fff;font-size:25px;cursor:pointer}.populationDetail>span,.populationDetail>h3,.populationDetail>p,.populationDetail>.populationNet{grid-column:1/-1}.populationDetail>span{font-size:10px;color:#aac3bc}.populationDetail>h3{margin:0;font-size:20px}.populationDetail>p{margin:-7px 0 2px;color:#aac3bc;font-size:11px}.populationDetail>section{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:13px;border:1px solid #ffffff20;border-radius:11px;background:#ffffff08}.populationDetail h4{grid-column:1/-1;margin:0;font-size:13px}.populationDetail section div{display:grid;gap:3px}.populationDetail section strong{font:500 18px Georgia,serif}.populationDetail section small{font-size:9px;color:#aac3bc}.populationNet{display:flex;align-items:baseline;gap:9px;padding-top:3px}.populationNet strong{font:500 22px Georgia,serif;color:#f1c66e}.populationNet span{font-size:10px;color:#b5cac4}.populationNote{padding:13px 3px 0;color:#7d8a85;font-size:9px;line-height:1.5}
+.populationDrillAction{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:12px;border-top:1px solid #ffffff18}.populationDrillAction button{border:0;border-radius:9px;background:#f3c76d;color:#17342d;padding:9px 13px;font-size:11px;font-weight:750;cursor:pointer}.populationDrillAction small{color:#9eb8b1;font-size:9px}.populationTownPanel .townTable{max-height:360px}
+.populationOdList{margin-top:12px;overflow:hidden;border:1px solid var(--line);border-radius:14px;background:#fff}.populationOdHead{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 20px;border-bottom:1px solid #e8eeea}.populationOdHead h2{margin:0;font-size:15px}.populationOdHead p{margin:5px 0 0;color:var(--muted);font-size:10px}.populationPagination{display:flex;align-items:center;gap:9px}.populationPagination button{border:1px solid #d8e2dc;border-radius:7px;background:#fff;padding:6px 10px;color:#315349;font-size:10px;cursor:pointer}.populationPagination button:disabled{opacity:.35;cursor:default}.populationPagination span{min-width:78px;text-align:center;color:#6f7d78;font-size:10px}.populationOdTable{overflow:auto;max-height:620px}.populationOdTableHead,.populationOdTable>button{display:grid;grid-template-columns:52px minmax(170px,1.3fr) 44px minmax(170px,1.3fr) 120px 120px 120px;align-items:center;column-gap:10px;min-width:900px;padding:10px 16px}.populationOdTableHead{position:sticky;top:0;z-index:2;background:#eef3ef;color:#65756f;font-size:9px;font-weight:700}.populationOdTable>button{width:100%;min-height:60px;border:0;border-top:1px solid #edf1ee;background:#fff;text-align:left;color:#1d332d;cursor:pointer}.populationOdTable>button:hover{background:#f6f9f6}.populationOdTable>button>b{font:500 11px Georgia;color:#9aa6a1}.populationOdTable>button>div{display:grid;gap:3px}.populationOdTable>button strong{font-size:12px}.populationOdTable>button small{color:#7d8a85;font-size:9px}.populationOdTable>button>i{text-align:center;color:#70a897;font-style:normal}.populationOdTable>button>em,.populationOdTable>button>span{text-align:right;font:600 13px Georgia;color:#214d41}.populationOdTable>button>span.positive{color:#a85438}.populationOdTable>button>span.negative{color:#33766a}.populationOdEmpty{padding:42px;text-align:center;color:#73817c;font-size:11px}
+@media(max-width:1050px){.populationControls{grid-template-columns:1fr 1fr}.populationWorkspace{grid-template-columns:1fr}.populationMap{height:520px}}
+@media(max-width:700px){.moduleSwitch button{min-width:0;flex:1}.populationControls{grid-template-columns:1fr}.populationStats{grid-template-columns:1fr 1fr}.populationMap{height:450px}.populationDetail{grid-template-columns:1fr}.populationDetail>section{grid-column:1/-1}.populationLegend{max-width:calc(100% - 32px);overflow:auto;white-space:nowrap}.populationWorkspace aside{display:none}}
+
+/* Context-aware map titles, numeric legends and report export */
+.mapHeadActions{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+.mapHeadActions button{border:1px solid #b9cbc4;border-radius:7px;background:#173f38;color:#fff;padding:7px 11px;font-size:10px;font-weight:700;white-space:nowrap;cursor:pointer}
+.mapHeadActions button:hover{background:#245f52}
+.legend,.populationLegend{gap:8px;margin-top:-55px;max-width:calc(100% - 44px);overflow:auto;white-space:nowrap;font-size:9px}
+.legend>span:first-child{margin-right:4px;font-weight:700}
+.legendItem{display:inline-flex!important;align-items:center;gap:4px;color:#5f706a!important;font-weight:500!important;margin:0!important;white-space:nowrap}
+.legendItem i{display:block;width:18px!important;height:7px!important;border-radius:2px;flex:none}
+.populationLegend .legendItem{margin:0}
+.townMapCaption{gap:16px}
+.townMapCaption>div:first-child{display:grid;gap:3px}
+.townMapLegend{right:12px;overflow:auto;white-space:nowrap}
+.townMapLegend .townStrengthLegend{gap:8px}
+.townStrengthLegend .legendItem{gap:3px}
+.townStrengthLegend .legendItem i{width:13px!important;height:5px!important}
+@media(max-width:760px){.cardHead{align-items:flex-start;gap:12px}.mapHeadActions{flex-wrap:wrap}.townMapCaption{display:grid}.townMapCaption .mapHeadActions{justify-content:flex-start}}
+
+/* Selected county-pair industry composition */
+.detail{max-height:calc(100vh - 56px);overflow:auto}
+.industryDonutCard{grid-column:1/-1;display:grid;gap:12px;padding:14px;border:1px solid #ffffff20;border-radius:11px;background:#ffffff07}
+.industryDonutHead{display:grid!important;gap:4px}
+.industryDonutHead h4{margin:0;font-size:14px}
+.industryDonutHead p{grid-column:auto;margin:0;color:#aac3bc;font-size:9px}
+.industryDonutBody{display:grid!important;grid-template-columns:132px minmax(0,1fr);gap:16px;align-items:center}
+.industryDonut{width:124px;height:124px;border-radius:50%;display:grid!important;place-items:center;position:relative}
+.industryDonut:after{content:"";position:absolute;inset:24px;border-radius:50%;background:#15352f}
+.industryDonut>span{position:relative;z-index:1;display:grid!important;text-align:center}
+.industryDonut>span strong{font:500 17px Georgia,serif}
+.industryDonut>span small{margin-top:2px!important}
+.industryDonutLegend{display:grid!important;grid-template-columns:1fr 1fr;gap:7px 12px;max-height:168px;overflow:auto;padding-right:4px}
+.industryDonutLegend>div{display:grid!important;grid-template-columns:9px minmax(0,1fr);gap:7px;align-items:start}
+.industryDonutLegend i{display:block;width:9px;height:9px;border-radius:2px;margin-top:2px}
+.industryDonutLegend span{display:grid;min-width:0}
+.industryDonutLegend strong{font:600 9px/1.25 inherit!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.industryDonutLegend small{font-size:8px!important;margin-top:2px!important}
+.industryDonutCard.empty p{grid-column:auto;margin:0;color:#aac3bc;font-size:10px}
+@media(max-width:620px){.industryDonutBody{grid-template-columns:1fr}.industryDonut{margin:auto}.industryDonutLegend{grid-template-columns:1fr}}
+
+/* Hierarchical industry / industry-chain dual selector */
+.controls{grid-template-columns:150px 190px minmax(500px,1fr) 220px}
+.industrySelectorGroup{display:grid;grid-template-columns:145px minmax(0,1fr);gap:9px;min-width:0}
+.industrySelectorGroup>label,.industrySelectorGroup>.industryTree{min-height:58px}
+.industrySelectorGroup .chainSelector{display:flex;flex-direction:column;justify-content:center;min-width:0}
+.chainSelector select{font-size:12px}
+.chainSelector small{display:block;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#87928e;font-size:8px}
+@media(max-width:1180px){.controls{grid-template-columns:1fr 1fr}.industrySelectorGroup{grid-column:1/-1}.toggle{grid-column:auto}}
+@media(max-width:700px){.controls{grid-template-columns:1fr}.industrySelectorGroup{grid-column:1;grid-template-columns:1fr}.toggle{grid-column:1}}
+
+/* Enterprise county / township direct analysis */
+.controls{grid-template-columns:105px 110px 145px minmax(175px,.8fr) minmax(175px,.8fr) minmax(420px,1.8fr) 180px}
+.locationTree{position:relative;min-width:0;border:1px solid var(--line);border-radius:10px;background:#fff}
+.locationTree>summary{position:relative;display:grid;gap:4px;padding:8px 32px 8px 12px;list-style:none;cursor:pointer}
+.locationTree>summary::-webkit-details-marker{display:none}.locationTree>summary:after{content:"⌄";position:absolute;right:12px;top:17px;color:#63766f}
+.locationTree>summary span{color:var(--muted);font-size:10px}.locationTree>summary strong{overflow:hidden;font-size:12px;text-overflow:ellipsis;white-space:nowrap}
+.locationTreePanel{position:absolute;top:calc(100% + 6px);left:0;z-index:55;width:max(100%,260px);max-height:440px;overflow:auto;padding:9px;border:1px solid var(--line);border-radius:12px;background:#fff;box-shadow:0 18px 50px #173f3830}
+.locationTreePanel details{margin-left:8px;border-left:1px solid #dce7e1}.locationTreePanel summary{padding:7px 8px;list-style:none;color:#345048;font-size:12px;font-weight:700;cursor:pointer}.locationTreePanel summary::-webkit-details-marker{display:none}.locationTreePanel summary:before{content:"›";display:inline-block;width:14px;color:#769088}.locationTreePanel details[open]>summary:before{transform:rotate(90deg)}
+.locationTreePanel details>div{margin-left:13px}.locationTreePanel button{width:100%;padding:7px 9px;border:0;border-radius:6px;background:transparent;color:#334a44;text-align:left;font-size:12px;cursor:pointer}.locationTreePanel button:hover,.locationTreePanel button.chosen{background:#e5f0eb;color:#123f35;font-weight:700}
+.enterpriseTownBoundary{fill:#dfe8e3;stroke:#fff;stroke-width:.4;opacity:.52;vector-effect:non-scaling-stroke}
+.enterpriseTownState{position:absolute;inset:0;z-index:4;display:grid;place-items:center;background:#eff4f0dd;color:#49685f;font-size:12px;pointer-events:none}
+.enterpriseTownState.error{color:#a54b42;background:#fff5f3e8}
+@media(max-width:1260px){.controls{grid-template-columns:1fr 1fr}.industrySelectorGroup{grid-column:1/-1}.toggle{grid-column:auto}}
+@media(max-width:700px){.controls{grid-template-columns:1fr}.industrySelectorGroup,.toggle{grid-column:1}}
+
+/* County-pair population–enterprise quadrants */
+.quadrantModule{padding-top:16px}
+.quadrantLoading{min-height:580px;display:grid;place-items:center;color:#687872}
+.quadrantControls{display:grid;grid-template-columns:170px minmax(230px,1fr) minmax(230px,1fr) minmax(250px,1.2fr);gap:10px;margin-bottom:12px}
+.quadrantControls label{padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--muted);font-size:10px}
+.quadrantControls select{font-size:12px}
+.quadrantStats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}
+.quadrantStats article{display:flex;min-height:104px;flex-direction:column;padding:17px 19px;border-radius:12px;background:#173f38;color:#fff}
+.quadrantStats span,.quadrantStats small{font-size:10px;color:#b7cbc5}
+.quadrantStats strong{margin:auto 0 0;font:500 28px/1.25 Georgia,serif}
+.quadrantStats .quadrantTopName{font:700 16px/1.3 inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.quadrantTypeGuide{margin-bottom:12px;overflow:hidden;border:1px solid var(--line);border-radius:14px;background:#fff}
+.quadrantTypeHead{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding:17px 20px;border-bottom:1px solid #e6ede9}
+.quadrantTypeHead>div{display:grid;gap:4px}.quadrantTypeHead span{color:#6f817b;font:700 8px/1.2 ui-monospace;letter-spacing:.16em}.quadrantTypeHead h2{margin:0;font-size:15px}.quadrantTypeHead p{margin:0;color:#74827d;font-size:9px}
+.quadrantTypeHead>button{border:1px solid #cad8d1;border-radius:8px;background:#fff;padding:7px 11px;color:#49665d;font-size:9px;font-weight:700;cursor:pointer}.quadrantTypeHead>button.active{border-color:#285c4e;background:#173f38;color:#fff}
+.quadrantTypeGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#e5ebe7}
+.quadrantTypeGrid>button{display:grid;align-content:start;gap:6px;min-height:154px;padding:15px 16px;border:0;background:#fff;color:#243c35;text-align:left;cursor:pointer;transition:background .15s ease,box-shadow .15s ease}
+.quadrantTypeGrid>button:hover{background:#f5f8f5}.quadrantTypeGrid>button.active{position:relative;z-index:1;background:#edf4f0;box-shadow:inset 0 0 0 2px #2b6757}
+.quadrantTypeGrid>button>span{display:flex;align-items:center;gap:6px;color:#77857f;font-size:8px}.quadrantTypeGrid>button>span i{width:7px;height:7px;border-radius:50%}.quadrantTypeGrid>button>span b{margin-left:auto;color:#49665d;font:700 9px Georgia}
+.quadrantTypeGrid strong{font-size:12px}.quadrantTypeGrid p{margin:0;color:#536860;font-size:9px;line-height:1.55}.quadrantTypeGrid small{color:#89958f;font-size:8px;line-height:1.5}
+.quadrantWorkspace{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:12px}
+.quadrantChartCard,.quadrantRanking{overflow:hidden;border:1px solid var(--line);border-radius:14px;background:#fff}
+.quadrantChartWrap{position:relative;overflow:hidden;background:linear-gradient(135deg,#fcfdfb,#f1f5f2)}
+.quadrantChart{display:block;width:100%;height:auto;min-height:570px;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+.quadrantGrid{stroke:#dce4df;stroke-width:1}
+.quadrantZero{stroke:#253f38;stroke-width:1.35}
+.quadrantTick,.quadrantAxis,.quadrantLabel{fill:#687872;font-size:12px;pointer-events:none}
+.quadrantAxis{font-size:13px;font-weight:650;fill:#38534b}
+.quadrantLabel{font-size:12px;font-weight:750;fill:#314b43}
+.quadrantPoint{cursor:pointer;stroke:#fff;stroke-width:1.2;opacity:.86;transition:opacity .16s ease,filter .16s ease;outline:none}
+.quadrantPoint.high{stroke:#c99a2e;stroke-width:2.4}
+.quadrantPoint:hover,.quadrantPoint.selected{opacity:1;filter:drop-shadow(0 2px 4px #102f2745);stroke:#173f38;stroke-width:2.2}
+.quadrantPoint.dimmed{opacity:.08}
+.quadrantPoint.selected{opacity:1}
+.quadrantSelectedLabel{fill:#173f38;font-size:12px;font-weight:800;paint-order:stroke;stroke:#fff;stroke-width:4px;pointer-events:none}
+.quadrantTooltip{position:absolute;z-index:4;display:grid;gap:3px;width:255px;padding:10px 12px;border-radius:9px;background:#122f2aed;color:#fff;box-shadow:0 12px 28px #071b1740;pointer-events:none}
+.quadrantTooltip strong{font-size:12px}.quadrantTooltip span{font-size:9px;color:#c2d3ce}
+.quadrantLegend{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:11px 18px;border-top:1px solid #e6ede9;color:#61716b;font-size:9px}
+.quadrantLegend>span{display:flex;align-items:center;gap:6px}.quadrantLegend b{font:600 10px Georgia;color:#294a40}
+.quadrantLegend>small{flex:1;min-width:280px;text-align:right;color:#86928e;font-size:8px}
+.quadrantLegend i.shape{display:block;width:11px;height:11px}.quadrantLegend i.q1{border-radius:50%}.quadrantLegend i.q3{transform:rotate(45deg)}.quadrantLegend i.q4{clip-path:polygon(50% 0,100% 100%,0 100%)}
+.quadrantLegend i.highRing{display:block;width:12px;height:12px;border:2px solid #c99a2e;border-radius:50%;background:#fff}
+.quadrantRanking .ranking{max-height:700px}
+.quadrantRanking .ranking button.active{background:#e9f1ed}
+.quadrantRanking .ranking small{display:flex;align-items:center;gap:5px}
+.quadrantRanking .ranking small i{display:inline-block;width:7px;height:7px;border-radius:50%}
+.quadrantChartActions{display:flex;align-items:center;gap:8px}
+.quadrantAxisToggle{display:flex;padding:3px;border-radius:8px;background:#e8eeea}
+.mapHeadActions .quadrantAxisToggle button{border:0;border-radius:6px;background:transparent;color:#65756f;padding:5px 8px;font-size:9px;font-weight:650}
+.mapHeadActions .quadrantAxisToggle button.active{background:#fff;color:#173f38;box-shadow:0 1px 4px #173f3818}
+.quadrantModelStrip{display:grid;grid-template-columns:150px 240px 240px minmax(280px,1fr);gap:10px;margin-top:12px;padding:14px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.quadrantModelStrip>div{display:grid;gap:4px;padding:5px 10px;border-right:1px solid #e5ebe7}
+.quadrantModelStrip span,.quadrantModelStrip small{font-size:9px;color:#75837e}
+.quadrantModelStrip strong{font:600 17px Georgia,serif;color:#173f38}
+.quadrantModelStrip p{align-self:center;margin:0;color:#6d7c76;font-size:10px;line-height:1.65}
+.quadrantTypeMapCard{position:relative;margin-bottom:12px;overflow:hidden;border:1px solid var(--line);border-radius:14px;background:#fff}.quadrantTypeMapWrap{position:relative;overflow:hidden;background:#eef4f0}.quadrantTypeMap{display:block;width:100%;height:560px;touch-action:none;cursor:grab}.quadrantTypeMap:active{cursor:grabbing}.quadrantTypeLink{fill:none;stroke-linecap:round;vector-effect:non-scaling-stroke;cursor:pointer}.quadrantTypeNode{fill:#173f38;stroke:#fff;stroke-width:.8;vector-effect:non-scaling-stroke}.quadrantTypeMapCard .populationLegend{position:relative;margin:-49px 0 12px 22px;width:max-content;z-index:3}
+.quadrantDetail{position:fixed;right:28px;bottom:28px;z-index:65;display:grid;grid-template-columns:1fr 1fr;gap:12px;width:min(620px,calc(100vw - 36px));max-height:calc(100vh - 56px);overflow:auto;padding:22px;border-radius:16px;background:#122f2a;color:#fff;box-shadow:0 20px 60px #071b1755}
+.quadrantDetail>button{position:absolute;right:12px;top:10px;border:0;background:transparent;color:#fff;font-size:25px;cursor:pointer}
+.quadrantDetail>span,.quadrantDetail>h3,.quadrantDetail>p,.quadrantDetail>.quadrantVerdict{grid-column:1/-1}
+.quadrantDetail>span{font-size:10px;color:#aac3bc}.quadrantDetail>h3{margin:0;font-size:21px}.quadrantDetail>p{margin:-7px 0 2px;color:#aac3bc;font-size:10px}
+.quadrantVerdict{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:11px 13px;border-radius:10px;background:#ffffff0d;border:1px solid #ffffff16}
+.quadrantVerdict strong{font-size:14px;color:#f1c66e}.quadrantVerdict small{font-size:9px;color:#aac3bc}
+.quadrantDetail>section{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:13px;border:1px solid #ffffff20;border-radius:11px;background:#ffffff08}
+.quadrantDetail h4{grid-column:1/-1;margin:0;font-size:13px}.quadrantDetail section div{display:grid;gap:3px}
+.quadrantDetail section strong{font:500 17px Georgia,serif}.quadrantDetail section small{font-size:8px;color:#aac3bc}
+.quadrantDetail section em{grid-column:1/-1;color:#f1c66e;font-size:9px;font-style:normal}
+.quadrantNote{padding:13px 3px 0;color:#7d8a85;font-size:9px;line-height:1.5}
+@media(max-width:1100px){.quadrantControls{grid-template-columns:1fr 1fr}.quadrantTypeGrid{grid-template-columns:repeat(2,1fr)}.quadrantWorkspace{grid-template-columns:1fr}.quadrantChart{min-height:0}.quadrantTypeMap{height:500px}.quadrantModelStrip{grid-template-columns:1fr 1fr}.quadrantModelStrip p{grid-column:1/-1}.quadrantRanking .ranking{max-height:420px}}
+@media(max-width:700px){.moduleSwitch{display:grid;grid-template-columns:repeat(2,1fr)}.moduleSwitch button{width:100%;padding:9px 10px}.quadrantControls{grid-template-columns:1fr}.quadrantStats{grid-template-columns:1fr 1fr}.quadrantTypeHead{align-items:flex-start;flex-direction:column}.quadrantTypeGrid{grid-template-columns:1fr}.quadrantTypeGrid>button{min-height:0}.quadrantChartCard .cardHead{display:grid;gap:10px}.quadrantChartActions{align-items:flex-start;flex-direction:column}.quadrantChartWrap{overflow:auto}.quadrantChart{min-width:760px}.quadrantLegend>small{text-align:left}.quadrantModelStrip{grid-template-columns:1fr}.quadrantModelStrip>div{border-right:0;border-bottom:1px solid #e5ebe7}.quadrantDetail{grid-template-columns:1fr}.quadrantDetail>section{grid-column:1/-1}.quadrantVerdict{align-items:flex-start;flex-direction:column}}
+@media(max-width:700px){.platformSwitch{grid-template-columns:1fr 1fr}.platformSwitch button{padding:11px 12px}}
+
+/* County-government driving accessibility */
+.trafficModule{padding-top:16px}.trafficLoading{min-height:580px;display:grid;place-items:center;color:#687872}
+.trafficControls{display:grid;grid-template-columns:150px 160px minmax(260px,1fr) minmax(260px,1fr);gap:10px;margin-bottom:12px}
+.trafficControls>label{display:flex;flex-direction:column;justify-content:center;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--muted);font-size:10px}.trafficControls select{font-size:12px}
+.trafficStats article:first-child{background:#17483e}.trafficStats article:nth-child(2){background:#1d564a}.trafficDetail>section{grid-template-columns:repeat(3,1fr)}
+@media(max-width:900px){.trafficControls{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.trafficControls{grid-template-columns:1fr}.trafficDetail>section{grid-template-columns:repeat(3,1fr)}}

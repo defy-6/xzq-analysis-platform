@@ -1,0 +1,38 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Dependencies and package-manager caches
+**/node_modules/
+**/.pnp
+**/.pnp.*
+**/.yarn/cache/
+
+# Build and framework output
+**/.next/
+**/.vinext/
+**/.wrangler/
+**/dist/
+**/out/
+**/coverage/
+**/outputs/
+**/work/
+**/*.tsbuildinfo
+
+# Local environment and credentials
+**/.env
+**/.env.*
+!**/.env.example
+**/*.pem
+**/*.key
+
+# Logs
+**/*.log
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/.pnpm-debug.log*
+
+# Large source datasets remain local; generated web interfaces are versioned.
+data/raw/
+
