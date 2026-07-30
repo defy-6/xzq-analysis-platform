@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import PopulationModule from "./population";
 import QuadrantModule from "./quadrants";
 import TransportAccessibilityModule from "../transport-accessibility/transport-accessibility";
+import LandUseModule from "../land-use/land-use";
+import PublicServicesModule from "../public-services/public-services";
 import { exportMapPng, numericLegend } from "./map-export";
 import { ALL_CHAIN_CODES, CHAIN_BY_CODE, INDUSTRY_CHAINS, INDUSTRY_CHAIN_CODE_COUNT } from "./industry-chains";
 import LocationTreePicker, { buildLocationTree } from "./location-tree";
@@ -54,6 +56,7 @@ function IndustryDonut({composition,metric,relation,parent}:{composition:Industr
 }
 
 export default function Home(){
+  const [platformFeature,setPlatformFeature]=useState<"区域联系网络"|"用地分析"|"公共服务设施">("区域联系网络");
   const [module,setModule]=useState<"企业关系"|"人口流动"|"交通可达性"|"联系象限">("企业关系");
   const [data,setData]=useState<Payload|null>(null);
   const [devLog,setDevLog]=useState<DevLog|null>(null);
@@ -299,13 +302,15 @@ export default function Home(){
   const townMapTitle=selected?`${selected.o}—${selected.d}${relation}镇街联系图 · ${activeIndustryName}`:`镇街联系图 · ${activeIndustryName}`;
   const townMapSubtitle=`${activeIndustryPath} · ${townMetric==="count"?"关系数量":"金额（万元人民币）"} · ${townFlows.length} 条镇街联系`;
   if(!data||!geo)return <main className="loading"><span>正在载入厦漳泉关系数据…</span></main>;
-  const headerTitle=module==="企业关系"?"厦漳泉企业关系流动图谱":module==="人口流动"?"厦漳泉人口流动图谱":module==="交通可达性"?"厦漳泉交通可达性":"厦漳泉区县联系四象限";
-  const headerSubtitle=module==="企业关系"?"区县与镇街两级投资、分支与专利协作网络 · 已排除区县内部关系":module==="人口流动"?"区县与镇街两级人口流动方向、双向联系与净流动分析":module==="交通可达性"?"区县政府驻地驾车时间、距离、过路费与跨市走廊分析":"人口流动联系与企业联系相对引力预期的协同类型识别";
-  const headerStatus=module==="企业关系"?"3 类关系 · 28 个区县":module==="人口流动"?"人口流动 · 28 个区县":module==="交通可达性"?"驾车 OD · 28 个区县":"四类象限 · 378 个区县对";
-  const headerNote=module==="企业关系"?`汇率基准 ${data.meta.baseline}`:module==="人口流动"?"行政区按源文件名称汇总":module==="交通可达性"?"756 条有向非自身 OD":"优化引力模型 · 无向区县对";
+  const headerTitle=platformFeature==="用地分析"?"厦漳泉用地结构分析":platformFeature==="公共服务设施"?"厦漳泉公共服务设施图谱":module==="企业关系"?"厦漳泉企业关系流动图谱":module==="人口流动"?"厦漳泉人口流动图谱":module==="交通可达性"?"厦漳泉交通可达性":"厦漳泉区县联系四象限";
+  const headerSubtitle=platformFeature==="用地分析"?"三市28区县开发强度、功能结构、混合度与区位熵比较":platformFeature==="公共服务设施"?"基于POI中类的区县设施数量、空间分布与结构比较":module==="企业关系"?"区县与镇街两级投资、分支与专利协作网络 · 已排除区县内部关系":module==="人口流动"?"区县与镇街两级人口流动方向、双向联系与净流动分析":module==="交通可达性"?"区县政府驻地驾车时间、距离、过路费与跨市走廊分析":"人口流动联系与企业联系相对引力预期的协同类型识别";
+  const headerStatus=platformFeature==="用地分析"?"单期横截面 · 28 个区县":platformFeature==="公共服务设施"?"230 个POI中类 · 28 个区县":module==="企业关系"?"3 类关系 · 28 个区县":module==="人口流动"?"人口流动 · 28 个区县":module==="交通可达性"?"驾车 OD · 28 个区县":"四类象限 · 378 个区县对";
+  const headerNote=platformFeature==="用地分析"?"面积统一采用公顷":platformFeature==="公共服务设施"?"现行区县名称汇总":module==="企业关系"?`汇率基准 ${data.meta.baseline}`:module==="人口流动"?"行政区按源文件名称汇总":module==="交通可达性"?"756 条有向非自身 OD":"优化引力模型 · 无向区县对";
   const header=<header><div><p className="eyebrow">XIAMEN · ZHANGZHOU · QUANZHOU</p><h1>{headerTitle}</h1><p className="sub">{headerSubtitle}</p></div><div className="source"><div className="dataStatus"><span>数据状态</span><strong>{headerStatus}</strong><small>{headerNote}</small></div><details className="devLog"><summary><i/><span>开发日志</span><b>实时</b></summary><div className="devLogPanel"><div className="devLogHead"><div><strong>开发日志</strong><small>每 3 秒自动更新</small></div><time>{devLog?`更新于 ${fmtTime(devLog.updatedAt)}`:"正在读取…"}</time></div><div className="devLogList">{devLog&&[...devLog.entries].reverse().slice(0,10).map((entry,index)=><article key={`${entry.time}-${index}`} className={`log-${entry.type}`}><div><i/><time>{fmtTime(entry.time)}</time><em>{entry.type==="data"?"数据":entry.type==="server"?"服务":"功能"}</em></div><strong>{entry.title}</strong><p>{entry.detail}</p></article>)}</div><a href="/data/dev-log.json" target="_blank" rel="noreferrer">查看原始实时记录</a></div></details></div></header>;
-  const platformSwitch=<nav className="platformSwitch" aria-label="平台功能"><button className="active"><span>区域联系网络</span><small>企业 · 人口流动 · 交通 · 协同象限</small></button><button disabled><span>用地分析</span><small>功能预留</small></button><button disabled><span>公共服务设施</span><small>功能预留</small></button></nav>;
+  const platformSwitch=<nav className="platformSwitch" aria-label="平台功能"><button className={platformFeature==="区域联系网络"?"active":""} onClick={()=>setPlatformFeature("区域联系网络")}><span>区域联系网络</span><small>企业 · 人口流动 · 交通 · 协同象限</small></button><button className={platformFeature==="用地分析"?"active":""} onClick={()=>setPlatformFeature("用地分析")}><span>用地分析</span><small>结构 · 强度 · 区位熵</small></button><button className={platformFeature==="公共服务设施"?"active":""} onClick={()=>setPlatformFeature("公共服务设施")}><span>公共服务设施</span><small>POI中类 · 区县比较</small></button></nav>;
   const moduleSwitch=<nav className="moduleSwitch" aria-label="区域联系网络子模块"><button className={module==="企业关系"?"active":""} onClick={()=>setModule("企业关系")}><span>企业关系</span><small>投资 · 分支 · 专利</small></button><button className={module==="人口流动"?"active":""} onClick={()=>setModule("人口流动")}><span>人口流动</span><small>区县 · 镇街</small></button><button className={module==="交通可达性"?"active":""} onClick={()=>setModule("交通可达性")}><span>交通可达性</span><small>区县政府驾车 OD</small></button><button className={module==="联系象限"?"active":""} onClick={()=>setModule("联系象限")}><span>联系象限</span><small>人口流动 · 企业 · 协同</small></button></nav>;
+  if(platformFeature==="用地分析")return <main>{header}{platformSwitch}<LandUseModule/><footer><span>数据源：厦漳泉用地数据_整理成果.xlsx · 福建省 GeoPackage 行政边界</span><span>用地口径：单期横截面，面积统一采用公顷；未利用地不直接解释为可开发后备土地</span></footer></main>;
+  if(platformFeature==="公共服务设施")return <main>{header}{platformSwitch}<PublicServicesModule/><footer><span>数据源：各区县各中类POI数量汇总.xlsx · 福建省 GeoPackage 行政边界</span><span>POI口径：历史区县名称合并为现行名称，仅保留厦门、漳州、泉州三市28个区县</span></footer></main>;
   if(module==="交通可达性")return <main>{header}{platformSwitch}{moduleSwitch}<TransportAccessibilityModule/><footer><span>数据源：厦漳泉区县政府所在地_OD.xlsx · 福建省 GeoPackage 行政边界</span><span>距离口径：有向地图保留实际方向；无向联系象限取两方向驾车里程算术平均值</span></footer></main>;
   if(module==="人口流动")return <main>{header}{platformSwitch}{moduleSwitch}<PopulationModule/><footer><span>数据源：厦漳泉乡镇级人口流动_汇总版.xlsx · 福建省 GeoPackage 行政边界</span><span>人口流动口径：不使用行政区代码，O/D 地市、区县和镇街均按源文件名称汇总</span></footer></main>;
   if(module==="联系象限")return <main>{header}{platformSwitch}{moduleSwitch}<QuadrantModule/><footer><span>数据源：优化引力模型四象限成果 · 人口流动汇总版 · 企业三类关系</span><span>象限口径：无向区县对；横轴人口流动联系残差，纵轴企业综合联系残差</span></footer></main>;

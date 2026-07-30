@@ -38,7 +38,8 @@ export async function exportMapPng(svg:SVGSVGElement|null,options:{title:string;
   const style=document.createElementNS("http://www.w3.org/2000/svg","style");
   style.textContent=`
     svg{background:#f4f8f4;font-family:"PingFang SC","Microsoft YaHei",sans-serif}
-    .county,.populationCounty,.townCountyBackground{fill:#e2ebe5;stroke:#fff;stroke-width:1.5;vector-effect:non-scaling-stroke}
+    .county,.populationCounty,.townCountyBackground,.thematicCounty{fill:#e2ebe5;stroke:#fff;stroke-width:1.5;vector-effect:non-scaling-stroke}
+    .thematicCounty.muted{fill:#e8edea;opacity:.45}.thematicCounty.selected{stroke:#173f38;stroke-width:3}
     .populationTown{fill:#dfe9e3;stroke:#fff;stroke-width:.55;opacity:.86;vector-effect:non-scaling-stroke}
     .townBoundary{fill:#e4ebe7;stroke:#fff;stroke-width:.7;vector-effect:non-scaling-stroke}
     .townBoundary.sideA{fill:#a9cec3}.townBoundary.sideB{fill:#ecd39b}

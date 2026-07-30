@@ -73,13 +73,46 @@ def parse_geometry(data):
     return read()
 
 
-def simplify(ring, target_points=300):
-    if len(ring) <= target_points:
+def simplify(ring, tolerance=0.00008):
+    """Douglas-Peucker simplification in geographic degrees (about 8 m locally).
+
+    The former fixed point sampling kept only every Nth vertex. It distorted
+    coastlines and produced visibly angular county boundaries. This method keeps
+    vertices where the line actually bends, so the same file size retains much
+    more of the source geometry's visual character.
+    """
+    if len(ring) < 4:
         return ring
-    step = max(2, len(ring) // target_points)
-    result = ring[::step]
-    if result[-1] != ring[-1]:
-        result.append(ring[-1])
+    closed = ring[0] == ring[-1]
+    points = ring[:-1] if closed else ring
+    if len(points) < 3:
+        return ring
+    keep = {0, len(points) - 1}
+    stack = [(0, len(points) - 1)]
+    tolerance_sq = tolerance * tolerance
+    while stack:
+        start, end = stack.pop()
+        ax, ay = points[start]
+        bx, by = points[end]
+        dx, dy = bx - ax, by - ay
+        length_sq = dx * dx + dy * dy
+        furthest = -1
+        max_distance_sq = 0.0
+        for index in range(start + 1, end):
+            px, py = points[index]
+            if length_sq:
+                cross = (px - ax) * dy - (py - ay) * dx
+                distance_sq = cross * cross / length_sq
+            else:
+                distance_sq = (px - ax) ** 2 + (py - ay) ** 2
+            if distance_sq > max_distance_sq:
+                furthest, max_distance_sq = index, distance_sq
+        if furthest >= 0 and max_distance_sq > tolerance_sq:
+            keep.add(furthest)
+            stack.extend(((start, furthest), (furthest, end)))
+    result = [points[index] for index in sorted(keep)]
+    if closed:
+        result.append(result[0])
     return result
 
 

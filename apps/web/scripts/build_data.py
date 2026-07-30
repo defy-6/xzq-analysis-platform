@@ -202,10 +202,24 @@ def parse_geom(data):
             return out
         raise ValueError(typ)
     return read()
-def simplify(ring,step=12):
-    if len(ring)<80:return ring
-    out=ring[::step]
-    if out[-1]!=ring[-1]:out.append(ring[-1])
+def simplify(ring,tolerance=0.00008):
+    if len(ring)<4:return ring
+    closed=ring[0]==ring[-1];points=ring[:-1] if closed else ring
+    if len(points)<3:return ring
+    keep={0,len(points)-1};stack=[(0,len(points)-1)];tolerance_sq=tolerance*tolerance
+    while stack:
+        start,end=stack.pop();ax,ay=points[start];bx,by=points[end];dx,dy=bx-ax,by-ay;length_sq=dx*dx+dy*dy
+        furthest=-1;max_distance_sq=0.0
+        for index in range(start+1,end):
+            px,py=points[index]
+            if length_sq:
+                cross=(px-ax)*dy-(py-ay)*dx;distance_sq=cross*cross/length_sq
+            else:distance_sq=(px-ax)**2+(py-ay)**2
+            if distance_sq>max_distance_sq:furthest,max_distance_sq=index,distance_sq
+        if furthest>=0 and max_distance_sq>tolerance_sq:
+            keep.add(furthest);stack.extend(((start,furthest),(furthest,end)))
+    out=[points[index] for index in sorted(keep)]
+    if closed:out.append(out[0])
     return out
 
 def load_town_boundaries(conn):
@@ -216,7 +230,7 @@ def load_town_boundaries(conn):
         raw=parse_geom(gpkg_wkb(blob));points=[point for poly in raw for ring in poly for point in ring]
         if not points:continue
         xs=[point[0] for point in points];ys=[point[1] for point in points];center=[(min(xs)+max(xs))/2,(min(ys)+max(ys))/2]
-        polys=[[simplify(r,max(3,len(r)//300)) for r in poly] for poly in raw]
+        polys=[[simplify(r) for r in poly] for poly in raw]
         features.append({"type":"Feature","properties":{"city":txt(city),"county":county(county_name),"town":txt(town),"center":center},"geometry":{"type":"MultiPolygon","coordinates":polys}})
     return features
 
@@ -253,7 +267,7 @@ def main():
             if not points:continue
             county_name=county(name);xs=[point[0] for point in points];ys=[point[1] for point in points]
             centers[county_name]=[(min(xs)+max(xs))/2,(min(ys)+max(ys))/2]
-            polys=[[simplify(r,max(3,len(r)//300)) for r in poly] for poly in raw]
+            polys=[[simplify(r) for r in poly] for poly in raw]
             features.append({"type":"Feature","properties":{"name":county_name,"city":CITY_CODES[code[:4]],"code":code},"geometry":{"type":"MultiPolygon","coordinates":polys}})
         town_boundaries=load_town_boundaries(conn);conn.close()
     else:

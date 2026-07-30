@@ -9,6 +9,11 @@
 - 联系象限：人口流动联系与企业联系协同类型。
 - 交通可达性：区县政府驻地驾车时间、距离、过路费和双向联系。
 
+其他一级模块：
+
+- 用地分析：28区县开发强度、功能结构、混合度与区位熵；
+- 公共服务设施：230个POI中类的区县数量分布与结构比较。
+
 网页读取 `public/data/` 下的接口文件。原始数据不放入网页目录，由 `scripts/` 中的数据生成程序从平台根目录的 `data/` 读取。
 
 ## 启动
@@ -29,4 +34,5 @@ python3 scripts/build_population_data.py
 python3 scripts/build_transport_data.py
 python3 scripts/rebuild_quadrant_with_driving_distance.py
 python3 scripts/build_quadrant_data.py
+python3 scripts/build_land_public_data.py
 ```
