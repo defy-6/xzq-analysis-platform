@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { exportMapPng, numericLegend } from "./map-export";
+import DynamicMapLabels, { MapLabelCandidate } from "../thematic/map-labels";
+import useFujianBackdrop from "../thematic/fujian-backdrop";
 
 type ModelParam={
   metric:string;
@@ -95,9 +97,11 @@ function PointShape({row,x,y,size,selected,dimmed,onSelect,onHover,onLeave}:{row
 }
 
 export default function QuadrantModule(){
+  const fujianBackdrop=useFujianBackdrop();
   const [data,setData]=useState<QuadrantPayload|null>(null);
   const [spatial,setSpatial]=useState<SpatialPayload|null>(null);
-  const [scope,setScope]=useState<"全部"|"跨市"|"市内">("全部");
+  const [governmentCenters,setGovernmentCenters]=useState<Record<string,[number,number]>>({});
+  const [scope,setScope]=useState<"全部"|"跨市"|"市内">("跨市");
   const [quadrant,setQuadrant]=useState<"ALL"|"1"|"2"|"3"|"4">("ALL");
   const [functionType,setFunctionType]=useState("ALL");
   const [axisMode,setAxisMode]=useState<"密集展开"|"线性范围">("密集展开");
@@ -109,6 +113,7 @@ export default function QuadrantModule(){
   const mapDrag=useRef<{x:number;y:number;vx:number;vy:number}|null>(null);
   useEffect(()=>{fetch("/data/quadrant-analysis.json").then(response=>response.json()).then(setData)},[]);
   useEffect(()=>{fetch("/data/population-flow.json").then(response=>response.json()).then(setSpatial)},[]);
+  useEffect(()=>{fetch("/data/government-centers.json").then(response=>response.json()).then(payload=>setGovernmentCenters(payload.county||{}))},[]);
 
   const functionTypes=useMemo(()=>data?[...new Set(data.rows.map(row=>row.function_type))].sort():[],[data]);
   const scopeRows=useMemo(()=>data?.rows.filter(row=>{
@@ -144,11 +149,12 @@ export default function QuadrantModule(){
     const centerX=(minX+maxX)/2,centerY=(minY+maxY)/2,cos=Math.cos(centerY*Math.PI/180),scale=Math.min(820/Math.max((maxX-minX)*cos,.0001),500/Math.max(maxY-minY,.0001))/1.08;
     const project=(point:[number,number]):[number,number]=>[450+(point[0]-centerX)*cos*scale,300-(point[1]-centerY)*scale];
     const counties=spatial.countyBoundaries.features.map(feature=>({...feature.properties,d:geometryPath(feature.geometry.coordinates,project)}));
-    const centers:Record<string,[number,number]>={};Object.entries(spatial.countyCenters).forEach(([key,point])=>centers[key]=project(point));
-    return{counties,centers};
-  },[spatial]);
+    const centers:Record<string,[number,number]>={};Object.entries({...spatial.countyCenters,...governmentCenters}).forEach(([key,point])=>centers[key]=project(point));
+    const backdrop=fujianBackdrop.map(feature=>({...feature.properties,d:geometryPath(feature.geometry.coordinates,project)}));
+    return{counties,centers,backdrop};
+  },[spatial,governmentCenters,fujianBackdrop]);
   const zoomTypeMap=(factor:number)=>setMapView(current=>{const k=Math.min(5,Math.max(1,current.k*factor));return k===1?{x:0,y:0,k}:{x:450-(450-current.x)*k/current.k,y:300-(300-current.y)*k/current.k,k}});
-  useEffect(()=>{const element=typeMapRef.current;if(!element||functionType==="ALL")return;const wheel=(event:WheelEvent)=>{event.preventDefault();zoomTypeMap(event.deltaY<0?1.18:1/1.18)};element.addEventListener("wheel",wheel,{passive:false});return()=>element.removeEventListener("wheel",wheel)},[functionType]);
+  useEffect(()=>{const element=typeMapRef.current;if(!element||functionType==="ALL")return;const wheel=(event:WheelEvent)=>{event.preventDefault();event.stopPropagation();zoomTypeMap(event.deltaY<0?1.18:1/1.18)};element.addEventListener("wheel",wheel,{passive:false});return()=>element.removeEventListener("wheel",wheel)},[functionType]);
   useEffect(()=>setMapView({x:0,y:0,k:1}),[functionType,scope]);
   if(!data||!geometry)return <section className="quadrantLoading">正在载入区县对四象限分析…</section>;
 
@@ -182,7 +188,8 @@ export default function QuadrantModule(){
   const typeMapLegend=numericLegend(mapColors,typeMapBreaks,typeMapRows.map(row=>row.absolute_composite*100),"分",1);
   const typeMapTitle=`厦漳泉${scope==="全部"?"全域":scope}${displayFunctionType(functionType)}区县对分布图`;
   const typeMapSubtitle=`${typeMapRows.length} 个无向区县对 · 按人口流动—企业联系绝对综合强度分级`;
-  const typeMapLabels=[...new Map(typeMapRows.flatMap(row=>[[`${row.city_a}|${row.county_a}`,{city:row.city_a,county:row.county_a}],[`${row.city_b}|${row.county_b}`,{city:row.city_b,county:row.county_b}]]) as Array<[string,{city:string;county:string}]>).values()];
+  const typeMapLabels=[...new Map(typeMapRows.flatMap(row=>[[`${row.city_a}|${row.county_a}`,{city:row.city_a,county:row.county_a,priority:row.absolute_composite}],[`${row.city_b}|${row.county_b}`,{city:row.city_b,county:row.county_b,priority:row.absolute_composite}]]) as Array<[string,{city:string;county:string;priority:number}]>).values()];
+  const typeMapLabelCandidates=typeMapLabels.map(item=>({key:`${item.city}|${item.county}`,name:item.county,point:typeMapGeometry?.centers[`${item.city}|${item.county}`],priority:item.priority,selected:Boolean(selected&&(selected.county_a===item.county||selected.county_b===item.county))})).filter(item=>Boolean(item.point)) as MapLabelCandidate[];
 
   const hover=(row:QuadrantRow,event:React.MouseEvent<SVGElement>)=>{
     const rect=chartRef.current?.getBoundingClientRect();if(!rect)return;
@@ -216,9 +223,9 @@ export default function QuadrantModule(){
     {functionType!=="ALL"&&typeMapGeometry&&<section className="quadrantTypeMapCard">
       <div className="cardHead"><div><h2>{typeMapTitle}</h2><p>{typeMapSubtitle}；点击连线查看区县对详情</p></div><div className="mapHeadActions"><button onClick={()=>exportMapPng(typeMapRef.current,{title:typeMapTitle,subtitle:typeMapSubtitle,legendTitle:"绝对综合强度",legend:typeMapLegend})}>导出 PNG</button></div></div>
       <div className="quadrantTypeMapWrap"><svg ref={typeMapRef} viewBox="0 0 900 600" className="quadrantTypeMap" role="img" aria-label={`${displayFunctionType(functionType)}区县对空间分布图`} onPointerDown={event=>{event.currentTarget.setPointerCapture(event.pointerId);mapDrag.current={x:event.clientX,y:event.clientY,vx:mapView.x,vy:mapView.y}}} onPointerMove={event=>{if(!mapDrag.current)return;const ratio=900/event.currentTarget.getBoundingClientRect().width;setMapView(current=>({...current,x:mapDrag.current!.vx+(event.clientX-mapDrag.current!.x)*ratio,y:mapDrag.current!.vy+(event.clientY-mapDrag.current!.y)*ratio}))}} onPointerUp={()=>{mapDrag.current=null}} onPointerCancel={()=>{mapDrag.current=null}}>
-        <g transform={`translate(${mapView.x} ${mapView.y}) scale(${mapView.k})`}><g>{typeMapGeometry.counties.map(feature=><path key={feature.code} d={feature.d} className="populationCounty"><title>{feature.city} · {feature.name}</title></path>)}</g>
+        <g transform={`translate(${mapView.x} ${mapView.y}) scale(${mapView.k})`}><g aria-hidden="true">{typeMapGeometry.backdrop.map(feature=><path key={`fujian-${feature.code}`} d={feature.d} className="fujianPrefectureBackdrop"/>)}</g><g>{typeMapGeometry.counties.map(feature=><path key={feature.code} d={feature.d} className="populationCounty"><title>{feature.city} · {feature.name}</title></path>)}</g>
         <g>{[...typeMapRows].sort((a,b)=>a.absolute_composite-b.absolute_composite).map(row=>{const start=typeMapGeometry.centers[`${row.city_a}|${row.county_a}`],end=typeMapGeometry.centers[`${row.city_b}|${row.county_b}`];if(!start||!end)return null;const grade=strengthBand(row.absolute_composite*100,typeMapBreaks),dx=end[0]-start[0],dy=end[1]-start[1],length=Math.max(1,Math.hypot(dx,dy)),bend=Math.min(32,Math.max(8,length*.08)),mx=(start[0]+end[0])/2-dy/length*bend,my=(start[1]+end[1])/2+dx/length*bend,d=`M${start} Q${mx},${my} ${end}`;return <g key={row.pair} onPointerDown={event=>event.stopPropagation()} onClick={()=>setSelected(row)}><path d={d} className="populationFlowHit" style={{strokeWidth:11}}/><path d={d} className="quadrantTypeLink" style={{stroke:mapColors[grade],strokeWidth:[.8,1.1,1.55,2.15,3][grade],opacity:.78}}><title>{row.pair}：{fmt(row.absolute_composite*100,1)}分</title></path></g>})}</g>
-        <g>{typeMapLabels.map(item=>{const point=typeMapGeometry.centers[`${item.city}|${item.county}`];return point?<g key={`${item.city}|${item.county}`}><circle cx={point[0]} cy={point[1]} r="2.6" className="quadrantTypeNode"/><text x={point[0]+4} y={point[1]-4}>{item.county}</text></g>:null})}</g></g>
+        <DynamicMapLabels candidates={typeMapLabelCandidates} view={mapView} baseLimit={16}/></g>
       </svg><div className="mapTools"><button onClick={()=>zoomTypeMap(1.25)}>＋</button><button onClick={()=>zoomTypeMap(.8)}>－</button><button onClick={()=>setMapView({x:0,y:0,k:1})}>复位</button></div><span className="mapHint">滚轮缩放 · 按住拖动</span></div>
       <div className="populationLegend numericLegend"><strong>绝对综合强度</strong>{typeMapLegend.map(item=><span className="legendItem" key={`${item.color}-${item.label}`}><i style={{background:item.color}}/>{item.label}</span>)}</div>
     </section>}

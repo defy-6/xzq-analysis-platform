@@ -1,6 +1,6 @@
 @import "tailwindcss";
 :root{--ink:#152421;--muted:#66736f;--line:#dce4df;--paper:#f5f7f3;--card:#fff;--green:#173f38}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif}button,select{font:inherit}main{max-width:1540px;margin:auto;padding:30px 38px}header{display:flex;justify-content:space-between;align-items:flex-end;padding:12px 4px 28px;border-bottom:1px solid #ccd7d0}.eyebrow{font:600 11px/1.2 ui-monospace;letter-spacing:.19em;color:#70807a;margin:0 0 11px}h1{font-family:Georgia,"Songti SC",serif;font-weight:500;font-size:38px;letter-spacing:.02em;margin:0}.sub{color:var(--muted);margin:9px 0 0}.source{text-align:right;display:grid;gap:4px}.source span,.source small{font-size:12px;color:var(--muted)}.source strong{font-size:14px}.controls{display:grid;grid-template-columns:190px minmax(440px,1fr) 240px;gap:12px;padding:20px 0;align-items:stretch}.controls label{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:11px;color:var(--muted)}select{display:block;width:100%;border:0;background:transparent;color:var(--ink);font-weight:600;outline:0;margin-top:4px}.toggle{display:flex;background:#e7ece8;padding:4px;border-radius:10px}.toggle button{flex:1;border:0;background:transparent;border-radius:7px;color:var(--muted);cursor:pointer}.toggle button.active{background:#fff;color:var(--ink);box-shadow:0 1px 5px #173f3815}.toggle button:disabled{opacity:.35}.industryTree{position:relative;background:#fff;border:1px solid var(--line);border-radius:10px;min-width:0}.industryTree>summary{list-style:none;padding:8px 12px;cursor:pointer;display:grid;gap:4px}.industryTree>summary::-webkit-details-marker{display:none}.industryTree>summary:after{content:"⌄";position:absolute;right:12px;top:17px}.industryTree>summary span{font-size:11px;color:var(--muted)}.industryTree>summary strong{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:24px}.treePanel{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:20;max-height:460px;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px;box-shadow:0 18px 50px #173f3830}.treePanel details{margin-left:10px;border-left:1px solid #dce7e1}.treePanel summary{cursor:pointer;padding-left:6px}.treePanel button{border:0;background:transparent;text-align:left;width:calc(100% - 4px);padding:7px 9px;border-radius:6px;color:#334a44;cursor:pointer;font-size:12px}.treePanel details>div{margin-left:15px}.treePanel button:hover,.treePanel button.chosen{background:#e5f0eb;color:#123f35;font-weight:700}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}.stats article{background:var(--green);color:#fff;padding:18px 20px;border-radius:12px;min-height:108px;display:flex;flex-direction:column}.stats span,.stats small{font-size:11px;color:#b8cbc5}.stats strong{font:500 30px/1.3 Georgia,serif;margin:auto 0 0}.stats .industryName{font-family:inherit;font-size:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:12px}.mapCard,aside{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}.cardHead{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #edf0ed}.cardHead h2{font:600 15px/1.2 inherit;margin:0}.cardHead p{font-size:11px;color:var(--muted);margin:5px 0 0}.cardHead select{width:auto;border:1px solid var(--line);border-radius:7px;padding:6px 9px;margin:0}.map{width:100%;height:600px;background:radial-gradient(circle at 45% 47%,#f9fbf8,#eff4ef)}.county{fill:#e2ebe5;stroke:#fff;stroke-width:1.5;vector-effect:non-scaling-stroke}.flow{fill:none;stroke-linecap:round;cursor:pointer;vector-effect:non-scaling-stroke;transition:opacity .2s}.flow:hover{opacity:1!important}.map circle{fill:#173f38}.map text{font-size:10px;fill:#37554d;paint-order:stroke;stroke:#f6f8f5;stroke-width:3px}.legend{display:flex;align-items:center;gap:5px;position:absolute;margin:-48px 0 0 22px;background:#ffffffed;border:1px solid #e3e9e5;border-radius:20px;padding:8px 12px;font-size:10px}.legend i{display:block;width:22px;height:7px;border-radius:2px}.legend span:first-child{margin-right:4px;font-weight:700}.legend span:last-child{margin-left:4px;color:var(--muted)}.ranking{padding:5px 14px 14px;max-height:655px;overflow:auto}.ranking button{width:100%;display:grid;grid-template-columns:30px 1fr auto;gap:8px;align-items:center;text-align:left;padding:12px 5px;border:0;border-bottom:1px solid #edf0ed;background:#fff;cursor:pointer}.ranking button:hover{background:#f6f8f5}.ranking b{font:500 12px Georgia;color:#9aa6a1}.ranking span{display:grid}.ranking strong{font-size:12px}.ranking small{font-size:10px;color:var(--muted);margin-top:3px}.ranking em{font:600 13px Georgia;color:#173f38}.detail{position:fixed;right:28px;bottom:28px;width:360px;background:#122f2a;color:#fff;border-radius:16px;padding:22px;box-shadow:0 20px 60px #071b1755;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;z-index:5}.detail>button{position:absolute;right:12px;top:10px;border:0;background:transparent;color:#fff;font-size:25px}.detail>span,.detail h3,.detail p{grid-column:1/-1}.detail>span{font-size:10px;color:#aac3bc}.detail h3{margin:0;font-size:20px}.detail p{margin:-8px 0 3px;color:#aac3bc;font-size:12px}.detail div{display:grid}.detail div strong{font:500 18px Georgia}.detail div small{font-size:9px;color:#aac3bc;margin-top:4px}footer{display:flex;justify-content:space-between;color:#7c8985;font-size:10px;padding:17px 3px}.loading{height:100vh;display:grid;place-items:center;color:#60716b}@media(max-width:900px){main{padding:18px}.controls{grid-template-columns:1fr}.industryTree,.toggle{grid-column:1}.stats{grid-template-columns:1fr 1fr}.workspace{grid-template-columns:1fr}.map{height:500px}header{align-items:flex-start}.source{display:none}h1{font-size:30px}}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif}button,select{font:inherit}main{width:100%;max-width:1920px;margin:auto;padding:30px clamp(18px,2vw,34px)}header{display:flex;justify-content:space-between;align-items:flex-end;padding:12px 4px 28px;border-bottom:1px solid #ccd7d0}.eyebrow{font:600 11px/1.2 ui-monospace;letter-spacing:.19em;color:#70807a;margin:0 0 11px}h1{font-family:Georgia,"Songti SC",serif;font-weight:500;font-size:38px;letter-spacing:.02em;margin:0}.sub{color:var(--muted);margin:9px 0 0}.source{text-align:right;display:grid;gap:4px}.source span,.source small{font-size:12px;color:var(--muted)}.source strong{font-size:14px}.controls{display:grid;grid-template-columns:190px minmax(440px,1fr) 240px;gap:12px;padding:20px 0;align-items:stretch}.controls label{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:11px;color:var(--muted)}select{display:block;width:100%;border:0;background:transparent;color:var(--ink);font-weight:600;outline:0;margin-top:4px}.toggle{display:flex;background:#e7ece8;padding:4px;border-radius:10px}.toggle button{flex:1;border:0;background:transparent;border-radius:7px;color:var(--muted);cursor:pointer}.toggle button.active{background:#fff;color:var(--ink);box-shadow:0 1px 5px #173f3815}.toggle button:disabled{opacity:.35}.industryTree{position:relative;background:#fff;border:1px solid var(--line);border-radius:10px;min-width:0}.industryTree>summary{list-style:none;padding:8px 12px;cursor:pointer;display:grid;gap:4px}.industryTree>summary::-webkit-details-marker{display:none}.industryTree>summary:after{content:"⌄";position:absolute;right:12px;top:17px}.industryTree>summary span{font-size:11px;color:var(--muted)}.industryTree>summary strong{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:24px}.treePanel{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:20;max-height:460px;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px;box-shadow:0 18px 50px #173f3830}.treePanel details{margin-left:10px;border-left:1px solid #dce7e1}.treePanel summary{cursor:pointer;padding-left:6px}.treePanel button{border:0;background:transparent;text-align:left;width:calc(100% - 4px);padding:7px 9px;border-radius:6px;color:#334a44;cursor:pointer;font-size:12px}.treePanel details>div{margin-left:15px}.treePanel button:hover,.treePanel button.chosen{background:#e5f0eb;color:#123f35;font-weight:700}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}.stats article{background:var(--green);color:#fff;padding:18px 20px;border-radius:12px;min-height:108px;display:flex;flex-direction:column}.stats span,.stats small{font-size:11px;color:#b8cbc5}.stats strong{font:500 30px/1.3 Georgia,serif;margin:auto 0 0}.stats .industryName{font-family:inherit;font-size:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:12px}.mapCard,aside{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}.cardHead{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #edf0ed}.cardHead h2{font:600 15px/1.2 inherit;margin:0}.cardHead p{font-size:11px;color:var(--muted);margin:5px 0 0}.cardHead select{width:auto;border:1px solid var(--line);border-radius:7px;padding:6px 9px;margin:0}.map{width:100%;height:600px;background:radial-gradient(circle at 45% 47%,#f9fbf8,#eff4ef)}.county{fill:#e2ebe5;stroke:#fff;stroke-width:1.5;vector-effect:non-scaling-stroke}.flow{fill:none;stroke-linecap:round;cursor:pointer;vector-effect:non-scaling-stroke;transition:opacity .2s}.flow:hover{opacity:1!important}.map circle{fill:#173f38}.map text{font-size:10px;fill:#37554d;paint-order:stroke;stroke:#f6f8f5;stroke-width:3px}.legend{display:flex;align-items:center;gap:5px;position:absolute;margin:-48px 0 0 22px;background:#ffffffed;border:1px solid #e3e9e5;border-radius:20px;padding:8px 12px;font-size:10px}.legend i{display:block;width:22px;height:7px;border-radius:2px}.legend span:first-child{margin-right:4px;font-weight:700}.legend span:last-child{margin-left:4px;color:var(--muted)}.ranking{padding:5px 14px 14px;max-height:655px;overflow:auto}.ranking button{width:100%;display:grid;grid-template-columns:30px 1fr auto;gap:8px;align-items:center;text-align:left;padding:12px 5px;border:0;border-bottom:1px solid #edf0ed;background:#fff;cursor:pointer}.ranking button:hover{background:#f6f8f5}.ranking b{font:500 12px Georgia;color:#9aa6a1}.ranking span{display:grid}.ranking strong{font-size:12px}.ranking small{font-size:10px;color:var(--muted);margin-top:3px}.ranking em{font:600 13px Georgia;color:#173f38}.detail{position:fixed;right:28px;bottom:28px;width:360px;background:#122f2a;color:#fff;border-radius:16px;padding:22px;box-shadow:0 20px 60px #071b1755;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;z-index:5}.detail>button{position:absolute;right:12px;top:10px;border:0;background:transparent;color:#fff;font-size:25px}.detail>span,.detail h3,.detail p{grid-column:1/-1}.detail>span{font-size:10px;color:#aac3bc}.detail h3{margin:0;font-size:20px}.detail p{margin:-8px 0 3px;color:#aac3bc;font-size:12px}.detail div{display:grid}.detail div strong{font:500 18px Georgia}.detail div small{font-size:9px;color:#aac3bc;margin-top:4px}footer{display:flex;justify-content:space-between;color:#7c8985;font-size:10px;padding:17px 3px}.loading{height:100vh;display:grid;place-items:center;color:#60716b}@media(max-width:900px){main{padding:18px}.controls{grid-template-columns:1fr}.industryTree,.toggle{grid-column:1}.stats{grid-template-columns:1fr 1fr}.workspace{grid-template-columns:1fr}.map{height:500px}header{align-items:flex-start}.source{display:none}h1{font-size:30px}}
 /* Hierarchical industry picker overrides */
 .treePanel summary{cursor:pointer;padding:8px 7px;color:#263f38;font-size:12px;font-weight:650}
 .treePanel button.levelChoice{margin-left:15px;width:calc(100% - 20px);font-size:11px;color:#74847f}
@@ -227,7 +227,7 @@
 
 /* County-government driving accessibility */
 .trafficModule{padding-top:16px}.trafficLoading{min-height:580px;display:grid;place-items:center;color:#687872}
-.trafficControls{display:grid;grid-template-columns:150px 160px minmax(260px,1fr) minmax(260px,1fr);gap:10px;margin-bottom:12px}
+.trafficControls{display:grid;grid-template-columns:130px 130px 145px minmax(230px,1fr) minmax(230px,1fr);gap:10px;margin-bottom:12px}
 .trafficControls>label{display:flex;flex-direction:column;justify-content:center;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--muted);font-size:10px}.trafficControls select{font-size:12px}
 .trafficStats article:first-child{background:#17483e}.trafficStats article:nth-child(2){background:#1d564a}.trafficDetail>section{grid-template-columns:repeat(3,1fr)}
 @media(max-width:900px){.trafficControls{grid-template-columns:1fr 1fr}}
@@ -256,3 +256,278 @@
 .poiTopicInsight{grid-template-columns:220px 1fr}.poiTopicInsight .topicIntro span{color:#789087;font:600 9px ui-monospace;letter-spacing:.16em}.poiTopicInsight .topicIntro h2{margin:7px 0 5px;font-size:18px}.poiTopicInsight .topicIntro p{margin:0;color:#74827d;font-size:10px;line-height:1.6}.poiInsightGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.poiInsightGrid article{display:grid;align-content:center;gap:5px;min-height:94px;padding:13px 14px;border:1px solid #e1e9e4;border-radius:10px;background:#f7faf8}.poiInsightGrid small{color:#73847e;font-size:9px}.poiInsightGrid strong{color:#21473d;font:600 22px Georgia,"Songti SC",serif}.poiInsightGrid p{margin:0;color:#84918c;font-size:8px;line-height:1.45}.poiTopicBars{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px}.poiTopicBars>div{display:grid;grid-template-columns:78px minmax(70px,1fr) 48px 46px;gap:8px;align-items:center}.poiTopicBars span{font-size:9px;color:#52665f}.poiTopicBars i{height:7px;border-radius:4px;background:#e9efeb}.poiTopicBars i b{display:block;height:100%;border-radius:4px;background:#6ba997}.poiTopicBars em,.poiTopicBars small{text-align:right;color:#536b63;font:600 9px Georgia;font-style:normal}.poiTypeLayout{display:grid;grid-template-columns:250px 1fr;gap:16px}.poiTypeCard{display:grid;align-content:center;gap:7px;padding:16px;border-radius:10px;background:#173f38;color:#fff}.poiTypeCard small{color:#abc2bb;font-size:9px}.poiTypeCard strong{font-size:18px}.poiTypeCard p{margin:0;color:#b8cbc5;font-size:8px;line-height:1.55}
 @media(max-width:1100px){.thematicControls.poiControls{grid-template-columns:1fr 1fr}.poiInsightGrid{grid-template-columns:1fr 1fr}.poiTypeLayout{grid-template-columns:1fr}}
 @media(max-width:700px){.thematicControls.poiControls,.poiTopicBars,.poiInsightGrid{grid-template-columns:1fr}.poiTopicInsight{grid-template-columns:1fr}.poiTopicBars>div{grid-template-columns:72px 1fr 48px 42px}}
+
+/* Unified map labels: fixed screen size, collision-aware and zoom-responsive */
+.mapDynamicLabels{pointer-events:none}.mapDynamicLabels circle{fill:#173f38;stroke:#fff;stroke-width:1.1}.mapDynamicLabels text{font-size:10px;font-weight:650;letter-spacing:.01em;fill:#254b40;paint-order:stroke;stroke:#f8fbf8;stroke-width:3.5px;stroke-linejoin:round}.mapDynamicLabels .selected circle{fill:#c46b42;stroke-width:1.6}.mapDynamicLabels .selected text{font-weight:800;fill:#173f38;stroke-width:4.5px}
+.populationMap .mapDynamicLabels text,.quadrantTypeMap .mapDynamicLabels text,.thematicMap .mapDynamicLabels text{font-size:10px}.townNetworkMap .mapDynamicLabels text{font-size:9px;stroke-width:3px}
+
+/* Enterprise map-first desktop layout */
+.enterpriseAnalysisStage{display:grid;grid-template-columns:220px minmax(0,1fr) 310px;gap:12px;align-items:stretch}.enterpriseAnalysisStage>.stats{grid-column:1;display:grid;grid-template-columns:1fr;grid-template-rows:repeat(4,1fr);gap:10px;margin:0}.enterpriseAnalysisStage>.stats article{min-height:0;padding:15px 16px}.enterpriseAnalysisStage>.stats strong{font-size:25px}.enterpriseAnalysisStage>.stats .industryName{font-size:17px;white-space:normal}.enterpriseAnalysisStage>.workspace{display:contents}.enterpriseAnalysisStage .mapCard{grid-column:2;min-width:0}.enterpriseAnalysisStage .workspace>aside{grid-column:3}.enterpriseAnalysisStage .map{height:clamp(590px,66vh,760px)}.enterpriseAnalysisStage .ranking{max-height:calc(clamp(590px,66vh,760px) + 57px)}
+@media(max-width:1280px){.enterpriseAnalysisStage{display:block}.enterpriseAnalysisStage>.stats{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto;margin-bottom:12px}.enterpriseAnalysisStage>.stats article{min-height:108px}.enterpriseAnalysisStage>.workspace{display:grid}.enterpriseAnalysisStage .map{height:600px}}
+@media(max-width:900px){.enterpriseAnalysisStage>.stats{grid-template-columns:1fr 1fr}.enterpriseAnalysisStage>.workspace{grid-template-columns:1fr}.enterpriseAnalysisStage .map{height:500px}}
+
+/* Unified full-width, map-first layout */
+html,body{width:100%;min-height:100%}
+main{width:100%;max-width:none;margin:0;padding:14px clamp(10px,1vw,22px)}
+main>header{padding-top:4px;padding-bottom:14px}
+.platformSwitch{padding-top:10px}.moduleSwitch{padding-top:8px}.controls{padding:10px 0}.populationModule,.trafficModule,.thematicModule,.quadrantModule{padding-top:10px}
+.mapFirstStage{display:grid;grid-template-columns:minmax(190px,13vw) minmax(560px,1fr) minmax(260px,18vw);gap:10px;align-items:stretch}
+.mapFirstStage>.populationStats{grid-column:1;display:grid;grid-template-columns:1fr;grid-template-rows:repeat(4,1fr);gap:9px;margin:0}
+.mapFirstStage>.populationStats article{min-height:0;padding:14px 15px}.mapFirstStage>.populationStats strong{font-size:24px}.mapFirstStage>.populationStats .populationTopName{font-size:15px;white-space:normal}
+.mapFirstStage>.populationWorkspace,.mapFirstStage>.thematicWorkspace{display:contents}
+.mapFirstStage .populationMapCard,.mapFirstStage .thematicMapCard{grid-column:2;min-width:0}
+.mapFirstStage>.populationWorkspace>aside,.mapFirstStage>.thematicWorkspace>aside{grid-column:3}
+.mapFirstStage .populationMap,.mapFirstStage .thematicMap{height:clamp(590px,67vh,790px)}
+.mapFirstStage .populationRanking .ranking{max-height:calc(clamp(590px,67vh,790px) + 58px)}
+.thematicMapFirstStage>.landTopicInsight{grid-column:1/-1;grid-row:2;margin:2px 0 0}
+.enterpriseAnalysisStage{grid-template-columns:minmax(190px,13vw) minmax(560px,1fr) minmax(260px,18vw);gap:10px}.enterpriseAnalysisStage .map{height:clamp(590px,67vh,790px)}
+
+.quadrantModule{display:grid;grid-template-columns:minmax(190px,13vw) minmax(560px,1fr) minmax(260px,18vw);gap:10px;align-items:stretch}
+.quadrantModule>.quadrantControls{grid-column:1/-1;margin:0}.quadrantModule>.quadrantStats{grid-column:1;grid-row:2;grid-template-columns:1fr;grid-template-rows:repeat(4,1fr);gap:9px;margin:0}.quadrantModule>.quadrantStats article{min-height:0;padding:14px 15px}.quadrantModule>.quadrantStats strong{font-size:24px}.quadrantModule>.quadrantStats .quadrantTopName{font-size:15px}
+.quadrantModule>.quadrantWorkspace{display:contents}.quadrantModule>.quadrantWorkspace>.quadrantChartCard{grid-column:2;grid-row:2}.quadrantModule>.quadrantWorkspace>aside{grid-column:3;grid-row:2}.quadrantModule>.quadrantTypeMapCard{grid-column:2;grid-row:2;margin:0}.quadrantModule:has(>.quadrantTypeMapCard)>.quadrantWorkspace>.quadrantChartCard{grid-column:1/3;grid-row:4}.quadrantModule>.quadrantTypeGuide{grid-column:1/-1;grid-row:3;margin:0}.quadrantModule:has(>.quadrantTypeMapCard)>.quadrantTypeGuide{grid-row:5}.quadrantModule>.quadrantModelStrip,.quadrantModule>.quadrantNote{grid-column:1/-1}.quadrantModule>.quadrantModelStrip{grid-row:6;margin-top:0}.quadrantModule>.quadrantNote{grid-row:7}.quadrantChart{height:clamp(590px,67vh,790px)}.quadrantTypeMap{height:clamp(590px,67vh,790px)}.quadrantRanking .ranking{max-height:calc(clamp(590px,67vh,790px) + 58px)}
+
+@media(max-width:1280px){main{padding:16px}.mapFirstStage,.quadrantModule{display:block}.mapFirstStage>.populationStats,.quadrantModule>.quadrantStats{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto;margin-bottom:12px}.mapFirstStage>.populationStats article,.quadrantModule>.quadrantStats article{min-height:108px}.mapFirstStage>.populationWorkspace,.mapFirstStage>.thematicWorkspace,.quadrantModule>.quadrantWorkspace{display:grid}.mapFirstStage .populationMap,.mapFirstStage .thematicMap,.quadrantChart,.quadrantTypeMap{height:580px}.thematicMapFirstStage>.landTopicInsight{margin-bottom:12px}.quadrantModule>.quadrantTypeGuide,.quadrantModule>.quadrantTypeMapCard,.quadrantModule>.quadrantModelStrip{margin-bottom:12px}}
+@media(max-width:900px){.mapFirstStage>.populationStats,.quadrantModule>.quadrantStats{grid-template-columns:1fr 1fr}.mapFirstStage>.populationWorkspace,.mapFirstStage>.thematicWorkspace,.quadrantModule>.quadrantWorkspace{grid-template-columns:1fr}.mapFirstStage .populationMap,.mapFirstStage .thematicMap,.quadrantChart,.quadrantTypeMap{height:500px}}
+
+/* Keep the three-column desktop canvas active on ordinary laptop widths. */
+@media(min-width:1051px){
+  .enterpriseAnalysisStage,.mapFirstStage{display:grid}
+  .enterpriseAnalysisStage>.stats,.mapFirstStage>.populationStats{grid-column:1;display:grid;grid-template-columns:1fr;grid-template-rows:repeat(4,1fr);margin:0}
+  .enterpriseAnalysisStage>.workspace,.mapFirstStage>.populationWorkspace,.mapFirstStage>.thematicWorkspace{display:contents}
+  .enterpriseAnalysisStage .mapCard,.mapFirstStage .populationMapCard,.mapFirstStage .thematicMapCard{grid-column:2}
+  .enterpriseAnalysisStage .workspace>aside,.mapFirstStage>.populationWorkspace>aside,.mapFirstStage>.thematicWorkspace>aside{grid-column:3}
+  .enterpriseAnalysisStage>.stats article,.mapFirstStage>.populationStats article{min-height:0}
+}
+
+/* Region profile shared by population, enterprise and transport modules. */
+.regionalPerformance{margin:14px 0 0;border:1px solid var(--line);border-radius:18px;background:#fff;overflow:hidden}
+.regionalPerformance>header{display:flex;align-items:end;justify-content:space-between;gap:18px;padding:16px 18px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,#f7faf8,#fff)}
+.regionalPerformance>header span{display:block;color:#668078;font-size:clamp(14px,.76vw,17px);letter-spacing:.14em;font-weight:800}
+.regionalPerformance>header h2{margin:4px 0 0;font-size:clamp(20px,1.15vw,26px);color:#173e36}
+.regionalPerformance>header label{display:flex;align-items:center;gap:10px;color:#61736e;font-size:clamp(16px,.82vw,19px);font-weight:700}
+.regionalPerformance>header select{min-width:210px;border:1px solid #cbd9d4;border-radius:9px;background:#fff;padding:9px 34px 9px 11px;color:#173e36;font:inherit}
+.regionalPerformanceCards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line)}
+.regionalPerformanceCards article{min-width:0;padding:17px 18px;background:#fff}
+.regionalPerformanceCards span,.regionalPerformanceCards small{display:block;color:#6b7c77;font-size:clamp(16px,.82vw,19px)}
+.regionalPerformanceCards strong{display:block;margin:7px 0 4px;color:#17483e;font-size:clamp(26px,1.7vw,38px);line-height:1.05;font-family:Georgia,"Times New Roman",serif}
+@media(max-width:900px){.regionalPerformanceCards{grid-template-columns:repeat(2,minmax(0,1fr))}.regionalPerformance>header{align-items:stretch;flex-direction:column}.regionalPerformance>header label{justify-content:space-between}}
+@media(max-width:560px){.regionalPerformanceCards{grid-template-columns:1fr}.regionalPerformance>header select{min-width:0;max-width:65%}}
+
+/* Map labels stay compact and unoutlined; page typography rules do not affect them. */
+.mapDynamicLabels text,
+.populationMap .mapDynamicLabels text,
+.quadrantTypeMap .mapDynamicLabels text,
+.thematicMap .mapDynamicLabels text{
+  font-size:clamp(9px,.54vw,13px);
+  paint-order:normal;
+  stroke:none;
+  stroke-width:0;
+}
+.townNetworkMap .mapDynamicLabels text,.trafficDrillLabels text{
+  font-size:clamp(8px,.48vw,11px);
+  paint-order:normal;
+  stroke:none;
+  stroke-width:0;
+}
+.mapDynamicLabels .selected text{stroke:none;stroke-width:0}
+
+/* Township-level main maps use the same clear base-map treatment as county maps. */
+.populationTown,.enterpriseTownBoundary{
+  fill:#e4ebe7;
+  stroke:#ccd6d1;
+  stroke-width:.55;
+  stroke-linejoin:round;
+  stroke-linecap:round;
+  opacity:1;
+  vector-effect:non-scaling-stroke;
+}
+.townshipCountyOverlay{
+  fill:none;
+  stroke:#879b92;
+  stroke-width:1.25;
+  stroke-linejoin:round;
+  stroke-linecap:round;
+  pointer-events:none;
+  vector-effect:non-scaling-stroke;
+}
+.fujianPrefectureBackdrop{fill:#fbfcfb;fill-opacity:.78;stroke:#c9d0cd;stroke-width:.75;stroke-linejoin:round;stroke-linecap:round;pointer-events:none;vector-effect:non-scaling-stroke}
+
+/* Resizable county-pair detail with paired industry charts and one shared legend. */
+.detail{
+  width:min(920px,calc(100vw - 56px));
+  min-width:min(560px,calc(100vw - 36px));
+  min-height:420px;
+  max-width:calc(100vw - 36px);
+  max-height:calc(100vh - 36px);
+  resize:both;
+  container-type:inline-size;
+  background-image:linear-gradient(135deg,transparent 0 48%,#88ada4 49% 55%,transparent 56% 63%,#88ada4 64% 70%,transparent 71%);
+  background-size:18px 18px;
+  background-position:right bottom;
+  background-repeat:no-repeat;
+}
+.industryDonutBody.comparison{grid-template-columns:minmax(280px,340px) minmax(0,1fr);align-items:start}
+.industryDonutCharts{display:flex!important;align-items:flex-start;justify-content:center;gap:clamp(22px,3vw,46px);padding:8px 0}
+.industryDonutFigure{display:grid!important;justify-items:center;gap:9px}
+.industryDonutFigure>b{font-size:clamp(15px,.82vw,18px);color:#d8e6e1}
+.industryDonutPlaceholder{display:grid!important;min-height:150px;place-items:center;color:#aac3bc;font-size:15px}
+.industryDonutLegend.shared{grid-template-columns:1fr 1fr;max-height:310px;gap:11px 18px}
+.industryDonutLegend.shared>div{grid-template-columns:11px minmax(0,1fr);gap:9px}
+.industryDonutLegend.shared i{width:11px;height:11px;margin-top:5px}
+.industryDonutLegend.shared strong{
+  overflow:visible;
+  font-size:clamp(15px,.82vw,18px)!important;
+  line-height:1.45!important;
+  text-overflow:clip;
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+.industryDonutLegend.shared small{font-size:clamp(13px,.72vw,16px)!important;line-height:1.45}
+.industryDonutLegend.shared>button{display:grid;grid-template-columns:11px minmax(0,1fr);gap:9px;align-items:start;width:100%;padding:7px;border:1px solid transparent;border-radius:9px;background:transparent;color:#fff;text-align:left;cursor:pointer}
+.industryDonutLegend.shared>button:hover,.industryDonutLegend.shared>button.active{border-color:#7caaa0;background:#ffffff12}
+.industryDonutLegend.shared>button:disabled{cursor:default;opacity:.82}
+.industryDonutLegend.shared>button i{display:block;width:11px;height:11px;border-radius:2px;margin-top:5px}
+.industryDonutLegend.shared>button span{display:grid;min-width:0}
+.industryDonutLegend.shared>button strong{overflow:visible;font-size:clamp(15px,.82vw,18px)!important;line-height:1.45!important;text-overflow:clip;white-space:normal;overflow-wrap:anywhere}
+.companyDetailPanel{display:grid;gap:10px;border-top:1px solid #ffffff20;padding-top:13px}
+.companyDetailHead{display:flex!important;align-items:end;justify-content:space-between;gap:16px}
+.companyDetailHead span,.companyDetailHead small{color:#aac3bc;font-size:clamp(13px,.72vw,16px)}
+.companyDetailHead h4{margin:3px 0 0;font-size:clamp(18px,1vw,23px)}
+.companyDetailList{display:grid!important;max-height:300px;overflow:auto;border:1px solid #ffffff18;border-radius:10px}
+.companyDetailList article{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:11px;align-items:center;padding:10px 12px;border-bottom:1px solid #ffffff12}
+.companyDetailList article:last-child{border-bottom:0}.companyDetailList b{color:#83aaa1;font:500 14px Georgia,serif}
+.companyDetailList article>div{display:grid!important;gap:2px}.companyDetailList strong{font:700 clamp(14px,.78vw,18px)/1.35 inherit!important}.companyDetailList span,.companyDetailList small{color:#aac3bc;font-size:clamp(12px,.68vw,15px)}
+.companyDetailList em{color:#f0c66e;font:700 clamp(14px,.8vw,19px)/1.2 Georgia,serif;white-space:nowrap}.companyDetailPanel>p{margin:4px 0;color:#aac3bc}
+@container (max-width:700px){.industryDonutBody.comparison{grid-template-columns:1fr}.industryDonutCharts{flex-wrap:wrap}.industryDonutLegend.shared{grid-template-columns:1fr}.companyDetailHead{align-items:start;flex-direction:column}.companyDetailList article{grid-template-columns:30px minmax(0,1fr)}.companyDetailList em{grid-column:2}}
+@media(max-width:760px){
+  .detail{width:calc(100vw - 20px);min-width:0;resize:none}
+  .industryDonutBody.comparison{grid-template-columns:1fr}
+  .industryDonutLegend.shared{grid-template-columns:1fr}
+}
+@media(max-width:1050px){.enterpriseAnalysisStage,.mapFirstStage,.quadrantModule{display:block}.enterpriseAnalysisStage>.stats,.mapFirstStage>.populationStats,.quadrantModule>.quadrantStats{display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:auto;margin-bottom:12px}.enterpriseAnalysisStage>.workspace,.mapFirstStage>.populationWorkspace,.mapFirstStage>.thematicWorkspace,.quadrantModule>.quadrantWorkspace{display:grid}}
+
+/* Compact navigation so the analytical canvas starts inside the first viewport. */
+main>header{padding:2px 4px 10px}main>header h1{font-size:30px}.eyebrow{margin-bottom:6px}.sub{margin-top:5px;font-size:12px}
+.platformSwitch{gap:8px;padding-top:8px}.platformSwitch button{gap:2px;padding:8px 12px}.moduleSwitch{gap:6px;padding-top:6px}.moduleSwitch button{min-width:150px;padding:7px 11px}
+.controls,.populationControls,.trafficControls,.quadrantControls,.thematicControls{gap:7px;margin-bottom:8px}.controls{padding:7px 0}.controls label,.populationControls>label,.trafficControls>label,.quadrantControls>label,.thematicControls label{padding-top:6px;padding-bottom:6px}
+.landTopics{gap:6px;margin-bottom:8px}.landTopics button{padding:8px 10px}.landTopics button small{margin-top:2px}
+
+/* Taller analytical canvas on wide screens. */
+@media(min-width:1051px){
+  .enterpriseAnalysisStage .map,.mapFirstStage .populationMap,.mapFirstStage .thematicMap,.quadrantChart,.quadrantTypeMap{height:clamp(860px,88vh,1120px)}
+  .enterpriseAnalysisStage .ranking,.mapFirstStage .populationRanking .ranking,.quadrantRanking .ranking{max-height:calc(clamp(860px,88vh,1120px) + 64px)}
+  main>header h1{font-size:36px}.eyebrow{font-size:12px}.sub{font-size:14px}.source strong{font-size:15px}.source span,.source small{font-size:13px}
+  .platformSwitch button span,.moduleSwitch button span{font-size:15px}.platformSwitch button small,.moduleSwitch button small{font-size:11px}
+  .controls label,.populationControls>label,.trafficControls>label,.quadrantControls>label,.thematicControls label{font-size:12px}select{font-size:14px}
+  .cardHead h2{font-size:18px}.cardHead p{font-size:13px}.mapHeadActions button,.mapHeadActions select{font-size:13px}
+  .stats span,.stats small,.populationStats span,.populationStats small,.quadrantStats span,.quadrantStats small{font-size:13px}.stats strong,.populationStats strong,.quadrantStats strong{font-size:30px}
+  .ranking strong{font-size:14px}.ranking small{font-size:12px}.ranking em{font-size:15px}.ranking b{font-size:13px}.legend,.populationLegend{font-size:11px}
+  .populationOdHead h2,.townMapCaption strong{font-size:16px}.populationOdHead p,.townMapCaption span,.townToolbar span{font-size:12px}.populationOdTable,.townTable{font-size:13px}
+}
+.townNetworkMap{position:relative}.townNetworkMap svg{touch-action:none;cursor:grab}.townNetworkMap svg:active{cursor:grabbing}.townNetworkMap .mapTools{top:72px}.townMapCaption{position:relative;z-index:3}
+
+/* Fluid typography: scales continuously with the available page width. */
+body{font-size:clamp(14px,.82vw,19px)}
+main>header h1{font-size:clamp(32px,2vw,46px)}.eyebrow{font-size:clamp(11px,.68vw,15px)}.sub{font-size:clamp(13px,.82vw,18px)}
+.source span,.source small{font-size:clamp(11px,.7vw,15px)}.source strong{font-size:clamp(14px,.86vw,19px)}
+.platformSwitch button span,.moduleSwitch button span{font-size:clamp(14px,.9vw,19px)}.platformSwitch button small,.moduleSwitch button small{font-size:clamp(11px,.66vw,15px)}
+.controls label,.populationControls>label,.trafficControls>label,.quadrantControls>label,.thematicControls label,.industryTree>summary span{font-size:clamp(12px,.72vw,16px)}
+select,.industryTree>summary strong,.locationTree>summary strong{font-size:clamp(14px,.82vw,18px)}
+.cardHead h2,.townMapCaption strong,.populationOdHead h2{font-size:clamp(16px,1vw,22px)}.cardHead p,.townMapCaption span,.populationOdHead p{font-size:clamp(12px,.74vw,16px)}
+.mapHeadActions button,.mapHeadActions select,.mapTools button{font-size:clamp(12px,.76vw,17px)}
+.stats span,.stats small,.populationStats span,.populationStats small,.quadrantStats span,.quadrantStats small{font-size:clamp(12px,.75vw,17px)}
+.stats strong,.populationStats strong,.quadrantStats strong{font-size:clamp(28px,1.72vw,40px)}.stats .industryName,.populationStats .populationTopName,.quadrantStats .quadrantTopName{font-size:clamp(16px,1vw,23px)}
+.ranking b{font-size:clamp(12px,.72vw,16px)}.ranking strong{font-size:clamp(13px,.82vw,18px)}.ranking small{font-size:clamp(11px,.68vw,15px)}.ranking em{font-size:clamp(14px,.86vw,19px)}
+.legend,.populationLegend,.townMapLegend,.mapHint{font-size:clamp(10px,.65vw,14px)}
+.mapDynamicLabels text,.populationMap .mapDynamicLabels text,.quadrantTypeMap .mapDynamicLabels text,.thematicMap .mapDynamicLabels text{font-size:clamp(12px,.76vw,18px)}.townNetworkMap .mapDynamicLabels text{font-size:clamp(11px,.7vw,16px)}
+.populationOdTable,.townTable,.populationOdTable strong,.townTable strong{font-size:clamp(12px,.74vw,17px)}.populationOdTable small,.townTable small,.townToolbar span,.populationNote,.townNote{font-size:clamp(10px,.64vw,14px)}
+.metricMethod p,.metricMethod strong,.thematicDetailPanel p,.landTopicInsight p,.poiTopicInsight p,.topicBars span,.topicBars strong,.poiTopicBars span,.poiTopicBars em,.poiTopicBars small{font-size:clamp(11px,.68vw,15px)}
+@media(max-width:700px){body{font-size:14px}.mapDynamicLabels text,.populationMap .mapDynamicLabels text,.townNetworkMap .mapDynamicLabels text{font-size:12px}}
+
+/* Readability pass for data cards, detail panels and tabular information. */
+.stats span,.stats small,.populationStats span,.populationStats small,.quadrantStats span,.quadrantStats small{font-size:clamp(14px,.84vw,19px)}
+.stats strong,.populationStats strong,.quadrantStats strong{font-size:clamp(31px,1.86vw,43px)}
+.ranking b{font-size:clamp(13px,.78vw,18px)}.ranking strong{font-size:clamp(15px,.9vw,21px)}.ranking small{font-size:clamp(13px,.76vw,17px)}.ranking em{font-size:clamp(16px,.95vw,22px)}
+.ranking button{padding-top:clamp(13px,.8vw,18px);padding-bottom:clamp(13px,.8vw,18px)}
+.detail>span,.populationDetail>span,.quadrantDetail>span{font-size:clamp(12px,.72vw,16px)}
+.detail h3,.populationDetail>h3,.quadrantDetail>h3{font-size:clamp(22px,1.35vw,30px)}
+.detail p,.populationDetail>p,.quadrantDetail>p{font-size:clamp(13px,.8vw,18px)}
+.detail h4,.populationDetail h4,.quadrantDetail h4{font-size:clamp(15px,.9vw,20px)}
+.detail section strong,.detail div strong,.populationDetail section strong,.quadrantDetail section strong{font-size:clamp(20px,1.18vw,27px)}
+.detail section small,.detail div small,.populationDetail section small,.quadrantDetail section small,.detail .direction em,.quadrantDetail section em{font-size:clamp(12px,.72vw,16px)}
+.populationDrillAction button,.detail .townAction button{font-size:clamp(13px,.8vw,18px)}.populationDrillAction small,.detail .townAction small{font-size:clamp(12px,.7vw,16px)}
+.townSummary span,.townSummary small{font-size:clamp(12px,.72vw,16px)}.townSummary strong{font-size:clamp(25px,1.46vw,33px)}
+.townTableHead,.populationOdTableHead{font-size:clamp(12px,.7vw,16px)}
+.townTable article>b,.populationOdTable>button>b{font-size:clamp(13px,.76vw,17px)}
+.townTable article strong,.populationOdTable>button strong{font-size:clamp(14px,.84vw,19px)}
+.townTable article small,.populationOdTable>button small{font-size:clamp(12px,.7vw,16px)}
+.townTable article>em,.populationOdTable>button>em,.populationOdTable>button>span{font-size:clamp(15px,.88vw,20px)}
+.populationOdHead h2,.townToolbar strong{font-size:clamp(17px,1vw,23px)}.populationOdHead p,.townToolbar span,.populationPagination button,.populationPagination span{font-size:clamp(12px,.72vw,16px)}
+.thematicDetailPanel>div:first-child span,.selectedMetricDetail>div span,.selectedMetricDetail article small,.metricMethod article small,.metricMethod>div span{font-size:clamp(12px,.72vw,16px)}
+.thematicDetailPanel p,.selectedMetricDetail p,.selectedMetricDetail article em,.metricMethod p,.metricMethod>aside p{font-size:clamp(13px,.78vw,17px)}
+.landComposition span,.landComposition small,.lqPanel span,.poiBars span,.poiBars small{font-size:clamp(13px,.76vw,17px)}
+.landComposition strong,.lqPanel>strong,.lqPanel em,.poiBars em,.metricMethod article strong{font-size:clamp(15px,.88vw,20px)}
+.selectedMetricDetail h3,.metricMethod h2{font-size:clamp(19px,1.12vw,25px)}.selectedMetricDetail article strong{font-size:clamp(21px,1.25vw,29px)}.selectedMetricDetail .metricValue strong{font-size:clamp(28px,1.65vw,38px)}
+.quadrantTypeGrid>button strong,.landTopicInsight h2,.poiTopicInsight h2{font-size:clamp(18px,1.05vw,24px)}.quadrantTypeGrid>button p,.quadrantTypeGrid>button small,.landTopicInsight p,.poiTopicInsight p,.poiInsightGrid p{font-size:clamp(13px,.76vw,17px)}
+
+/* Hard readability floor: secondary information must remain legible at every viewport size. */
+body{font-size:clamp(16px,.9vw,21px)}
+.controls label,.populationControls>label,.trafficControls>label,.quadrantControls>label,.thematicControls label,
+.industryTree>summary span,.locationTree>summary span{font-size:clamp(16px,.82vw,19px)}
+select,.industryTree>summary strong,.locationTree>summary strong,
+.industryTreePanel summary,.industryTreePanel button,.locationTreePanel summary,.locationTreePanel button{font-size:clamp(17px,.9vw,21px)}
+.cardHead h2,.townMapCaption strong,.populationOdHead h2{font-size:clamp(20px,1.05vw,25px)}
+.cardHead p,.townMapCaption span,.populationOdHead p,.townToolbar span,.populationNote,.townNote{font-size:clamp(16px,.82vw,19px)}
+.mapHeadActions button,.mapHeadActions select,.mapTools button{font-size:clamp(16px,.84vw,20px)}
+.stats span,.stats small,.populationStats span,.populationStats small,.quadrantStats span,.quadrantStats small{font-size:clamp(16px,.84vw,20px)}
+.ranking b{font-size:clamp(16px,.82vw,19px)}.ranking strong{font-size:clamp(18px,.94vw,22px)}
+.ranking small{font-size:clamp(16px,.82vw,19px)}.ranking em{font-size:clamp(18px,.96vw,23px)}
+.detail>span,.populationDetail>span,.quadrantDetail>span,.detail p,.populationDetail>p,.quadrantDetail>p{font-size:clamp(16px,.84vw,20px)}
+.detail h4,.populationDetail h4,.quadrantDetail h4{font-size:clamp(20px,1vw,24px)}
+.detail section small,.detail div small,.populationDetail section small,.quadrantDetail section small,
+.detail .direction em,.quadrantDetail section em,.populationDrillAction small,.detail .townAction small{font-size:clamp(16px,.82vw,19px)}
+.populationDrillAction button,.detail .townAction button{font-size:clamp(17px,.9vw,21px)}
+.townSummary span,.townSummary small,.townTableHead,.populationOdTableHead{font-size:clamp(16px,.82vw,19px)}
+.townTable article>b,.populationOdTable>button>b{font-size:clamp(17px,.88vw,21px)}
+.townTable article strong,.populationOdTable>button strong{font-size:clamp(18px,.94vw,23px)}
+.townTable article small,.populationOdTable>button small{font-size:clamp(16px,.82vw,19px)}
+.townTable article>em,.populationOdTable>button>em,.populationOdTable>button>span{font-size:clamp(18px,.94vw,23px)}
+.populationPagination button,.populationPagination span{font-size:clamp(16px,.82vw,19px)}
+.thematicDetailPanel>div:first-child span,.selectedMetricDetail>div span,.selectedMetricDetail article small,
+.metricMethod article small,.metricMethod>div span,.thematicDetailPanel p,.selectedMetricDetail p,
+.selectedMetricDetail article em,.metricMethod p,.metricMethod>aside p,.landComposition span,.landComposition small,
+.lqPanel span,.poiBars span,.poiBars small{font-size:clamp(16px,.82vw,19px)}
+.landComposition strong,.lqPanel>strong,.lqPanel em,.poiBars em,.metricMethod article strong{font-size:clamp(18px,.94vw,22px)}
+.quadrantTypeGrid>button>span,.quadrantTypeGrid>button p,.quadrantTypeGrid>button small,
+.quadrantTypeHead p,.quadrantLegend,.quadrantLegend>small,.quadrantModelStrip span,.quadrantModelStrip small,
+.quadrantModelStrip p,.quadrantNote,.landTopicInsight p,.landTopicInsight header>small,
+.poiTopicInsight p,.poiInsightGrid small,.poiInsightGrid p,.poiTopicBars span,.poiTopicBars em,
+.poiTopicBars small,.poiTypeCard small,.poiTypeCard p{font-size:clamp(16px,.82vw,19px)}
+@media(max-width:700px){body{font-size:16px}}
+
+/* Land-use topic readability: keep every explanatory layer at the same legible scale. */
+.landTopics button>b{font-size:clamp(16px,.82vw,19px)}
+.landTopics button span{font-size:clamp(18px,.94vw,22px)}
+.landTopics button small{font-size:clamp(16px,.82vw,19px);line-height:1.5}
+.landTopicInsight header span{font-size:clamp(16px,.82vw,19px)}
+.landTopicInsight header h2{font-size:clamp(22px,1.14vw,27px)}
+.landTopicInsight header p,.landTopicInsight header>small{font-size:clamp(16px,.84vw,20px);line-height:1.65}
+.cityLandStack article>strong{font-size:clamp(17px,.88vw,21px)}
+.cityLandStack article>p{font-size:clamp(16px,.82vw,19px);line-height:1.5}
+.topicBars h3{font-size:clamp(18px,.94vw,22px)}
+.topicBars article span{font-size:clamp(16px,.84vw,20px)}
+.topicBars article strong{font-size:clamp(17px,.9vw,21px)}
+.landTypePanel article span,.landTypePanel article p,.landTypePanel>div span{font-size:clamp(16px,.82vw,19px);line-height:1.55}
+.landTypePanel article strong{font-size:clamp(20px,1.04vw,25px)}
+.landTypePanel>div b{font-size:clamp(19px,1vw,24px)}
+.metricMethod>aside b{font-size:clamp(17px,.88vw,21px)}
+
+/* Rebalance explanatory modules after the typography increase. */
+@media(min-width:1051px){
+  .landTopicInsight{grid-template-columns:clamp(340px,23vw,460px) minmax(0,1fr);gap:clamp(24px,1.8vw,38px)}
+  .poiTopicInsight{grid-template-columns:clamp(340px,23vw,460px) minmax(0,1fr)}
+  .thematicDetailPanel{grid-template-columns:clamp(320px,21vw,420px) minmax(360px,1.08fr) minmax(360px,1fr)}
+  .thematicDetailPanel.poiDetailPanel{grid-template-columns:clamp(320px,21vw,420px) minmax(0,1fr)}
+  .selectedMetricDetail{grid-template-columns:clamp(320px,21vw,420px) repeat(4,minmax(170px,1fr))}
+  .metricMethod{grid-template-columns:clamp(320px,21vw,420px) repeat(3,minmax(190px,1fr))}
+}

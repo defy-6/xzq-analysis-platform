@@ -21,9 +21,13 @@ async function appendLog(title, detail, type = "server") {
 
 await appendLog("开发服务器启动", "通过 pnpm web 启动本地可视化网站；网页开发日志开始实时更新。");
 
-const executable = path.join(root, "node_modules", ".bin", "vinext");
+// Windows 上 .bin 里的可执行入口是 vinext.cmd，且必须经 cmd.exe 启动；
+// macOS/Linux 上是无扩展名的 shell 脚本，可直接 spawn。
+const isWindows = process.platform === "win32";
+const executable = path.join(root, "node_modules", ".bin", isWindows ? "vinext.cmd" : "vinext");
 const child = spawn(executable, ["dev"], {
   cwd: root,
+  shell: isWindows,
   env: { ...process.env, WRANGLER_LOG_PATH: path.join(root, ".wrangler", "wrangler.log") },
   stdio: "inherit",
 });
