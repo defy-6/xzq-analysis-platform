@@ -694,3 +694,26 @@ main>.moduleTopRow{padding-top:6px}
 .moduleTopRow .locationTree>summary select,
 .quadrantControls>label select,
 .thematicControls>label select{appearance:none;-webkit-appearance:none;height:24px;line-height:24px;padding:0 2px;border:0;background:transparent}
+
+/* 下拉控件：自定义三角箭头（视觉等同原生）+ 文字贴左（无系统内边距空格） */
+.moduleTopRow label select,
+.moduleTopRow .industryTree>summary select,
+.moduleTopRow .locationTree>summary select,
+.quadrantControls>label select,
+.thematicControls>label select{
+  appearance:none;-webkit-appearance:none;-moz-appearance:none;
+  height:24px;line-height:24px;padding:0 20px 0 0;border:0;
+  background:transparent;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%2366736f' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 3px center;background-size:10px 6px;
+}
+/* 控件最小等高：切换控件类型（分类口径/行业口径/产业链）时行高恒定，右边控件文字位置不位移 */
+.moduleTopRow label,
+.moduleTopRow .industryTree>summary,
+.moduleTopRow .locationTree>summary,
+.quadrantControls>label,
+.quadrantControls .industryTree>summary,
+.thematicControls>label,
+.thematicControls .industryTree>summary,
+.thematicControls .locationTree>summary{min-height:60px}
+.moduleTopRow .chainSelector{min-height:62px}
