@@ -644,3 +644,11 @@ main>.moduleTopRow{padding-top:6px}
 .quadrantControls .locationTree>summary{padding-right:32px}
 .moduleTopRow .chainSelector small,
 .thematicControls .chainSelector small{margin-top:2px}
+
+/* 控件标签文字单行截断：长标签（如 POI 原始类别）换行会顶动下方值文字的位置 */
+.moduleTopRow .industryTree>summary span,
+.moduleTopRow .locationTree>summary span,
+.thematicControls .industryTree>summary span,
+.thematicControls .locationTree>summary span,
+.quadrantControls .industryTree>summary span,
+.quadrantControls .locationTree>summary span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
