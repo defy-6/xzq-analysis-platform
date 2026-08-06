@@ -27,7 +27,7 @@ import pandas as pd
 import statsmodels.api as sm
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[4]
 MODEL = ROOT / "data/processed/contact-quadrants/current-model/model-results.json"
 LAND = ROOT / "apps/web/public/data/land-use.json"
 POI = ROOT / "apps/web/public/data/public-services.json"

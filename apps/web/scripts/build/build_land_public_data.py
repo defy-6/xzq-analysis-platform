@@ -9,8 +9,8 @@ from pathlib import Path
 from openpyxl import load_workbook
 
 
-PLATFORM_ROOT = Path(__file__).resolve().parents[3]
-WEB_ROOT = Path(__file__).resolve().parents[1]
+PLATFORM_ROOT = Path(__file__).resolve().parents[4]
+WEB_ROOT = Path(__file__).resolve().parents[2]
 LAND_SOURCE = PLATFORM_ROOT / "data" / "raw" / "land-use" / "厦漳泉用地数据_整理成果.xlsx"
 POI_DETAIL_SOURCE = PLATFORM_ROOT / "data" / "raw" / "public-services" / "poi" / "厦漳泉POI.csv"
 DEMOGRAPHIC_SOURCE = PLATFORM_ROOT / "data" / "raw" / "demographics" / "厦漳泉都市圈区县常住人口与GDP.xlsx"

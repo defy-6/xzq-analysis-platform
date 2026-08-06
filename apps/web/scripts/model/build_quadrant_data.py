@@ -5,9 +5,9 @@ from datetime import datetime
 from pathlib import Path
 
 
-PLATFORM_ROOT = Path(__file__).resolve().parents[3]
+PLATFORM_ROOT = Path(__file__).resolve().parents[4]
 SOURCE = PLATFORM_ROOT / "data" / "processed" / "contact-quadrants" / "current-model" / "model-results.json"
-OUT = Path(__file__).resolve().parents[1] / "public" / "data" / "quadrant-analysis.json"
+OUT = Path(__file__).resolve().parents[2] / "public" / "data" / "quadrant-analysis.json"
 
 
 def main():

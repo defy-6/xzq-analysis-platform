@@ -9,13 +9,13 @@ from pathlib import Path
 import numpy as np
 
 
-PLATFORM_ROOT = Path(__file__).resolve().parents[3]
+PLATFORM_ROOT = Path(__file__).resolve().parents[4]
 MODEL_DIR = PLATFORM_ROOT / "data" / "processed" / "contact-quadrants" / "current-model"
 MODEL = MODEL_DIR / "model-results.json"
 BASELINE = MODEL_DIR / "baseline-straight-line-model-results.json"
-TRANSPORT = Path(__file__).resolve().parents[1] / "public" / "data" / "transport-accessibility.json"
-LAND_USE = Path(__file__).resolve().parents[1] / "public" / "data" / "land-use.json"
-PUBLIC_SERVICES = Path(__file__).resolve().parents[1] / "public" / "data" / "public-services.json"
+TRANSPORT = Path(__file__).resolve().parents[2] / "public" / "data" / "transport-accessibility.json"
+LAND_USE = Path(__file__).resolve().parents[2] / "public" / "data" / "land-use.json"
+PUBLIC_SERVICES = Path(__file__).resolve().parents[2] / "public" / "data" / "public-services.json"
 METRICS = ["population_flow", "branch", "investment", "patent"]
 # 用地/POI 扩展变量：仅加入企业三类子模型（人口流动子模型保持原口径，见诊断结论）
 EXTRA_METRICS = ["branch", "investment", "patent"]

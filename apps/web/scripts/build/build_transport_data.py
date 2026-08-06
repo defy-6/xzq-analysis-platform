@@ -8,14 +8,14 @@ from pathlib import Path
 from openpyxl import load_workbook
 
 
-PLATFORM_ROOT = Path(__file__).resolve().parents[3]
+PLATFORM_ROOT = Path(__file__).resolve().parents[4]
 SOURCE = PLATFORM_ROOT / "data" / "raw" / "transport" / "driving" / "county-government" / "厦漳泉区县政府所在地_OD.xlsx"
 TOWNSHIP_SOURCE = PLATFORM_ROOT / "data" / "raw" / "transport" / "driving" / "township-government" / "厦漳泉乡镇街政府经纬度_WGS84_OD_驾车结果.xlsx"
-POPULATION_INTERFACE = Path(__file__).resolve().parents[1] / "public" / "data" / "population-flow.json"
-TOWNSHIP_BOUNDARIES = Path(__file__).resolve().parents[1] / "public" / "data" / "township-boundaries.json"
-OUT = Path(__file__).resolve().parents[1] / "public" / "data" / "transport-accessibility.json"
-TOWNSHIP_OUT = Path(__file__).resolve().parents[1] / "public" / "data" / "transport-accessibility-township.json"
-CENTER_OUT = Path(__file__).resolve().parents[1] / "public" / "data" / "government-centers.json"
+POPULATION_INTERFACE = Path(__file__).resolve().parents[2] / "public" / "data" / "population-flow.json"
+TOWNSHIP_BOUNDARIES = Path(__file__).resolve().parents[2] / "public" / "data" / "township-boundaries.json"
+OUT = Path(__file__).resolve().parents[2] / "public" / "data" / "transport-accessibility.json"
+TOWNSHIP_OUT = Path(__file__).resolve().parents[2] / "public" / "data" / "transport-accessibility-township.json"
+CENTER_OUT = Path(__file__).resolve().parents[2] / "public" / "data" / "government-centers.json"
 
 
 def avg(values):

@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-const project=path.resolve(import.meta.dirname,"..");
+const project=path.resolve(import.meta.dirname,"../..");
 const platform=path.resolve(project,"../..");
 const sourceFile=path.join(project,"public/data/township-relations.json");
 const publicFile=path.join(project,"public/data/township-secondary-industry.json");

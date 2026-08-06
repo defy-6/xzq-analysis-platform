@@ -10,11 +10,11 @@ from pathlib import Path
 from openpyxl import load_workbook
 
 
-PLATFORM_ROOT = Path(__file__).resolve().parents[3]
+PLATFORM_ROOT = Path(__file__).resolve().parents[4]
 POPULATION_DIR = PLATFORM_ROOT / "data" / "raw" / "population"
 SOURCE_FILE = POPULATION_DIR / "厦漳泉乡镇级人口流动_汇总版.xlsx"
 GPKG = PLATFORM_ROOT / "data" / "raw" / "spatial" / "fujian.gpkg"
-OUT = Path(__file__).resolve().parents[1] / "public" / "data" / "population-flow.json"
+OUT = Path(__file__).resolve().parents[2] / "public" / "data" / "population-flow.json"
 CITY_CODES = {"3502": "厦门市", "3505": "泉州市", "3506": "漳州市"}
 CITIES = set(CITY_CODES.values())
 

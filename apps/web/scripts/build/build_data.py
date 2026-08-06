@@ -7,10 +7,10 @@ from decimal import Decimal
 from pathlib import Path
 from openpyxl import load_workbook
 
-PLATFORM_ROOT = Path(__file__).resolve().parents[3]
+PLATFORM_ROOT = Path(__file__).resolve().parents[4]
 SOURCE = PLATFORM_ROOT / "data" / "raw" / "enterprise"
 GPKG = PLATFORM_ROOT / "data" / "raw" / "spatial" / "fujian.gpkg"
-OUT = Path(__file__).resolve().parents[1] / "public" / "data"
+OUT = Path(__file__).resolve().parents[2] / "public" / "data"
 CITIES = {"厦门市", "漳州市", "泉州市"}
 CITY_CODES = {"3502": "厦门市", "3505": "泉州市", "3506": "漳州市"}
 COUNTY_UPDATES={"龙海市":"龙海区","长泰县":"长泰区"}
@@ -42,7 +42,7 @@ def append_dev_log(title, detail, event_type="data"):
     except (FileNotFoundError,json.JSONDecodeError):payload={"updatedAt":now,"entries":[]}
     payload["entries"]=(payload.get("entries",[])+[{"time":now,"type":event_type,"title":title,"detail":detail}])[-100:]
     payload["updatedAt"]=now;log_file.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding="utf-8")
-    markdown=Path(__file__).resolve().parents[1]/"开发日志.md"
+    markdown=Path(__file__).resolve().parents[2]/"开发日志.md"
     with markdown.open("a",encoding="utf-8") as fh:fh.write(f"\n- {now}｜{title}：{detail}\n")
 
 def txt(v): return "" if v is None else str(v).strip()
