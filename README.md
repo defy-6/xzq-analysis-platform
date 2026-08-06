@@ -37,6 +37,8 @@
 
 ## 环境要求
 
+> **首次将项目整体拷贝到新电脑（含原始数据）？请看 [docs/新电脑迁移指南.md](docs/新电脑迁移指南.md)。**
+
 - **Node.js >= 22.13**（https://nodejs.org/）
 - **pnpm**（`npm install -g pnpm`）
 - Git（Windows 建议安装 Git for Windows）
