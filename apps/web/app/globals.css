@@ -686,3 +686,11 @@ main>.moduleTopRow{padding-top:6px}
 .moduleTopRow .locationTree>summary strong,
 .quadrantControls select,
 .thematicControls select{text-align:left}
+
+/* 根因修复：select 去除系统外观，渲染高度与 strong（24px）精确一致，
+   消除 label 与树 summary 的高度差——切换分类口径时行高不变，右边控件文字位置不位移 */
+.moduleTopRow label select,
+.moduleTopRow .industryTree>summary select,
+.moduleTopRow .locationTree>summary select,
+.quadrantControls>label select,
+.thematicControls>label select{appearance:none;-webkit-appearance:none;height:24px;line-height:24px;padding:0 2px;border:0;background:transparent}
