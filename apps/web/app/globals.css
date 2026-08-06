@@ -717,3 +717,10 @@ main>.moduleTopRow{padding-top:6px}
 .thematicControls .industryTree>summary,
 .thematicControls .locationTree>summary{min-height:60px}
 .moduleTopRow .chainSelector{min-height:62px}
+
+/* 地图框完整进入首屏：高度 = 视口高度 - 顶部占用（header/一级导航/工具栏/stats ≈330px），
+   不再需要向下滚动才能看到完整地图框 */
+@media(min-width:1051px){
+  .enterpriseAnalysisStage .map,.mapFirstStage .populationMap,.mapFirstStage .thematicMap,.quadrantChart,.quadrantTypeMap{height:clamp(520px,calc(100vh - 330px),900px)}
+  .enterpriseAnalysisStage .ranking,.mapFirstStage .populationRanking .ranking,.quadrantRanking .ranking{max-height:calc(clamp(520px,calc(100vh - 330px),900px) + 64px)}
+}
