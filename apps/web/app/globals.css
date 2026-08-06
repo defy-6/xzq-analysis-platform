@@ -614,3 +614,14 @@ main>header h1{font-size:clamp(20px,1.35vw,27px);line-height:1.15}
 .landTopics button span{font-size:clamp(12px,.72vw,15px)}
 .landTopics button small{font-size:clamp(9px,.54vw,11px)}
 .quadrantControls select,.thematicControls select{margin-top:2px}
+
+/* 修复：企业关系模块的 moduleTopRow 直接挂 main 下，与人口/交通（模块内 padding-top:6px）对齐 */
+main>.moduleTopRow{padding-top:6px}
+
+/* 用地/公共服务：专题 tab（landTopics）与控件（thematicControls）合并一行，竖线分隔 */
+.moduleTopRow>.landTopics{flex:0 0 auto;width:min(540px,38%);margin-bottom:0;border-bottom:0;padding-bottom:0;align-content:start}
+.moduleTopRow>.thematicControls{flex:1;min-width:0;margin-bottom:0;border-left:1px solid #dfe7e2;padding-left:10px}
+@media(max-width:1100px){
+  .moduleTopRow>.landTopics{flex:1 1 100%;width:100%;border-bottom:1px solid #dfe7e2;padding-bottom:8px}
+  .moduleTopRow>.thematicControls{flex:1 1 100%;border-left:0;padding-left:0}
+}
