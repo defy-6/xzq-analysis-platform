@@ -78,7 +78,7 @@
 
 /* Top-level analysis modules */
 .moduleSwitch{display:flex;gap:8px;padding:14px 0 0}.moduleSwitch button{display:grid;gap:2px;min-width:170px;padding:10px 14px;border:1px solid #d8e1dc;border-radius:10px;background:#fff;color:#60716b;text-align:left;cursor:pointer}.moduleSwitch button span{font-size:13px;font-weight:750}.moduleSwitch button small{font-size:9px;color:#85918d}.moduleSwitch button.active{border-color:#285c4e;background:#173f38;color:#fff;box-shadow:0 7px 20px #173f3820}.moduleSwitch button.active small{color:#b8ccc6}
-.platformSwitch{display:grid;grid-template-columns:1.35fr repeat(2,1fr);gap:10px;padding:16px 0 0}.platformSwitch button{display:grid;gap:4px;padding:13px 16px;border:1px solid var(--line);border-radius:11px;background:#fff;color:#51665f;text-align:left}.platformSwitch button span{font-size:13px;font-weight:750}.platformSwitch button small{font-size:9px;color:#87938e}.platformSwitch button.active{border-color:#173f38;background:#173f38;color:#fff;box-shadow:0 8px 24px #173f3820}.platformSwitch button.active small{color:#b8cbc5}.platformSwitch button:disabled{opacity:.56}
+.platformSwitch{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:16px 0 0}.platformSwitch button{display:grid;gap:4px;padding:13px 16px;border:1px solid var(--line);border-radius:11px;background:#fff;color:#51665f;text-align:left}.platformSwitch button span{font-size:13px;font-weight:750}.platformSwitch button small{font-size:9px;color:#87938e}.platformSwitch button.active{border-color:#173f38;background:#173f38;color:#fff;box-shadow:0 8px 24px #173f3820}.platformSwitch button.active small{color:#b8cbc5}.platformSwitch button:disabled{opacity:.56}
 
 /* Population flow analysis */
 .populationModule{padding-top:16px}.populationLoading{min-height:580px;display:grid;place-items:center;color:#687872}
@@ -531,3 +531,30 @@ select,.industryTree>summary strong,.locationTree>summary strong,
   .selectedMetricDetail{grid-template-columns:clamp(320px,21vw,420px) repeat(4,minmax(170px,1fr))}
   .metricMethod{grid-template-columns:clamp(320px,21vw,420px) repeat(3,minmax(190px,1fr))}
 }
+
+/* Layout compaction: 压缩顶部纵向空间，让分析画布（地图）进入首屏。
+   覆盖此前多轮累积的宽松间距（后定义优先）。 */
+main{padding-top:12px}
+main>header{padding:0 4px 8px;align-items:flex-end}
+main>header h1{font-size:clamp(20px,1.35vw,27px);line-height:1.15}
+.eyebrow{font-size:clamp(8px,.5vw,10px);margin-bottom:3px;letter-spacing:.12em}
+.sub{margin-top:3px;font-size:clamp(11px,.66vw,13px)}
+.source strong{font-size:clamp(12px,.78vw,14px)}
+.source span,.source small{font-size:clamp(10px,.6vw,12px)}
+.platformSwitch{gap:8px;padding-top:8px}
+.platformSwitch button{gap:1px;padding:7px 11px}
+.platformSwitch button span{font-size:clamp(12px,.72vw,15px)}
+.platformSwitch button small{font-size:clamp(9px,.54vw,11px)}
+.moduleSwitch{gap:6px;padding-top:6px}
+.moduleSwitch button{min-width:112px;padding:6px 11px;gap:1px}
+.moduleSwitch button span{font-size:clamp(12px,.72vw,15px)}
+.moduleSwitch button small{font-size:clamp(9px,.54vw,11px)}
+.populationModule,.trafficModule,.thematicModule,.quadrantModule{padding-top:6px}
+.controls,.populationControls,.trafficControls,.quadrantControls,.thematicControls{margin-bottom:8px}
+.controls{padding:6px 0}
+.stats,.populationStats,.quadrantStats{margin-bottom:8px}
+.stats article,.populationStats article{min-height:86px;padding:13px 16px}
+.stats strong,.populationStats strong{font-size:clamp(24px,1.45vw,30px)}
+.landTopics{margin-bottom:8px}
+.enterpriseAnalysisStage,.mapFirstStage,.quadrantModule{padding-top:4px}
+@media(max-width:700px){.platformSwitch{grid-template-columns:1fr 1fr}.platformSwitch button{padding:8px 10px}}
