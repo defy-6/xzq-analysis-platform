@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { exportMapPng, numericLegend } from "../mapkit/map-export";
 import LocationTreePicker, { buildLocationTree } from "../contact-network/location-tree";
 import DynamicMapLabels, { MapLabelCandidate, mapDisplayName } from "../mapkit/map-labels";
@@ -22,7 +22,7 @@ const quantileBreaks=(values:number[])=>{const sorted=values.filter(Number.isFin
 const band=(value:number,breaks:number[])=>{if(!breaks.length||breaks.every(x=>x===breaks[0]))return 2;if(value<=breaks[0])return 0;if(value<=breaks[1])return 1;if(value<=breaks[2])return 2;if(value<=breaks[3])return 3;return 4};
 const geometryPath=(coordinates:any[],project:(point:[number,number])=>[number,number])=>coordinates.map((polygon:any)=>polygon.map((ring:any)=>ring.map((point:any,index:number)=>(index?"L":"M")+project(point).join(",")).join("")+"Z").join("")).join("");
 
-export default function TransportAccessibilityModule(){
+export default function TransportAccessibilityModule({toolbar}:{toolbar?:ReactNode}){
   const fujianBackdrop=useFujianBackdrop();
   const [data,setData]=useState<Payload|null>(null);
   const [level,setLevel]=useState<Level>("区县");
@@ -129,13 +129,13 @@ export default function TransportAccessibilityModule(){
   const activeProfile=performanceRows.some(row=>row.name===profileRegion)?profileRegion:(performanceRows[0]?.name||"");
 
   return <section className="trafficModule">
-    <section className="trafficControls">
+    <div className="moduleTopRow">{toolbar}<section className="trafficControls">
       <label>分析层级<select value={level} onChange={event=>{const next=event.target.value as Level;setLevel(next);if(next==="城市")setScope("跨市")}}><option value="城市">城市总体</option><option value="区县">区县政府驻地</option><option value="镇街">乡镇街政府驻地</option></select></label>
       <label>联系范围<select value={scope} onChange={event=>setScope(event.target.value as typeof scope)}><option value="全部">全部联系</option><option value="跨市">仅跨市联系</option><option value="市内">仅市内联系</option></select></label>
       <label>评价指标<select value={metric} onChange={event=>setMetric(event.target.value as Metric)}><option value="time">驾车时间</option><option value="distance">驾车距离</option><option value="toll">过路费</option></select></label>
       <LocationTreePicker label={`起点${level}`} level={level} value={origin} onChange={setOrigin} tree={tree} allLabel={`全部起点${level}`}/>
       <LocationTreePicker label={`终点${level}`} level={level} value={destination} onChange={setDestination} tree={tree} allLabel={`全部终点${level}`}/>
-    </section>
+    </section></div>
     <section className="mapFirstStage"><section className="populationStats trafficStats">
       <article><span>平均驾车时间</span><strong>{fmt(average("time"),1)}</strong><small>分钟 · 当前筛选</small></article>
       <article><span>平均驾车距离</span><strong>{fmt(average("distance"),1)}</strong><small>公里 · 当前筛选</small></article>

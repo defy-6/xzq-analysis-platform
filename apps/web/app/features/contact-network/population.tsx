@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { exportMapPng, numericLegend } from "../mapkit/map-export";
 import LocationTreePicker, { buildLocationTree } from "./location-tree";
 import DynamicMapLabels, { MapLabelCandidate, mapDisplayName } from "../mapkit/map-labels";
@@ -32,7 +32,7 @@ function geometryPath(coordinates:any[],project:(point:[number,number])=>[number
   return coordinates.map((polygon:any)=>polygon.map((ring:any)=>ring.map((point:any,index:number)=>(index?"L":"M")+project(point).join(",")).join("")+"Z").join("")).join("");
 }
 
-export default function PopulationModule(){
+export default function PopulationModule({toolbar}:{toolbar?:ReactNode}){
   const [data,setData]=useState<PopulationPayload|null>(null);
   const [governmentCenters,setGovernmentCenters]=useState<GovernmentCenters|null>(null);
   const fujianBackdrop=useFujianBackdrop();
@@ -196,12 +196,12 @@ export default function PopulationModule(){
   const activeProfile=performanceRows.some(row=>row.name===profileRegion)?profileRegion:(performanceRows[0]?.name||"");
 
   return <section className="populationModule">
-    <section className="populationControls">
+    <div className="moduleTopRow">{toolbar}<section className="populationControls">
       <label>分析层级<select value={level} onChange={event=>{const next=event.target.value as "城市"|"区县"|"镇街";setLevel(next);if(next==="城市")setScope("跨市");setOriginCounty("ALL");setDestinationCounty("ALL")}}><option>城市</option><option>区县</option><option>镇街</option></select></label>
       <label>联系范围<select value={scope} onChange={event=>setScope(event.target.value as "全部"|"跨市"|"市内")}><option value="全部">全部联系</option><option value="跨市">仅跨市联系</option><option value="市内">仅市内联系</option></select></label>
       <LocationTreePicker label={`起点${level}`} level={level} value={originCounty} onChange={setOriginCounty} tree={locationTree} allLabel={`全部起点${level}`}/>
       <LocationTreePicker label={`终点${level}`} level={level} value={destinationCounty} onChange={setDestinationCounty} tree={locationTree} allLabel={`全部终点${level}`}/>
-    </section>
+    </section></div>
     <section className="mapFirstStage"><section className="populationStats">
       <article><span>人口流量</span><strong>{fmt(totalPopulation)}</strong><small>人 · 当前筛选合计</small></article>
       <article><span>有效 OD</span><strong>{fmt(flows.length)}</strong><small>{level}方向</small></article>
