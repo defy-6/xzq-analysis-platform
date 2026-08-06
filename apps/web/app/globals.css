@@ -584,3 +584,33 @@ main>header h1{font-size:clamp(20px,1.35vw,27px);line-height:1.15}
 .moduleTopRow label .chainSelector small{font-size:clamp(10px,.6vw,12px)}
 .moduleTopRow select{margin-top:2px}
 .moduleTopRow .toggle{height:100%}
+
+/* 全板块统一排版：分割线、一级导航放大、控件字体与导航一致 */
+
+/* 1) 分割线：二级导航（moduleSwitch）与筛选控件之间；用地/公共服务的专题 tab 与控件之间 */
+.moduleTopRow>.moduleSwitch{border-right:1px solid #dfe7e2;padding-right:10px;margin-right:2px}
+.moduleTopRow>.populationControls,.moduleTopRow>.trafficControls,.moduleTopRow>.controls{padding-left:4px}
+.thematicModule>.landTopics{border-bottom:1px solid #dfe7e2;padding-bottom:8px}
+
+/* 2) 一级导航放大（比二级导航大一号，层级分明） */
+.platformSwitch button{padding:10px 15px}
+.platformSwitch button span{font-size:clamp(13.5px,.84vw,17px)}
+.platformSwitch button small{font-size:clamp(10px,.6vw,12.5px)}
+
+/* 3) 控件字体统一到全部板块（覆盖"可读性下限"对控件与专题 tab 的放大字号） */
+.quadrantControls>label,
+.thematicControls>label,
+.quadrantControls select,
+.thematicControls select,
+.quadrantControls .industryTree>summary span,
+.quadrantControls .industryTree>summary strong,
+.thematicControls .industryTree>summary span,
+.thematicControls .industryTree>summary strong,
+.thematicControls .locationTree>summary span,
+.thematicControls .locationTree>summary strong,
+.quadrantControls .toggle button,
+.thematicControls .toggle button,
+.landTopics button b,
+.landTopics button span{font-size:clamp(12px,.72vw,15px)}
+.landTopics button small{font-size:clamp(9px,.54vw,11px)}
+.quadrantControls select,.thematicControls select{margin-top:2px}
