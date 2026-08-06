@@ -30,8 +30,9 @@ url_ready() {
 
 # vinext 启动时会输出 Local 地址；端口 3000 被占用时它会自动改用下一端口，
 # 因此必须从本项目的日志解析真实地址，而不是写死 3000。
+# -a：日志可能含 NUL 等控制字符被 grep 判为二进制，导致输出 "Binary file ... matches" 而非 URL。
 platform_local_url() {
-  grep -Eo 'http://localhost:[0-9]+/' "$FRONTEND_LOG" 2>/dev/null | tail -n 1
+  grep -aEo 'http://localhost:[0-9]+/' "$FRONTEND_LOG" 2>/dev/null | tail -n 1
 }
 
 pause_before_exit() {
@@ -42,16 +43,32 @@ pause_before_exit() {
 }
 
 # 已在运行则直接打开浏览器（后台守护，窗口关闭后平台仍运行）
-if pgrep -f "scripts/start_web.mjs" >/dev/null 2>&1; then
-  URL="$(platform_local_url)"
-  if [[ -z "$URL" ]]; then
-    URL="http://localhost:3000/"
+# 判断依据：本项目记录在 PID 文件的进程存活且其工作目录为本项目 apps/web。
+# 不能用 pgrep -f "scripts/start_web.mjs"——其他项目（如城乡融合评估系统）也用
+# 同样的相对路径启动命令，会跨项目误判；同时解析出的地址须探测可达，否则视为
+# 残留进程，清理后重新启动。
+platform_pid="$(cat "$PID_FILE" 2>/dev/null || true)"
+running=""
+if [[ -n "$platform_pid" ]] && kill -0 "$platform_pid" 2>/dev/null; then
+  raw_cwd="$(lsof -a -p "$platform_pid" -d cwd -Fn 2>/dev/null | sed -n 's/^n//p')"
+  cwd="$(printf '%b' "$raw_cwd")"
+  if [[ "$cwd" == "$WEB_DIR" ]]; then
+    running=1
   fi
-  print "✓ 平台已在运行，直接打开：$URL"
-  open "$URL"
-  print ""
-  pause_before_exit
-  exit 0
+fi
+
+if [[ -n "$running" ]]; then
+  URL="$(platform_local_url)"
+  if [[ -n "$URL" ]] && url_ready "$URL"; then
+    print "✓ 平台已在运行，直接打开：$URL"
+    open "$URL"
+    print ""
+    pause_before_exit
+    exit 0
+  fi
+  print "⚠ 检测到平台进程但服务不可达，正在清理并重新启动……"
+  kill "$platform_pid" 2>/dev/null || true
+  /bin/sleep 1
 fi
 
 NPM_BIN="$(command -v npm 2>/dev/null || true)"
