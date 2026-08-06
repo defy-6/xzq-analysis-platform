@@ -72,8 +72,8 @@ function IndustryDonut({composition:compositions,relation,parent,onIndustrySelec
 }
 
 export default function Home(){
-  const [platformFeature,setPlatformFeature]=useState<"区域联系网络"|"用地分析"|"公共服务设施">("区域联系网络");
-  const [module,setModule]=useState<"企业关系"|"人口流动"|"交通可达性"|"联系象限">("人口流动");
+  const [platformFeature,setPlatformFeature]=useState<"区域联系网络"|"联系象限"|"用地分析"|"公共服务设施">("区域联系网络");
+  const [module,setModule]=useState<"企业关系"|"人口流动"|"交通可达性">("人口流动");
   const [data,setData]=useState<Payload|null>(null);
   const [governmentCenters,setGovernmentCenters]=useState<GovernmentCenters|null>(null);
   const fujianBackdrop=useFujianBackdrop();
@@ -158,13 +158,14 @@ export default function Home(){
     const m=new Map<string,Flow>();
     if(analysisLevel!=="镇街")for(const r of data.records){
       if(r[0]!==relation||!matchesIndustry(r[1],r[2]))continue;
-      if(analysisLevel==="城市"&&r[4]===r[6])continue;
       if((scope==="跨市"&&r[4]===r[6])||(scope==="市内"&&r[4]!==r[6]))continue;
       const originKey=analysisLevel==="城市"?r[4]:`${r[4]}|${r[5]}`,destinationKey=analysisLevel==="城市"?r[6]:`${r[6]}|${r[7]}`;
-      if(originLocation!=="ALL"&&originKey!==originLocation)continue;
-      if(destinationLocation!=="ALL"&&destinationKey!==destinationLocation)continue;
+      // 专利关系无向：数据仅按码位序存储单一方向，起终点筛选按“任一端包含”匹配。
+      if(originLocation!=="ALL"&&originKey!==originLocation&&(relation!=="专利"||destinationKey!==originLocation))continue;
+      if(destinationLocation!=="ALL"&&destinationKey!==destinationLocation&&(relation!=="专利"||originKey!==destinationLocation))continue;
       let oName=analysisLevel==="城市"?r[4]:r[5],dName=analysisLevel==="城市"?r[6]:r[7],oc=r[4],dc=r[6];
-      if(analysisLevel==="城市"&&relation==="专利"&&oName.localeCompare(dName,"zh-CN")>0){[oName,dName]=[dName,oName];[oc,dc]=[dc,oc]}
+      // 城市层级专利按码位序规范化方向，与数据生成方向（Python sorted）保持一致。
+      if(analysisLevel==="城市"&&relation==="专利"&&oName>dName){[oName,dName]=[dName,oName];[oc,dc]=[dc,oc]}
       const key=`${oName}${relation==="专利"?"—":"→"}${dName}`;
       const x=m.get(key)||{key,oc,o:oName,dc,d:dName,count:0,amount:0,amountCount:0,patents:0,pairs:0,maxPair:0,share:0,unmatched:0};
       x.count+=r[8];x.amount+=r[9];x.amountCount+=r[10];x.patents+=r[11]||0;x.pairs+=r[12]||0;x.maxPair=Math.max(x.maxPair,r[13]||0);x.share=Math.max(x.share,r[14]||0);x.unmatched+=r[15]||0;m.set(key,x);
@@ -172,8 +173,8 @@ export default function Home(){
       if(r[0]!==relation||!matchesIndustry(r[1],r[2]))continue;
       if((scope==="跨市"&&r[4]===r[7])||(scope==="市内"&&r[4]!==r[7]))continue;
       if(r[4]===r[7]&&r[5]===r[8]&&r[6]===r[9])continue;
-      if(originLocation!=="ALL"&&`${r[4]}|${r[5]}|${r[6]}`!==originLocation)continue;
-      if(destinationLocation!=="ALL"&&`${r[7]}|${r[8]}|${r[9]}`!==destinationLocation)continue;
+      if(originLocation!=="ALL"&&`${r[4]}|${r[5]}|${r[6]}`!==originLocation&&(relation!=="专利"||`${r[7]}|${r[8]}|${r[9]}`!==originLocation))continue;
+      if(destinationLocation!=="ALL"&&`${r[7]}|${r[8]}|${r[9]}`!==destinationLocation&&(relation!=="专利"||`${r[4]}|${r[5]}|${r[6]}`!==destinationLocation))continue;
       const key=`${r[4]}${r[5]}${r[6]}${relation==="专利"?"—":"→"}${r[7]}${r[8]}${r[9]}`;
       const x=m.get(key)||{key,oc:r[4],o:r[5],ot:r[6],dc:r[7],d:r[8],dt:r[9],count:0,amount:0,amountCount:0,patents:0,pairs:0,maxPair:0,share:0,unmatched:0};
       x.count+=r[10];x.amount+=r[11];x.amountCount+=r[12];x.patents+=r[13]||0;x.pairs+=r[14]||0;x.maxPair=Math.max(x.maxPair,r[15]||0);x.share=Math.max(x.share,r[16]||0);x.unmatched+=r[17]||0;m.set(key,x);
@@ -187,7 +188,7 @@ export default function Home(){
   const currentLegend=numericLegend(scale,currentBreaks,shown.map(x=>metric==="count"?x.count:x.amount),metricUnit,metric==="amount"?1:0);
   const strength=(value:number)=>strengthBand(value,currentBreaks);
   const lineWidths=[.65,1,1.45,2.2,3.4];
-  const reverseSelected=selected&&relation!=="专利"?flows.find(x=>x.o===selected.d&&x.d===selected.o&&(analysisLevel!=="镇街"||(x.ot===selected.dt&&x.dt===selected.ot))):null;
+  const reverseSelected=selected&&relation!=="专利"?flows.find(x=>x.key!==selected.key&&x.o===selected.d&&x.d===selected.o&&(analysisLevel!=="镇街"||(x.ot===selected.dt&&x.dt===selected.ot))):null;
   const openTown=async()=>{
     setTownOpen(true);setTownMetric(relation==="专利"?"count":metric);setTownLimit(30);setTownView({x:0,y:0,k:1});setTownError("");
     if(!selected)return;
@@ -372,18 +373,18 @@ export default function Home(){
   };
   const companyPanel=companyIndustry&&analysisLevel==="区县"&&relation!=="专利"?<section className="companyDetailPanel"><div className="companyDetailHead"><div><span>企业明细 · {companyIndustry.code}</span><h4>{companyIndustry.name}</h4></div><small>{companyLoading?"正在读取…":`共 ${fmt(companyRecords.length)} 组企业关系 · 按${relation==="投资"?"投资额":"分支注册资本"}降序`}</small></div>{!companyLoading&&(companyRecords.length?<div className="companyDetailList">{companyRecords.slice(0,100).map((record,index)=><article key={`${record.direction}-${record.o}-${record.d}-${index}`}><b>{String(index+1).padStart(2,"0")}</b><div><strong>{record.o}</strong><span>→ {record.d}</span><small>{record.direction}</small></div><em>{record.amount==null?"金额缺失":`${fmt(record.amount,2)} 万元`}</em></article>)}</div>:<p>当前区县双向关系中没有该行业的企业明细。</p>)}</section>:null;
   if(!data||!geo)return <main className="loading"><span>正在载入厦漳泉关系数据…</span></main>;
-  const headerTitle=platformFeature==="用地分析"?"厦漳泉用地结构分析":platformFeature==="公共服务设施"?"厦漳泉公共服务设施图谱":module==="企业关系"?"厦漳泉企业关系流动图谱":module==="人口流动"?"厦漳泉人口流动图谱":module==="交通可达性"?"厦漳泉交通可达性":"厦漳泉区县联系四象限";
-  const headerSubtitle=platformFeature==="用地分析"?"三市28区县开发强度、功能结构、混合度与区位熵比较":platformFeature==="公共服务设施"?"基于POI中类的区县设施数量、空间分布与结构比较":module==="企业关系"?"城市、区县与镇街三级投资、分支与专利协作网络 · 已排除区域内部关系":module==="人口流动"?"城市、区县与镇街三级人口流动方向、双向联系与净流动分析":module==="交通可达性"?"城市、区县与乡镇街三级政府驻地驾车时间、距离、过路费分析":"人口流动联系与企业联系相对引力预期的协同类型识别";
-  const headerStatus=platformFeature==="用地分析"?"单期横截面 · 28 个区县":platformFeature==="公共服务设施"?"230 个POI中类 · 28 个区县":module==="企业关系"?"3 类关系 · 28 个区县":module==="人口流动"?"人口流动 · 28 个区县":module==="交通可达性"?"驾车 OD · 区县与镇街":"四类象限 · 378 个区县对";
-  const headerNote=platformFeature==="用地分析"?"面积统一采用公顷":platformFeature==="公共服务设施"?"现行区县名称汇总":module==="企业关系"?`汇率基准 ${data.meta.baseline}`:module==="人口流动"?"行政区按源文件名称汇总":module==="交通可达性"?"区县756条 · 镇街108,570条有向OD":"优化引力模型 · 无向区县对";
+  const headerTitle=platformFeature==="用地分析"?"厦漳泉用地结构分析":platformFeature==="公共服务设施"?"厦漳泉公共服务设施图谱":platformFeature==="联系象限"?"厦漳泉区县联系四象限":module==="企业关系"?"厦漳泉企业关系流动图谱":module==="人口流动"?"厦漳泉人口流动图谱":"厦漳泉交通可达性";
+  const headerSubtitle=platformFeature==="用地分析"?"三市28区县开发强度、功能结构、混合度与区位熵比较":platformFeature==="公共服务设施"?"基于POI中类的区县设施数量、空间分布与结构比较":platformFeature==="联系象限"?"人口流动联系与企业联系相对引力预期的协同类型识别":module==="企业关系"?"城市、区县与镇街三级投资、分支与专利协作网络 · 已排除区域内部关系":module==="人口流动"?"城市、区县与镇街三级人口流动方向、双向联系与净流动分析":"城市、区县与乡镇街三级政府驻地驾车时间、距离、过路费分析";
+  const headerStatus=platformFeature==="用地分析"?"单期横截面 · 28 个区县":platformFeature==="公共服务设施"?"230 个POI中类 · 28 个区县":platformFeature==="联系象限"?"四类象限 · 378 个区县对":module==="企业关系"?"3 类关系 · 28 个区县":module==="人口流动"?"人口流动 · 28 个区县":"驾车 OD · 区县与镇街";
+  const headerNote=platformFeature==="用地分析"?"面积统一采用公顷":platformFeature==="公共服务设施"?"现行区县名称汇总":platformFeature==="联系象限"?"优化引力模型 · 无向区县对":module==="企业关系"?`汇率基准 ${data.meta.baseline}`:module==="人口流动"?"行政区按源文件名称汇总":"区县756条 · 镇街108,570条有向OD";
   const header=<header><div><p className="eyebrow">XIAMEN · ZHANGZHOU · QUANZHOU</p><h1>{headerTitle}</h1><p className="sub">{headerSubtitle}</p></div><div className="source"><div className="dataStatus"><span>数据状态</span><strong>{headerStatus}</strong><small>{headerNote}</small></div><details className="devLog"><summary><i/><span>开发日志</span><b>实时</b></summary><div className="devLogPanel"><div className="devLogHead"><div><strong>开发日志</strong><small>每 3 秒自动更新</small></div><time>{devLog?`更新于 ${fmtTime(devLog.updatedAt)}`:"正在读取…"}</time></div><div className="devLogList">{devLog&&[...devLog.entries].reverse().slice(0,10).map((entry,index)=><article key={`${entry.time}-${index}`} className={`log-${entry.type}`}><div><i/><time>{fmtTime(entry.time)}</time><em>{entry.type==="data"?"数据":entry.type==="server"?"服务":"功能"}</em></div><strong>{entry.title}</strong><p>{entry.detail}</p></article>)}</div><a href="/data/dev-log.json" target="_blank" rel="noreferrer">查看原始实时记录</a></div></details></div></header>;
-  const platformSwitch=<nav className="platformSwitch" aria-label="平台功能"><button className={platformFeature==="区域联系网络"?"active":""} onClick={()=>setPlatformFeature("区域联系网络")}><span>区域联系网络</span><small>企业 · 人口流动 · 交通 · 协同象限</small></button><button className={platformFeature==="用地分析"?"active":""} onClick={()=>setPlatformFeature("用地分析")}><span>用地分析</span><small>结构 · 强度 · 区位熵</small></button><button className={platformFeature==="公共服务设施"?"active":""} onClick={()=>setPlatformFeature("公共服务设施")}><span>公共服务设施</span><small>POI中类 · 区县比较</small></button></nav>;
-  const moduleSwitch=<nav className="moduleSwitch" aria-label="区域联系网络子模块"><button className={module==="人口流动"?"active":""} onClick={()=>setModule("人口流动")}><span>人口流动</span><small>城市 · 区县 · 镇街</small></button><button className={module==="企业关系"?"active":""} onClick={()=>setModule("企业关系")}><span>企业关系</span><small>投资 · 分支 · 专利</small></button><button className={module==="交通可达性"?"active":""} onClick={()=>setModule("交通可达性")}><span>交通可达性</span><small>城市 · 区县 · 镇街驾车 OD</small></button><button className={module==="联系象限"?"active":""} onClick={()=>setModule("联系象限")}><span>联系象限</span><small>人口流动 · 企业 · 协同</small></button></nav>;
+  const platformSwitch=<nav className="platformSwitch" aria-label="平台功能"><button className={platformFeature==="区域联系网络"?"active":""} onClick={()=>setPlatformFeature("区域联系网络")}><span>区域联系网络</span><small>企业 · 人口流动 · 交通</small></button><button className={platformFeature==="联系象限"?"active":""} onClick={()=>setPlatformFeature("联系象限")}><span>联系象限</span><small>引力模型 · 协同类型</small></button><button className={platformFeature==="用地分析"?"active":""} onClick={()=>setPlatformFeature("用地分析")}><span>用地分析</span><small>结构 · 强度 · 区位熵</small></button><button className={platformFeature==="公共服务设施"?"active":""} onClick={()=>setPlatformFeature("公共服务设施")}><span>公共服务设施</span><small>POI中类 · 区县比较</small></button></nav>;
+  const moduleSwitch=<nav className="moduleSwitch" aria-label="区域联系网络子模块"><button className={module==="人口流动"?"active":""} onClick={()=>setModule("人口流动")}><span>人口流动</span><small>城市 · 区县 · 镇街</small></button><button className={module==="企业关系"?"active":""} onClick={()=>setModule("企业关系")}><span>企业关系</span><small>投资 · 分支 · 专利</small></button><button className={module==="交通可达性"?"active":""} onClick={()=>setModule("交通可达性")}><span>交通可达性</span><small>城市 · 区县 · 镇街驾车 OD</small></button></nav>;
   if(platformFeature==="用地分析")return <main>{header}{platformSwitch}<LandUseModule/><footer><span>数据源：厦漳泉用地数据_整理成果.xlsx · 福建省 GeoPackage 行政边界</span><span>用地口径：单期横截面，面积统一采用公顷；未利用地不直接解释为可开发后备土地</span></footer></main>;
   if(platformFeature==="公共服务设施")return <main>{header}{platformSwitch}<PublicServicesModule/><footer><span>数据源：各区县各中类POI数量汇总.xlsx · 福建省 GeoPackage 行政边界</span><span>POI口径：历史区县名称合并为现行名称，仅保留厦门、漳州、泉州三市28个区县</span></footer></main>;
+  if(platformFeature==="联系象限")return <main>{header}{platformSwitch}<QuadrantModule/><footer><span>数据源：优化引力模型四象限成果 · 人口流动汇总版 · 企业三类关系 · 用地/POI扩展</span><span>象限口径：无向区县对；横轴人口流动联系残差，纵轴企业综合联系残差</span></footer></main>;
   if(module==="交通可达性")return <main>{header}{platformSwitch}{moduleSwitch}<TransportAccessibilityModule/><footer><span>数据源：厦漳泉区县及乡镇街政府驻地驾车 OD · 福建省 GeoPackage 行政边界</span><span>距离口径：有向地图保留实际方向；无向统计取两方向驾车里程算术平均值</span></footer></main>;
   if(module==="人口流动")return <main>{header}{platformSwitch}{moduleSwitch}<PopulationModule/><footer><span>数据源：厦漳泉乡镇级人口流动_汇总版.xlsx · 福建省 GeoPackage 行政边界</span><span>人口流动口径：不使用行政区代码，O/D 地市、区县和镇街均按源文件名称汇总</span></footer></main>;
-  if(module==="联系象限")return <main>{header}{platformSwitch}{moduleSwitch}<QuadrantModule/><footer><span>数据源：优化引力模型四象限成果 · 人口流动汇总版 · 企业三类关系</span><span>象限口径：无向区县对；横轴人口流动联系残差，纵轴企业综合联系残差</span></footer></main>;
   return <main>{header}{platformSwitch}{moduleSwitch}
     <section className="controls">
       <label>分析层级<select value={analysisLevel} onChange={e=>changeAnalysisLevel(e.target.value as "城市"|"区县"|"镇街")}><option>城市</option><option>区县</option><option>镇街</option></select></label>
@@ -409,7 +410,7 @@ export default function Home(){
               <g>{geo.paths.map(p=><path key={p.name} d={p.d} className="county"><title>{p.name}</title></path>)}</g>
               {analysisLevel==="镇街"&&<g>{geo.townPaths.map(path=><path key={`${path.city}-${path.county}-${path.town}`} d={path.d} className="enterpriseTownBoundary"><title>{path.city} · {path.county} · {path.town}</title></path>)}</g>}
               {analysisLevel==="镇街"&&<g>{geo.paths.map(path=><path key={`town-county-overlay-${path.name}`} d={path.d} className="townshipCountyOverlay"/>)}</g>}
-              <g>{renderFlows.map(x=>{const a=mainCenter(x,"o"),b=mainCenter(x,"d");if(!a||!b)return null;const val=metric==="count"?x.count:x.amount,dx=b[0]-a[0],dy=b[1]-a[1],len=Math.max(1,Math.hypot(dx,dy)),bend=Math.min(52,Math.max(18,len*.16));const mx=(a[0]+b[0])/2-dy/len*bend,my=(a[1]+b[1])/2+dx/len*bend,d=`M${a} Q${mx},${my} ${b}`,band=strength(val),width=lineWidths[band];return <g key={x.key} onPointerDown={e=>e.stopPropagation()} onClick={()=>setSelected(x)}><path d={d} className="flowHit" style={{strokeWidth:width+9}}/><path d={d} className="flow" markerEnd={relation==="专利"?undefined:"url(#flowArrow)"} style={{stroke:scale[band],strokeWidth:width,opacity:.48+band*.1}}><title>{x.key}：{metric==="count"?fmt(x.count)+"条":fmt(x.amount,2)+"万元"}</title></path></g>})}</g>
+              <g>{renderFlows.map(x=>{const a=mainCenter(x,"o"),b=mainCenter(x,"d");if(!a||!b)return null;const val=metric==="count"?x.count:x.amount,dx=b[0]-a[0],dy=b[1]-a[1];let d;if(dx===0&&dy===0){d=`M${a[0]},${a[1]} C${a[0]+26},${a[1]-38} ${a[0]+34},${a[1]+14} ${a[0]+10},${a[1]+4}`}else{const len=Math.max(1,Math.hypot(dx,dy)),bend=Math.min(52,Math.max(18,len*.16));const mx=(a[0]+b[0])/2-dy/len*bend,my=(a[1]+b[1])/2+dx/len*bend;d=`M${a} Q${mx},${my} ${b}`}const band=strength(val),width=lineWidths[band];return <g key={x.key} onPointerDown={e=>e.stopPropagation()} onClick={()=>setSelected(x)}><path d={d} className="flowHit" style={{strokeWidth:width+9}}/><path d={d} className="flow" markerEnd={relation==="专利"?undefined:"url(#flowArrow)"} style={{stroke:scale[band],strokeWidth:width,opacity:.48+band*.1}}><title>{x.key}：{metric==="count"?fmt(x.count)+"条":fmt(x.amount,2)+"万元"}</title></path></g>})}</g>
               <DynamicMapLabels candidates={mainLabelCandidates} view={view} baseLimit={analysisLevel==="镇街"?10:17}/>
             </g>
           </svg>

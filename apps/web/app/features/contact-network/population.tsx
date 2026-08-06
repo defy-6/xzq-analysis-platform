@@ -83,7 +83,7 @@ export default function PopulationModule(){
     if(!data)return [];
     if(level==="城市"){
       const grouped=new Map<string,PopulationFlow>();
-      for(const record of data.countyRecords){if(record[0]===record[2])continue;const key=`${record[0]}→${record[2]}`,current=grouped.get(key)||{key,oc:record[0],o:record[0],ot:"",dc:record[2],d:record[2],dt:"",population:0,rows:0};current.population+=record[4];current.rows+=record[5];grouped.set(key,current)}
+      for(const record of data.countyRecords){const key=`${record[0]}→${record[2]}`,current=grouped.get(key)||{key,oc:record[0],o:record[0],ot:"",dc:record[2],d:record[2],dt:"",population:0,rows:0};current.population+=record[4];current.rows+=record[5];grouped.set(key,current)}
       return [...grouped.values()];
     }
     if(level==="区县")return data.countyRecords.map(record=>({key:`${record[0]}|${record[1]}→${record[2]}|${record[3]}`,oc:record[0],o:record[1],ot:"",dc:record[2],d:record[3],dt:"",population:record[4],rows:record[5]}));
@@ -104,7 +104,7 @@ export default function PopulationModule(){
   const legend=numericLegend(colors,breaks,shown.map(flow=>flow.population),"人");
   const totalPopulation=flows.reduce((sum,flow)=>sum+flow.population,0);
   const crossCityPopulation=flows.reduce((sum,flow)=>sum+(flow.oc!==flow.dc?flow.population:0),0);
-  const reverseSelected=selected?allFlows.find(flow=>flow.oc===selected.dc&&flow.o===selected.d&&flow.ot===selected.dt&&flow.dc===selected.oc&&flow.d===selected.o&&flow.dt===selected.ot):null;
+  const reverseSelected=selected?allFlows.find(flow=>flow.key!==selected.key&&flow.oc===selected.dc&&flow.o===selected.d&&flow.ot===selected.dt&&flow.dc===selected.oc&&flow.d===selected.o&&flow.dt===selected.ot):null;
   const pageSize=50;
   const listPageCount=Math.max(1,Math.ceil(flows.length/pageSize));
   const currentListPage=Math.min(listPage,listPageCount);
@@ -218,7 +218,7 @@ export default function PopulationModule(){
               <g>{mapGeometry.counties.map(feature=><path key={feature.code} d={feature.d} className="populationCounty"><title>{feature.city} · {feature.name}</title></path>)}</g>
               {level==="镇街"&&<g>{mapGeometry.towns.map(feature=><path key={`${feature.city}-${feature.county}-${feature.town}`} d={feature.d} className="populationTown"><title>{feature.city} · {feature.county} · {feature.town}</title></path>)}</g>}
               {level==="镇街"&&<g>{mapGeometry.counties.map(feature=><path key={`town-county-overlay-${feature.code}`} d={feature.d} className="townshipCountyOverlay"/>)}</g>}
-              <g>{renderFlows.map(flow=>{const start=centerFor(flow,"o"),end=centerFor(flow,"d");if(!start||!end)return null;const band=strengthBand(flow.population,breaks),dx=end[0]-start[0],dy=end[1]-start[1],length=Math.max(1,Math.hypot(dx,dy)),bend=Math.min(46,Math.max(13,length*.13)),middleX=(start[0]+end[0])/2-dy/length*bend,middleY=(start[1]+end[1])/2+dx/length*bend,d=`M${start} Q${middleX},${middleY} ${end}`,width=[.55,.85,1.25,1.8,2.8][band];return <g key={flow.key} onPointerDown={event=>event.stopPropagation()} onClick={()=>setSelected(flow)}><path d={d} className="populationFlowHit" style={{strokeWidth:width+9}}/><path d={d} className="populationFlow" markerEnd="url(#populationArrow)" style={{stroke:colors[band],strokeWidth:width,opacity:.5+band*.1}}><title>{endpointLabel(flow,"o")} → {endpointLabel(flow,"d")}：{fmt(flow.population)}人</title></path></g>})}</g>
+              <g>{renderFlows.map(flow=>{const start=centerFor(flow,"o"),end=centerFor(flow,"d");if(!start||!end)return null;const band=strengthBand(flow.population,breaks),dx=end[0]-start[0],dy=end[1]-start[1];let d;if(dx===0&&dy===0){d=`M${start[0]},${start[1]} C${start[0]+26},${start[1]-38} ${start[0]+34},${start[1]+14} ${start[0]+10},${start[1]+4}`}else{const length=Math.max(1,Math.hypot(dx,dy)),bend=Math.min(46,Math.max(13,length*.13)),middleX=(start[0]+end[0])/2-dy/length*bend,middleY=(start[1]+end[1])/2+dx/length*bend;d=`M${start} Q${middleX},${middleY} ${end}`}const width=[.55,.85,1.25,1.8,2.8][band];return <g key={flow.key} onPointerDown={event=>event.stopPropagation()} onClick={()=>setSelected(flow)}><path d={d} className="populationFlowHit" style={{strokeWidth:width+9}}/><path d={d} className="populationFlow" markerEnd="url(#populationArrow)" style={{stroke:colors[band],strokeWidth:width,opacity:.5+band*.1}}><title>{endpointLabel(flow,"o")} → {endpointLabel(flow,"d")}：{fmt(flow.population)}人</title></path></g>})}</g>
               <DynamicMapLabels candidates={labelCandidates} view={view} baseLimit={level==="镇街"?10:16}/>
             </g>
           </svg>

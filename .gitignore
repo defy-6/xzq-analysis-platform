@@ -36,3 +36,10 @@
 # Large source datasets remain local; generated web interfaces are versioned.
 data/raw/
 
+
+# Python caches
+**/__pycache__/
+*.pyc
+
+# Runtime state
+运行日志/*.pid
