@@ -724,3 +724,9 @@ main>.moduleTopRow{padding-top:6px}
   .enterpriseAnalysisStage .map,.mapFirstStage .populationMap,.mapFirstStage .thematicMap,.quadrantChart,.quadrantTypeMap{height:clamp(520px,calc(100vh - 330px),900px)}
   .enterpriseAnalysisStage .ranking,.mapFirstStage .populationRanking .ranking,.quadrantRanking .ranking{max-height:calc(clamp(520px,calc(100vh - 330px),900px) + 64px)}
 }
+
+/* 默认地图再放大 10%（在首屏完整基础上） */
+@media(min-width:1051px){
+  .enterpriseAnalysisStage .map,.mapFirstStage .populationMap,.mapFirstStage .thematicMap,.quadrantChart,.quadrantTypeMap{height:clamp(570px,calc((100vh - 330px) * 1.1),990px)}
+  .enterpriseAnalysisStage .ranking,.mapFirstStage .populationRanking .ranking,.quadrantRanking .ranking{max-height:calc(clamp(570px,calc((100vh - 330px) * 1.1),990px) + 64px)}
+}
