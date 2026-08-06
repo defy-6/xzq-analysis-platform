@@ -71,11 +71,19 @@ if (-not $node) {
   exit 1
 }
 
+# 包管理器检查：统一使用 pnpm（与仓库锁文件 pnpm-lock.yaml 一致）
+$pnpm = Get-Command pnpm -ErrorAction SilentlyContinue
+if (-not $pnpm) {
+  Write-Host "X  未找到 pnpm，请先安装：npm install -g pnpm"
+  Write-Host ""
+  exit 1
+}
+
 # 首次运行或依赖缺失时安装前端依赖
 if (-not (Test-Path (Join-Path $WebDir 'node_modules\.bin\vinext.cmd'))) {
   Write-Host "o  首次运行，正在安装前端依赖……"
   Push-Location $WebDir
-  & npm install 2>&1 | Out-File -Append -Encoding utf8 $FrontendLog
+  & $pnpm.Source install 2>&1 | Out-File -Append -Encoding utf8 $FrontendLog
   $installExit = $LASTEXITCODE
   Pop-Location
   if ($installExit -ne 0) {

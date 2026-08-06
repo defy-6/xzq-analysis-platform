@@ -12,8 +12,13 @@ LOG_DIR="$PROJECT_DIR/运行日志"
 FRONTEND_LOG="$LOG_DIR/frontend.log"
 PID_FILE="$LOG_DIR/frontend.pid"
 
-NODE_DIR="/Users/defy/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin"
-export PATH="$NODE_DIR:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+# 优先使用系统 Node.js；仅在系统缺失时回退到旧版本地缓存路径
+NODE_BIN="$(command -v node 2>/dev/null || true)"
+if [[ -z "$NODE_BIN" ]] && [[ -x "/Users/defy/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node" ]]; then
+  NODE_BIN="/Users/defy/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
+  export PATH="$(dirname "$NODE_BIN"):$PATH"
+fi
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 
 mkdir -p "$LOG_DIR"
 
@@ -71,9 +76,9 @@ if [[ -n "$running" ]]; then
   /bin/sleep 1
 fi
 
-NPM_BIN="$(command -v npm 2>/dev/null || true)"
-if [[ -z "$NPM_BIN" ]]; then
-  print "✗ 未找到 Node.js/npm，无法启动平台。"
+PNPM_BIN="$(command -v pnpm 2>/dev/null || true)"
+if [[ -z "$PNPM_BIN" ]]; then
+  print "✗ 未找到 pnpm，无法启动平台。请先安装：npm install -g pnpm"
   print ""
   pause_before_exit
   exit 1
@@ -82,7 +87,7 @@ fi
 # 首次运行或依赖缺失时安装前端依赖
 if [[ ! -x "$WEB_DIR/node_modules/.bin/vinext" ]]; then
   print "• 首次运行，正在安装前端依赖……"
-  (cd "$WEB_DIR" && "$NPM_BIN" install) >>"$FRONTEND_LOG" 2>&1
+  (cd "$WEB_DIR" && "$PNPM_BIN" install) >>"$FRONTEND_LOG" 2>&1
   if [[ $? -ne 0 ]]; then
     print "✗ 前端依赖安装失败，请查看：$FRONTEND_LOG"
     print ""
@@ -94,7 +99,7 @@ fi
 # 启动平台（后台守护，日志落盘）
 print "• 正在启动平台……"
 cd "$WEB_DIR" || exit 1
-nohup "$NODE_DIR/node" scripts/start_web.mjs >>"$FRONTEND_LOG" 2>&1 &
+nohup "$NODE_BIN" scripts/start_web.mjs >>"$FRONTEND_LOG" 2>&1 &
 print -r -- "$!" >"$PID_FILE"
 
 # 等待服务就绪：从日志解析真实地址并探测

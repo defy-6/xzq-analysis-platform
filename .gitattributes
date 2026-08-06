@@ -1,0 +1,23 @@
+# 统一换行符：所有文本文件以 LF 存储与检出，避免跨平台协作产生换行符 diff
+* text=auto eol=lf
+
+# Windows 批处理检出为 CRLF（cmd 对 LF-only .bat 的 GOTO/label 处理有历史问题）
+*.bat text eol=crlf
+
+# 二进制文件（按内容检测，防止被误当作文本转换换行符）
+*.docx binary
+*.xlsx binary
+*.pptx binary
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.zip binary
+*.gz binary
+*.sqlite binary
+*.db binary
