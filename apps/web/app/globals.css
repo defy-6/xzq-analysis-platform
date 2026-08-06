@@ -652,3 +652,22 @@ main>.moduleTopRow{padding-top:6px}
 .thematicControls .locationTree>summary span,
 .quadrantControls .industryTree>summary span,
 .quadrantControls .locationTree>summary span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* 控件内部统一为双行 grid（标签行 + 值行），值高度固定一致：
+   消除 label(flex) 与 树 summary(grid) 的结构差异，切换控件类型时上下位置不变 */
+.moduleTopRow label,
+.quadrantControls>label,
+.thematicControls>label{display:grid;gap:2px;align-content:center}
+.moduleTopRow label select,
+.quadrantControls>label select,
+.thematicControls>label select,
+.moduleTopRow .industryTree>summary strong,
+.moduleTopRow .locationTree>summary strong,
+.thematicControls .industryTree>summary strong,
+.thematicControls .locationTree>summary strong,
+.quadrantControls .industryTree>summary strong,
+.quadrantControls .locationTree>summary strong{height:24px;line-height:24px;margin-top:0}
+.moduleTopRow .industryTree>summary,
+.moduleTopRow .locationTree>summary,
+.thematicControls .industryTree>summary,
+.thematicControls .locationTree>summary{align-content:center}
