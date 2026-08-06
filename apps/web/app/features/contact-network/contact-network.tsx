@@ -298,7 +298,7 @@ export default function Home(){
   const geo=useMemo(()=>{
     if(!data)return null;const pts:any[]=[];
     data.boundaries.features.forEach(f=>f.geometry.coordinates.flat(2).forEach((p:any)=>pts.push(p)));
-    const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys),centerX=(minX+maxX)/2,centerY=(minY+maxY)/2,cosLatitude=Math.cos(centerY*Math.PI/180),xSpan=Math.max((maxX-minX)*cosLatitude,.0001),ySpan=Math.max(maxY-minY,.0001),mapScale=Math.min(850/xSpan,520/ySpan);
+    const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys),centerX=(minX+maxX)/2,centerY=(minY+maxY)/2,cosLatitude=Math.cos(centerY*Math.PI/180),xSpan=Math.max((maxX-minX)*cosLatitude,.0001),ySpan=Math.max(maxY-minY,.0001),mapScale=Math.min(820/xSpan,500/ySpan)/1.08;
     const project=(p:[number,number]):[number,number]=>[450+(p[0]-centerX)*cosLatitude*mapScale,300-(p[1]-centerY)*mapScale];
     const paths=data.boundaries.features.map(f=>({
       name:f.properties.name,
