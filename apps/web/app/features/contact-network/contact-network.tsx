@@ -105,7 +105,7 @@ export default function Home(){
   const [townError,setTownError]=useState("");
   const [townMetric,setTownMetric]=useState<"count"|"amount">("count");
   const [townLimit,setTownLimit]=useState(30);
-  const [view,setView]=useState({x:0,y:0,k:1});
+  const [view,setView]=useState({x:0,y:0,k:1.1});
   const [townView,setTownView]=useState({x:0,y:0,k:1});
   const mapRef=useRef<SVGSVGElement|null>(null);
   const townMapRef=useRef<SVGSVGElement|null>(null);
@@ -124,7 +124,7 @@ export default function Home(){
   useEffect(()=>{setCompanyIndustry(null);setCompanyRecords([])},[selected?.key,analysisLevel,relation]);
   useEffect(()=>setTownOpen(false),[selected?.key,relation,industry.level,industry.code,industryMode,chainId,scope]);
   const changeAnalysisLevel=async(level:"城市"|"区县"|"镇街")=>{
-    setAnalysisLevel(level);if(level==="城市")setScope("跨市");setOriginLocation("ALL");setDestinationLocation("ALL");setSelected(null);setTownOpen(false);setView({x:0,y:0,k:1});setDirectTownError("");
+    setAnalysisLevel(level);if(level==="城市")setScope("跨市");setOriginLocation("ALL");setDestinationLocation("ALL");setSelected(null);setTownOpen(false);setView({x:0,y:0,k:1.1});setDirectTownError("");
     if(level!=="镇街"||allTownData)return;
     setDirectTownLoading(true);
     try{
@@ -298,8 +298,8 @@ export default function Home(){
   const geo=useMemo(()=>{
     if(!data)return null;const pts:any[]=[];
     data.boundaries.features.forEach(f=>f.geometry.coordinates.flat(2).forEach((p:any)=>pts.push(p)));
-    const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys),centerX=(minX+maxX)/2,centerY=(minY+maxY)/2,cosLatitude=Math.cos(centerY*Math.PI/180),xSpan=Math.max((maxX-minX)*cosLatitude,.0001),ySpan=Math.max(maxY-minY,.0001),mapScale=Math.min(850/xSpan,548/ySpan);
-    const project=(p:[number,number]):[number,number]=>[450+(p[0]-centerX)*cosLatitude*mapScale,282-(p[1]-centerY)*mapScale];
+    const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys),centerX=(minX+maxX)/2,centerY=(minY+maxY)/2,cosLatitude=Math.cos(centerY*Math.PI/180),xSpan=Math.max((maxX-minX)*cosLatitude,.0001),ySpan=Math.max(maxY-minY,.0001),mapScale=Math.min(850/xSpan,520/ySpan);
+    const project=(p:[number,number]):[number,number]=>[450+(p[0]-centerX)*cosLatitude*mapScale,300-(p[1]-centerY)*mapScale];
     const paths=data.boundaries.features.map(f=>({
       name:f.properties.name,
       d:f.geometry.coordinates
@@ -416,7 +416,7 @@ export default function Home(){
           </svg>
           {analysisLevel==="镇街"&&directTownLoading&&<div className="enterpriseTownState">正在载入全量镇街关系与边界…</div>}
           {analysisLevel==="镇街"&&directTownError&&<div className="enterpriseTownState error">{directTownError}</div>}
-          <div className="mapTools"><button onClick={()=>zoom(1.25)} aria-label="放大地图">＋</button><button onClick={()=>zoom(.8)} aria-label="缩小地图">－</button><button onClick={()=>setView({x:0,y:0,k:1})} aria-label="重置地图">复位</button></div>
+          <div className="mapTools"><button onClick={()=>zoom(1.25)} aria-label="放大地图">＋</button><button onClick={()=>zoom(.8)} aria-label="缩小地图">－</button><button onClick={()=>setView({x:0,y:0,k:1.1})} aria-label="重置地图">复位</button></div>
           <span className="mapHint">滚轮缩放 · 按住拖动</span>
         </div>
         <div className="legend numericLegend"><span>{metric==="count"?"关系数量":"金额"}分级</span>{currentLegend.map(item=><span className="legendItem" key={`${item.color}-${item.label}`}><i style={{background:item.color}}/>{item.label}</span>)}</div>

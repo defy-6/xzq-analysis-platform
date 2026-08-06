@@ -37,15 +37,15 @@ export default function TransportAccessibilityModule({toolbar}:{toolbar?:ReactNo
   const [drillLimit,setDrillLimit]=useState(30);
   const [drillData,setDrillData]=useState<Payload|null>(null);
   const [drillLoading,setDrillLoading]=useState(false);
-  const [view,setView]=useState({x:0,y:0,k:1});
+  const [view,setView]=useState({x:0,y:0,k:1.1});
   const [drillView,setDrillView]=useState({x:0,y:0,k:1});
   const mapRef=useRef<SVGSVGElement|null>(null);
   const drag=useRef<{x:number;y:number;vx:number;vy:number}|null>(null);
   const drillMapRef=useRef<SVGSVGElement|null>(null);
   const drillDrag=useRef<{x:number;y:number;vx:number;vy:number}|null>(null);
   useEffect(()=>{setData(null);fetch(level==="镇街"?"/data/transport-accessibility-township.json":"/data/transport-accessibility.json").then(response=>response.json()).then(setData)},[level]);
-  useEffect(()=>{setOrigin("ALL");setDestination("ALL");setSelected(null);setView({x:0,y:0,k:1});setLimit(30)},[level]);
-  useEffect(()=>{setSelected(null);setDrillOpen(false);setView({x:0,y:0,k:1})},[scope,metric,origin,destination]);
+  useEffect(()=>{setOrigin("ALL");setDestination("ALL");setSelected(null);setView({x:0,y:0,k:1.1});setLimit(30)},[level]);
+  useEffect(()=>{setSelected(null);setDrillOpen(false);setView({x:0,y:0,k:1.1})},[scope,metric,origin,destination]);
 
   const openDrill=async()=>{setDrillOpen(true);setDrillLimit(30);setDrillView({x:0,y:0,k:1});if(drillData||drillLoading)return;setDrillLoading(true);try{const response=await fetch("/data/transport-accessibility-township.json");setDrillData(await response.json())}finally{setDrillLoading(false)}};
 
@@ -151,7 +151,7 @@ export default function TransportAccessibilityModule({toolbar}:{toolbar?:ReactNo
           {level==="镇街"&&<g>{geometry.counties.map(feature=><path key={`town-county-overlay-${feature.key}`} d={feature.d} className="townshipCountyOverlay"/>)}</g>}
           <g>{renderFlows.map(flow=>{const startKey=`${flow.oc}|${flow.oCounty}${level==="镇街"?`|${flow.o}`:""}`,endKey=`${flow.dc}|${flow.dCounty}${level==="镇街"?`|${flow.d}`:""}`,start=geometry.centers[startKey],end=geometry.centers[endKey];if(!start||!end)return null;const grade=band(valueFor(flow),breaks),dx=end[0]-start[0],dy=end[1]-start[1];let d;if(dx===0&&dy===0){d=`M${start[0]},${start[1]} C${start[0]+26},${start[1]-38} ${start[0]+34},${start[1]+14} ${start[0]+10},${start[1]+4}`}else{const length=Math.max(1,Math.hypot(dx,dy)),bend=Math.min(42,Math.max(12,length*.12)),mx=(start[0]+end[0])/2-dy/length*bend,my=(start[1]+end[1])/2+dx/length*bend;d=`M${start} Q${mx},${my} ${end}`}return <g key={flow.key} onPointerDown={event=>event.stopPropagation()} onClick={()=>setSelected(flow)}><path d={d} className="populationFlowHit" style={{strokeWidth:10}}/><path d={d} className="populationFlow" markerEnd="url(#trafficArrow)" style={{stroke:colors[grade],strokeWidth:[2.5,2,1.55,1.15,.8][grade],opacity:.82}}><title>{flow.o} → {flow.d}：{fmt(valueFor(flow),1)} {unit}</title></path></g>})}</g>
           <DynamicMapLabels candidates={labelCandidates} view={view} baseLimit={level==="镇街"?10:16}/></g>
-        </svg><div className="mapTools"><button onClick={()=>zoom(1.25)}>＋</button><button onClick={()=>zoom(.8)}>－</button><button onClick={()=>setView({x:0,y:0,k:1})}>复位</button></div><span className="mapHint">滚轮缩放 · 按住拖动</span></div>
+        </svg><div className="mapTools"><button onClick={()=>zoom(1.25)}>＋</button><button onClick={()=>zoom(.8)}>－</button><button onClick={()=>setView({x:0,y:0,k:1.1})}>复位</button></div><span className="mapHint">滚轮缩放 · 按住拖动</span></div>
         <div className="populationLegend numericLegend"><strong>{metricName}分级</strong>{legend.map(item=><span className="legendItem" key={item.label}><i style={{background:item.color}}/>{item.label}</span>)}</div>
       </div>
       <aside className="populationRanking"><div className="cardHead"><div><h2>{metricName}排名</h2><p>数值越低，可达性越好</p></div></div><div className="ranking">{shown.slice(0,12).map((flow,index)=><button key={flow.key} onClick={()=>setSelected(flow)}><b>{String(index+1).padStart(2,"0")}</b><span><strong>{mapDisplayName(flow.o)} → {mapDisplayName(flow.d)}</strong><small>{level==="镇街"?`${flow.oCounty} · ${flow.dCounty}`:`${flow.oc} · ${flow.dc}`}</small></span><em>{fmt(valueFor(flow),1)}</em></button>)}</div></aside>

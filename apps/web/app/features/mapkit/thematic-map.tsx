@@ -12,7 +12,7 @@ const band=(value:number,breaks:number[])=>{if(!breaks.length||breaks.every(item
 const geometryPath=(coordinates:any[],project:(point:[number,number])=>[number,number])=>coordinates.map((polygon:any)=>polygon.map((ring:any)=>ring.map((point:any,index:number)=>(index?"L":"M")+project(point).join(",")).join("")+"Z").join("")).join("");
 
 export default function ThematicMap({features,values,activeCounties,selected,onSelect,title,subtitle,legendTitle,unit,digits=1}:{features:BoundaryFeature[];values:Map<string,number>;activeCounties:Set<string>;selected:string|null;onSelect:(county:string)=>void;title:string;subtitle:string;legendTitle:string;unit:string;digits?:number}){
-  const [view,setView]=useState({x:0,y:0,k:1});
+  const [view,setView]=useState({x:0,y:0,k:1.1});
   const [governmentCenters,setGovernmentCenters]=useState<Record<string,[number,number]>>({});
   const fujianBackdrop=useFujianBackdrop();
   const mapRef=useRef<SVGSVGElement|null>(null);
@@ -32,7 +32,7 @@ export default function ThematicMap({features,values,activeCounties,selected,onS
   const currentValues=[...values.entries()].filter(([county])=>activeCounties.has(county)).map(([,value])=>value),breaks=quantiles(currentValues),legend=numericLegend(colors,breaks,currentValues,unit,digits);
   const zoom=(factor:number)=>setView(current=>{const k=Math.min(5,Math.max(1,current.k*factor));return k===1?{x:0,y:0,k}:{x:450-(450-current.x)*k/current.k,y:300-(300-current.y)*k/current.k,k}});
   useEffect(()=>{const element=mapRef.current;if(!element)return;const wheel=(event:WheelEvent)=>{event.preventDefault();event.stopPropagation();zoom(event.deltaY<0?1.18:1/1.18)};element.addEventListener("wheel",wheel,{passive:false});return()=>element.removeEventListener("wheel",wheel)},[]);
-  useEffect(()=>setView({x:0,y:0,k:1}),[title]);
+  useEffect(()=>setView({x:0,y:0,k:1.1}),[title]);
   return <div className="thematicMapCard"><div className="cardHead"><div><h2>{title}</h2><p>{subtitle}；点击区县查看详情</p></div><div className="mapHeadActions"><button onClick={()=>exportMapPng(mapRef.current,{title,subtitle,legendTitle,legend})}>导出 PNG</button></div></div>
     <div className="thematicMapWrap"><svg ref={mapRef} viewBox="0 0 900 600" className="thematicMap" role="img" aria-label={title} onPointerDown={event=>{event.currentTarget.setPointerCapture(event.pointerId);drag.current={x:event.clientX,y:event.clientY,vx:view.x,vy:view.y}}} onPointerMove={event=>{if(!drag.current)return;const ratio=900/event.currentTarget.getBoundingClientRect().width;setView(current=>({...current,x:drag.current!.vx+(event.clientX-drag.current!.x)*ratio,y:drag.current!.vy+(event.clientY-drag.current!.y)*ratio}))}} onPointerUp={()=>{drag.current=null}} onPointerCancel={()=>{drag.current=null}}>
       <g transform={`translate(${view.x} ${view.y}) scale(${view.k})`}>
@@ -41,7 +41,7 @@ export default function ThematicMap({features,values,activeCounties,selected,onS
         {selectedGeometry&&<path d={selectedGeometry.d} className="thematicCounty selected selectedOverlay" aria-hidden="true"/>}
         <DynamicMapLabels candidates={labelCandidates} view={view} baseLimit={18}/>
       </g>
-    </svg><div className="mapTools"><button onClick={()=>zoom(1.25)}>＋</button><button onClick={()=>zoom(.8)}>－</button><button onClick={()=>setView({x:0,y:0,k:1})}>复位</button></div><span className="mapHint">滚轮缩放 · 按住拖动</span></div>
+    </svg><div className="mapTools"><button onClick={()=>zoom(1.25)}>＋</button><button onClick={()=>zoom(.8)}>－</button><button onClick={()=>setView({x:0,y:0,k:1.1})}>复位</button></div><span className="mapHint">滚轮缩放 · 按住拖动</span></div>
     <div className="populationLegend numericLegend"><strong>{legendTitle}</strong>{legend.map(item=><span className="legendItem" key={`${item.color}-${item.label}`}><i style={{background:item.color}}/>{item.label}</span>)}</div>
   </div>;
 }

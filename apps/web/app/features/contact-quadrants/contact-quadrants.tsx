@@ -107,7 +107,7 @@ export default function QuadrantModule(){
   const [axisMode,setAxisMode]=useState<"密集展开"|"线性范围">("密集展开");
   const [selected,setSelected]=useState<QuadrantRow|null>(null);
   const [tooltip,setTooltip]=useState<{row:QuadrantRow;x:number;y:number}|null>(null);
-  const [mapView,setMapView]=useState({x:0,y:0,k:1});
+  const [mapView,setMapView]=useState({x:0,y:0,k:1.1});
   const chartRef=useRef<SVGSVGElement|null>(null);
   const typeMapRef=useRef<SVGSVGElement|null>(null);
   const mapDrag=useRef<{x:number;y:number;vx:number;vy:number}|null>(null);
@@ -155,7 +155,7 @@ export default function QuadrantModule(){
   },[spatial,governmentCenters,fujianBackdrop]);
   const zoomTypeMap=(factor:number)=>setMapView(current=>{const k=Math.min(5,Math.max(1,current.k*factor));return k===1?{x:0,y:0,k}:{x:450-(450-current.x)*k/current.k,y:300-(300-current.y)*k/current.k,k}});
   useEffect(()=>{const element=typeMapRef.current;if(!element||functionType==="ALL")return;const wheel=(event:WheelEvent)=>{event.preventDefault();event.stopPropagation();zoomTypeMap(event.deltaY<0?1.18:1/1.18)};element.addEventListener("wheel",wheel,{passive:false});return()=>element.removeEventListener("wheel",wheel)},[functionType]);
-  useEffect(()=>setMapView({x:0,y:0,k:1}),[functionType,scope]);
+  useEffect(()=>setMapView({x:0,y:0,k:1.1}),[functionType,scope]);
   if(!data||!geometry)return <section className="quadrantLoading">正在载入区县对四象限分析…</section>;
 
   const highCount=filtered.filter(row=>row.absolute_level==="高").length;
@@ -226,7 +226,7 @@ export default function QuadrantModule(){
         <g transform={`translate(${mapView.x} ${mapView.y}) scale(${mapView.k})`}><g aria-hidden="true">{typeMapGeometry.backdrop.map(feature=><path key={`fujian-${feature.code}`} d={feature.d} className="fujianPrefectureBackdrop"/>)}</g><g>{typeMapGeometry.counties.map(feature=><path key={feature.code} d={feature.d} className="populationCounty"><title>{feature.city} · {feature.name}</title></path>)}</g>
         <g>{[...typeMapRows].sort((a,b)=>a.absolute_composite-b.absolute_composite).map(row=>{const start=typeMapGeometry.centers[`${row.city_a}|${row.county_a}`],end=typeMapGeometry.centers[`${row.city_b}|${row.county_b}`];if(!start||!end)return null;const grade=strengthBand(row.absolute_composite*100,typeMapBreaks),dx=end[0]-start[0],dy=end[1]-start[1],length=Math.max(1,Math.hypot(dx,dy)),bend=Math.min(32,Math.max(8,length*.08)),mx=(start[0]+end[0])/2-dy/length*bend,my=(start[1]+end[1])/2+dx/length*bend,d=`M${start} Q${mx},${my} ${end}`;return <g key={row.pair} onPointerDown={event=>event.stopPropagation()} onClick={()=>setSelected(row)}><path d={d} className="populationFlowHit" style={{strokeWidth:11}}/><path d={d} className="quadrantTypeLink" style={{stroke:mapColors[grade],strokeWidth:[.8,1.1,1.55,2.15,3][grade],opacity:.78}}><title>{row.pair}：{fmt(row.absolute_composite*100,1)}分</title></path></g>})}</g>
         <DynamicMapLabels candidates={typeMapLabelCandidates} view={mapView} baseLimit={16}/></g>
-      </svg><div className="mapTools"><button onClick={()=>zoomTypeMap(1.25)}>＋</button><button onClick={()=>zoomTypeMap(.8)}>－</button><button onClick={()=>setMapView({x:0,y:0,k:1})}>复位</button></div><span className="mapHint">滚轮缩放 · 按住拖动</span></div>
+      </svg><div className="mapTools"><button onClick={()=>zoomTypeMap(1.25)}>＋</button><button onClick={()=>zoomTypeMap(.8)}>－</button><button onClick={()=>setMapView({x:0,y:0,k:1.1})}>复位</button></div><span className="mapHint">滚轮缩放 · 按住拖动</span></div>
       <div className="populationLegend numericLegend"><strong>绝对综合强度</strong>{typeMapLegend.map(item=><span className="legendItem" key={`${item.color}-${item.label}`}><i style={{background:item.color}}/>{item.label}</span>)}</div>
     </section>}
 

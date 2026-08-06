@@ -48,7 +48,7 @@ export default function PopulationModule({toolbar}:{toolbar?:ReactNode}){
   const [loadingTown,setLoadingTown]=useState(false);
   const [drillOpen,setDrillOpen]=useState(false);
   const [drillLimit,setDrillLimit]=useState(30);
-  const [view,setView]=useState({x:0,y:0,k:1});
+  const [view,setView]=useState({x:0,y:0,k:1.1});
   const [drillView,setDrillView]=useState({x:0,y:0,k:1});
   const mapRef=useRef<SVGSVGElement|null>(null);
   const drillMapRef=useRef<SVGSVGElement|null>(null);
@@ -61,7 +61,7 @@ export default function PopulationModule({toolbar}:{toolbar?:ReactNode}){
     setLoadingTown(true);
     fetch("/data/township-boundaries.json").then(response=>response.json()).then(setTownBoundaries).finally(()=>setLoadingTown(false));
   },[level,townBoundaries,loadingTown]);
-  useEffect(()=>{setSelected(null);setView({x:0,y:0,k:1})},[level,scope,originCounty,destinationCounty]);
+  useEffect(()=>{setSelected(null);setView({x:0,y:0,k:1.1})},[level,scope,originCounty,destinationCounty]);
   useEffect(()=>setListPage(1),[level,scope,originCounty,destinationCounty]);
   useEffect(()=>setDrillOpen(false),[selected?.key,level]);
   const openDrill=async()=>{
@@ -222,7 +222,7 @@ export default function PopulationModule({toolbar}:{toolbar?:ReactNode}){
               <DynamicMapLabels candidates={labelCandidates} view={view} baseLimit={level==="镇街"?10:16}/>
             </g>
           </svg>
-          <div className="mapTools"><button onClick={()=>zoom(1.25)} aria-label="放大人口地图">＋</button><button onClick={()=>zoom(.8)} aria-label="缩小人口地图">－</button><button onClick={()=>setView({x:0,y:0,k:1})} aria-label="重置人口地图">复位</button></div>
+          <div className="mapTools"><button onClick={()=>zoom(1.25)} aria-label="放大人口地图">＋</button><button onClick={()=>zoom(.8)} aria-label="缩小人口地图">－</button><button onClick={()=>setView({x:0,y:0,k:1.1})} aria-label="重置人口地图">复位</button></div>
           <span className="mapHint">滚轮缩放 · 按住拖动</span>
           {level==="镇街"&&loadingTown&&<div className="populationMapLoading">正在载入镇街边界…</div>}
         </div>
