@@ -628,3 +628,6 @@ main>.moduleTopRow{padding-top:6px}
 
 /* 用地/公共服务：专题 tab 加宽，占该行 60%（约一半至三分之二） */
 .moduleTopRow>.landTopics{flex:0 0 60%;width:60%;max-width:840px}
+
+/* 用地/公共服务：专题 tab 再加宽至 66%（三分之二） */
+.moduleTopRow>.landTopics{flex:0 0 66%;width:66%;max-width:920px}
