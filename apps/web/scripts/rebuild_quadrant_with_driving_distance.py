@@ -14,7 +14,14 @@ MODEL_DIR = PLATFORM_ROOT / "data" / "processed" / "contact-quadrants" / "curren
 MODEL = MODEL_DIR / "model-results.json"
 BASELINE = MODEL_DIR / "baseline-straight-line-model-results.json"
 TRANSPORT = Path(__file__).resolve().parents[1] / "public" / "data" / "transport-accessibility.json"
+LAND_USE = Path(__file__).resolve().parents[1] / "public" / "data" / "land-use.json"
+PUBLIC_SERVICES = Path(__file__).resolve().parents[1] / "public" / "data" / "public-services.json"
 METRICS = ["population_flow", "branch", "investment", "patent"]
+# 用地/POI 扩展变量：仅加入企业三类子模型（人口流动子模型保持原口径，见诊断结论）
+EXTRA_METRICS = ["branch", "investment", "patent"]
+EXTRA_COLUMNS = ["function_intensity_sum"]
+# 合成"功能强度指数"的区县级原始指标（三者 z-score 标准化后取均值）
+FUNCTION_INTENSITY_METRICS = ["commercial_share", "central_function_index", "poi_density"]
 
 
 def average_rank_percentile(values):
@@ -33,7 +40,10 @@ def average_rank_percentile(values):
 
 
 def fit(rows, metric):
-    matrix = np.array([[1.0, row["log_pop_mass"], row["log_gdp_mass"], row["log_distance"]] for row in rows], dtype=float)
+    columns = ["log_pop_mass", "log_gdp_mass", "log_distance"]
+    if metric in EXTRA_METRICS:
+        columns += EXTRA_COLUMNS
+    matrix = np.array([[1.0] + [row[c] for c in columns] for row in rows], dtype=float)
     target = np.log1p(np.array([row[metric] for row in rows], dtype=float))
     beta, *_ = np.linalg.lstsq(matrix, target, rcond=None)
     predicted_log = matrix @ beta
@@ -43,15 +53,47 @@ def fit(rows, metric):
     smearing = float(np.mean(np.exp(residual)))
     expected = np.exp(predicted_log) * smearing - 1
     z = residual / rmse
+    formula = "ln(1+Y)=alpha+b1*ln(popA*popB)+b2*ln(gdpA*gdpB)+gamma*ln(distance)"
+    if metric in EXTRA_METRICS:
+        formula += "+d1*functionIntensitySum"
     return {
         "metric": metric,
         "intercept": float(beta[0]),
-        "coefficients": {"log_pop_mass": float(beta[1]), "log_gdp_mass": float(beta[2]), "log_distance": float(beta[3])},
+        "coefficients": {c: float(beta[i + 1]) for i, c in enumerate(columns)},
         "r2": r2,
         "rmse": rmse,
         "smearing": smearing,
-        "formula": "ln(1+Y)=alpha+b1*ln(popA*popB)+b2*ln(gdpA*gdpB)+gamma*ln(distance)",
+        "formula": formula,
     }, expected, z
+
+
+def load_county_extension():
+    """读取用地（商业占比、中心功能指数）与 POI（建成密度）数据，
+    将三者区县级 z-score 标准化后取均值，合成区县级"功能强度指数"。"""
+    land = {r["county"]: r for r in json.loads(LAND_USE.read_text(encoding="utf-8"))["records"]}
+    poi = json.loads(PUBLIC_SERVICES.read_text(encoding="utf-8"))
+    poi_total = poi["countyTotals"]
+    poi_ctx = poi["countyContext"]
+    raw = {}
+    for county, rec in land.items():
+        cons_km2 = (poi_ctx.get(county, {}).get("constructionAreaHa", 0) or 0) / 100
+        raw[county] = {
+            "commercial_share": rec.get("commercialShare", 0.0) or 0.0,
+            "central_function_index": rec.get("centralFunctionIndex", 0.0) or 0.0,
+            "poi_density": (poi_total.get(county, 0) or 0) / cons_km2 if cons_km2 else 0.0,
+        }
+    counties = list(raw)
+    arrays = {}
+    for metric in FUNCTION_INTENSITY_METRICS:
+        values = np.array([raw[c][metric] for c in counties], dtype=float)
+        std = values.std(ddof=1)
+        arrays[metric] = (values - values.mean()) / std if std > 0 else np.zeros_like(values)
+    out = {}
+    for index, county in enumerate(counties):
+        out[county] = {
+            "function_intensity": float(np.mean([arrays[m][index] for m in FUNCTION_INTENSITY_METRICS])),
+        }
+    return out
 
 
 def main():
@@ -60,6 +102,7 @@ def main():
         shutil.copy2(MODEL, BASELINE)
     source = json.loads(BASELINE.read_text(encoding="utf-8"))
     transport = json.loads(TRANSPORT.read_text(encoding="utf-8"))
+    extension = load_county_extension()
     distance_by_pair = {
         frozenset(((row[0], row[1]), (row[2], row[3]))): row[5]
         for row in transport["pairRecords"]
@@ -74,6 +117,8 @@ def main():
             continue
         row["distance_km"] = distance
         row["log_distance"] = math.log(distance)
+        ext_a, ext_b = extension[row["county_a"]], extension[row["county_b"]]
+        row["function_intensity_sum"] = ext_a["function_intensity"] + ext_b["function_intensity"]
     if missing:
         raise ValueError(f"有 {len(missing)} 个区县对未匹配驾车距离: {missing[:5]}")
 
@@ -128,6 +173,13 @@ def main():
             "distance_pair_count": len(distance_by_pair),
             "recalculated_at": datetime.now().astimezone().isoformat(timespec="seconds"),
             "baseline_model": BASELINE.name,
+            "extension_variables": {
+                "metrics": EXTRA_METRICS,
+                "columns": EXTRA_COLUMNS,
+                "description": "企业三类子模型在基准上新增区县对级变量 function_intensity_sum（两端功能强度指数合计）；该指数由商业用地占比、中心功能指数、建设用地POI密度三个区县级指标 z-score 标准化后取均值合成，避免三指标共线。人口流动子模型保持原口径。",
+                "land_use_source": LAND_USE.name,
+                "public_services_source": PUBLIC_SERVICES.name,
+            },
         },
     }
     MODEL.write_text(json.dumps(output, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
