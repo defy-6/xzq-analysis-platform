@@ -736,3 +736,10 @@ main>.moduleTopRow{padding-top:6px}
   .enterpriseAnalysisStage .map,.mapFirstStage .populationMap,.mapFirstStage .thematicMap,.quadrantChart,.quadrantTypeMap{height:clamp(520px,calc(100vh - 330px),900px)}
   .enterpriseAnalysisStage .ranking,.mapFirstStage .populationRanking .ranking,.quadrantRanking .ranking{max-height:calc(clamp(520px,calc(100vh - 330px),900px) + 64px)}
 }
+
+/* 地图框与左右信息栏完整进入首屏：svg 高度 = 视口 - 顶部占用(≈330) - 卡片标题栏(≈60)；
+   右侧信息栏 max-height 与地图等高（去掉 +64 的撑高），整行底部不超出视口 */
+@media(min-width:1051px){
+  .enterpriseAnalysisStage .map,.mapFirstStage .populationMap,.mapFirstStage .thematicMap,.quadrantChart,.quadrantTypeMap{height:clamp(440px,calc(100vh - 390px),860px)}
+  .enterpriseAnalysisStage .ranking,.mapFirstStage .populationRanking .ranking,.quadrantRanking .ranking{max-height:clamp(440px,calc(100vh - 390px),860px)}
+}
