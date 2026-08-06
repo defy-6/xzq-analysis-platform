@@ -403,7 +403,7 @@ export default function Home(){
       <section className="workspace">
       <div className="mapCard"><div className="cardHead"><div><h2>{mapTitle}</h2><p>{mapSubtitle}；点击连线查看详情</p></div><div className="mapHeadActions"><select value={limit} onChange={e=>setLimit(+e.target.value)}><option value="30">前30</option><option value="60">前60</option><option value="120">前120</option><option value="200">前200</option><option value="0">全部</option></select><button onClick={()=>exportMapPng(mapRef.current,{title:mapTitle,subtitle:mapSubtitle,legendTitle:`${metric==="count"?"关系数量":"金额"}分级`,legend:currentLegend})}>导出 PNG</button></div></div>
         <div className="mapWrap">
-          <svg ref={mapRef} viewBox="0 24 900 600" className="map" role="img" aria-label={`可缩放、可拖动的厦漳泉${analysisLevel}企业关系地图`} onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp}>
+          <svg ref={mapRef} viewBox="0 34 900 600" className="map" role="img" aria-label={`可缩放、可拖动的厦漳泉${analysisLevel}企业关系地图`} onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp}>
             <defs><marker id="flowArrow" markerWidth={5/view.k} markerHeight={5/view.k} refX={4.7/view.k} refY={2.5/view.k} orient="auto" markerUnits="userSpaceOnUse"><path d={`M0,0 L${5/view.k},${2.5/view.k} L0,${5/view.k} Z`} fill="context-stroke"/></marker></defs>
             <g transform={`translate(${view.x} ${view.y}) scale(${view.k})`}>
               <g aria-hidden="true">{geo.backdrop.map(feature=><path key={`fujian-${feature.code}`} d={feature.d} className="fujianPrefectureBackdrop"/>)}</g>
