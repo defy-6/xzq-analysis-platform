@@ -631,3 +631,16 @@ main>.moduleTopRow{padding-top:6px}
 
 /* 用地/公共服务：专题 tab 再加宽至 66%（三分之二） */
 .moduleTopRow>.landTopics{flex:0 0 66%;width:66%;max-width:920px}
+
+/* 控件文字位置统一：行业树/位置树 summary 的标签与值位置对齐普通 label（padding 6px、标签-值间距 2px），选择内容变化（值加长）由单行截断保证不位移 */
+.moduleTopRow .industryTree>summary,
+.moduleTopRow .locationTree>summary,
+.thematicControls .industryTree>summary,
+.thematicControls .locationTree>summary,
+.quadrantControls .industryTree>summary,
+.quadrantControls .locationTree>summary{padding:6px 12px;gap:2px;align-content:center}
+.moduleTopRow .locationTree>summary,
+.thematicControls .locationTree>summary,
+.quadrantControls .locationTree>summary{padding-right:32px}
+.moduleTopRow .chainSelector small,
+.thematicControls .chainSelector small{margin-top:2px}
