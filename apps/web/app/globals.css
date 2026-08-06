@@ -556,7 +556,7 @@ main>header h1{font-size:clamp(20px,1.35vw,27px);line-height:1.15}
 .stats article,.populationStats article{min-height:86px;padding:13px 16px}
 .stats strong,.populationStats strong{font-size:clamp(24px,1.45vw,30px)}
 .landTopics{margin-bottom:8px}
-.enterpriseAnalysisStage,.mapFirstStage,.quadrantModule{padding-top:4px}
+.enterpriseAnalysisStage,.mapFirstStage{padding-top:4px}
 @media(max-width:700px){.platformSwitch{grid-template-columns:1fr 1fr}.platformSwitch button{padding:8px 10px}}
 
 /* 二级导航与模块筛选工具栏合并为一行：等高，控件尺寸与导航按钮一致 */
