@@ -211,7 +211,7 @@ export default function PopulationModule({toolbar}:{toolbar?:ReactNode}){
     <section className="populationWorkspace">
       <div className="populationMapCard"><div className="cardHead"><div><h2>{mapTitle}</h2><p>{mapSubtitle}；点击连线查看双向关系</p></div><div className="mapHeadActions"><select value={limit} onChange={event=>setLimit(+event.target.value)}><option value="30">前30</option><option value="60">前60</option><option value="120">前120</option><option value="200">前200</option><option value="0">全部</option></select><button onClick={()=>exportMapPng(mapRef.current,{title:mapTitle,subtitle:mapSubtitle,legendTitle:"人口流量分级",legend})}>导出 PNG</button></div></div>
         <div className="populationMapWrap">
-          <svg ref={mapRef} viewBox="0 0 900 600" className="populationMap" role="img" aria-label={`可缩放、可拖动的厦漳泉${level}人口流动地图`} onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp}>
+          <svg ref={mapRef} viewBox="0 24 900 600" className="populationMap" role="img" aria-label={`可缩放、可拖动的厦漳泉${level}人口流动地图`} onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp}>
             <defs><marker id="populationArrow" markerWidth={4/view.k} markerHeight={4/view.k} refX={3.8/view.k} refY={2/view.k} orient="auto" markerUnits="userSpaceOnUse"><path d={`M0,0 L${4/view.k},${2/view.k} L0,${4/view.k} Z`} fill="context-stroke"/></marker></defs>
             <g transform={`translate(${view.x} ${view.y}) scale(${view.k})`}>
               <g aria-hidden="true">{mapGeometry.backdrop.map(feature=><path key={`fujian-${feature.code}`} d={feature.d} className="fujianPrefectureBackdrop"/>)}</g>
