@@ -570,3 +570,17 @@ main>header h1{font-size:clamp(20px,1.35vw,27px);line-height:1.15}
   .moduleTopRow>.moduleSwitch button{flex:1;min-width:0}
   .moduleTopRow>.populationControls,.moduleTopRow>.trafficControls,.moduleTopRow>.controls{flex:1 1 100%}
 }
+
+/* 模块工具栏控件字体与二级导航一致（统一 label/select/树选择/开关的字号，
+   覆盖后部"可读性下限"对控件放大的 clamp(16-21px)） */
+.moduleTopRow label,
+.moduleTopRow select,
+.moduleTopRow .industryTree>summary span,
+.moduleTopRow .industryTree>summary strong,
+.moduleTopRow .locationTree>summary span,
+.moduleTopRow .locationTree>summary strong,
+.moduleTopRow .toggle button,
+.moduleTopRow .chainSelector small{font-size:clamp(12px,.72vw,15px)}
+.moduleTopRow label .chainSelector small{font-size:clamp(10px,.6vw,12px)}
+.moduleTopRow select{margin-top:2px}
+.moduleTopRow .toggle{height:100%}
