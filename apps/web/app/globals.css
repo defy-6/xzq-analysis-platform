@@ -625,3 +625,6 @@ main>.moduleTopRow{padding-top:6px}
   .moduleTopRow>.landTopics{flex:1 1 100%;width:100%;border-bottom:1px solid #dfe7e2;padding-bottom:8px}
   .moduleTopRow>.thematicControls{flex:1 1 100%;border-left:0;padding-left:0}
 }
+
+/* 用地/公共服务：专题 tab 加宽，占该行 60%（约一半至三分之二） */
+.moduleTopRow>.landTopics{flex:0 0 60%;width:60%;max-width:840px}
