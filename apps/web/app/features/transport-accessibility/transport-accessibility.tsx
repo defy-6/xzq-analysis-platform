@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { exportMapPng, numericLegend } from "../contact-network/map-export";
+import { exportMapPng, numericLegend } from "../mapkit/map-export";
 import LocationTreePicker, { buildLocationTree } from "../contact-network/location-tree";
-import DynamicMapLabels, { MapLabelCandidate, mapDisplayName } from "../thematic/map-labels";
+import DynamicMapLabels, { MapLabelCandidate, mapDisplayName } from "../mapkit/map-labels";
 import RegionalPerformance, { buildRegionPerformance } from "../contact-network/regional-performance";
-import useFujianBackdrop from "../thematic/fujian-backdrop";
+import useFujianBackdrop from "../mapkit/fujian-backdrop";
 
 type CountyTrafficRecord=[string,string,string,string,number,number,number,number,number];
 type TownshipTrafficRecord=[string,string,string,string,string,string,number,number,number,number,number];

@@ -2,16 +2,16 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import PopulationModule from "./population";
-import QuadrantModule from "./quadrants";
+import QuadrantModule from "../contact-quadrants/contact-quadrants";
 import TransportAccessibilityModule from "../transport-accessibility/transport-accessibility";
 import LandUseModule from "../land-use/land-use";
 import PublicServicesModule from "../public-services/public-services";
-import { exportMapPng, numericLegend } from "./map-export";
+import { exportMapPng, numericLegend } from "../mapkit/map-export";
 import { ALL_CHAIN_CODES, CHAIN_BY_CODE, INDUSTRY_CHAINS, INDUSTRY_CHAIN_CODE_COUNT } from "./industry-chains";
 import LocationTreePicker, { buildLocationTree } from "./location-tree";
-import DynamicMapLabels, { MapLabelCandidate, mapDisplayName } from "../thematic/map-labels";
+import DynamicMapLabels, { MapLabelCandidate, mapDisplayName } from "../mapkit/map-labels";
 import RegionalPerformance, { buildRegionPerformance } from "./regional-performance";
-import useFujianBackdrop from "../thematic/fujian-backdrop";
+import useFujianBackdrop from "../mapkit/fujian-backdrop";
 
 type Rec=[string,number,string,string,string,string,string,string,number,number,number,number,number,number,number,number];
 type TownRec=[string,number,string,string,string,string,string,string,string,string,number,number,number,number,number,number,number,number];
@@ -111,7 +111,7 @@ export default function Home(){
   const townMapRef=useRef<SVGSVGElement|null>(null);
   const drag=useRef<{x:number;y:number;vx:number;vy:number}|null>(null);
   const townDrag=useRef<{x:number;y:number;vx:number;vy:number}|null>(null);
-  useEffect(()=>{fetch("/data/dashboard.json").then(r=>r.json()).then(setData)},[]);
+  useEffect(()=>{fetch("/data/enterprise-relations.json").then(r=>r.json()).then(setData)},[]);
   useEffect(()=>{fetch("/data/government-centers.json").then(r=>r.json()).then(setGovernmentCenters)},[]);
   useEffect(()=>{
     let active=true;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { mapDisplayName } from "../thematic/map-labels";
+import { mapDisplayName } from "../mapkit/map-labels";
 
 export type LocationLevel="城市"|"区县"|"镇街";
 export type LocationEntry={city:string;county:string;town?:string};

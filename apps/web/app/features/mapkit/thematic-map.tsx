@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { exportMapPng, numericLegend } from "../contact-network/map-export";
+import { exportMapPng, numericLegend } from "./map-export";
 import DynamicMapLabels, { MapLabelCandidate } from "./map-labels";
 import useFujianBackdrop from "./fujian-backdrop";
 

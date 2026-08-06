@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import ThematicMap from "../thematic/thematic-map";
+import ThematicMap from "../mapkit/thematic-map";
 
 type LandRecord={city:string;county:string;totalArea:number;agriculturalArea:number;constructionArea:number;unusedArea:number;developmentIntensity:number;agriculturalShare:number;unusedShare:number;urbanHousingShare:number;ruralHousingShare:number;urbanRuralHousingRatio:number;urbanHousingArea:number;ruralHousingArea:number;industrialArea:number;logisticsArea:number;industryWarehouseShare:number;industrialDevelopmentDensity:number;commercialShare:number;commercialArea:number;publicServiceShare:number;publicServiceArea:number;centralFunctionIndex:number;transportGatewayIndex:number;gatewayArea:number;roadShare:number;roadArea:number;portShare:number;portArea:number;miningArea:number;publicSpaceShare:number;publicSpaceArea:number;landUseMix:number;scope201Construction:number;scope202Construction:number;scope203Construction:number;scope201AIndustrial:number;scope202AIndustrial:number;scope203AIndustrial:number;lq:Record<string,number>};
 type Payload={meta:{source:string;countyCount:number;year:string;areaUnit:string;note:string};countyBoundaries:{features:any[]};records:LandRecord[]};

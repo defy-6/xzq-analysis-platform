@@ -271,16 +271,16 @@ def main():
             features.append({"type":"Feature","properties":{"name":county_name,"city":CITY_CODES[code[:4]],"code":code},"geometry":{"type":"MultiPolygon","coordinates":polys}})
         town_boundaries=load_town_boundaries(conn);conn.close()
     else:
-        previous=json.loads((OUT/"dashboard.json").read_text(encoding="utf-8"));features=previous["boundaries"]["features"];centers=previous["centers"]
+        previous=json.loads((OUT/"enterprise-relations.json").read_text(encoding="utf-8"));features=previous["boundaries"]["features"];centers=previous["centers"]
         town_path=OUT/"township-boundaries.json";town_boundaries=json.loads(town_path.read_text(encoding="utf-8")).get("features",[]) if town_path.exists() else []
     payload={"meta":{"baseline":"2026-07-21","amountUnit":"万元人民币","sameOdExcluded":True,"patentUndirected":True,"patentDedupKey":"normalized_patent_name+unordered_enterprise_pair","patentIndustryFilter":"either_endpoint","patentDiagnostics":patent_stats,"sources":[x[1].name for x in specs]},"industries":{str(k):[[c,n] for c,n in sorted(v.items())] for k,v in industries.items()},"centers":centers,"boundaries":{"type":"FeatureCollection","features":features},"records":records}
-    (OUT/"dashboard.json").write_text(json.dumps(payload,ensure_ascii=False,separators=(",",":")),encoding="utf-8")
+    (OUT/"enterprise-relations.json").write_text(json.dumps(payload,ensure_ascii=False,separators=(",",":")),encoding="utf-8")
     (OUT/"township-boundaries.json").write_text(json.dumps({"type":"FeatureCollection","features":town_boundaries},ensure_ascii=False,separators=(",",":")),encoding="utf-8")
     town_pair_count=write_town_endpoints(town_records)
     patent_count=sum(r[8] for r in patent_records if r[1]==0)
     append_dev_log("专利去重改为专利名称口径",f"使用“标准化专利名＋无序企业对”合并正反向及 role 重复；不再使用专利 ID 或申请号。符合区县范围的 {patent_stats['eligibleRows']} 条源记录合并为 {patent_stats['dedupedRelations']} 条专利—企业对关系，跳过 {patent_stats['emptyPatentNameRows']} 条专利名为空记录。")
     append_dev_log("镇街关系接口已更新",f"生成 {len(town_records)} 个镇街汇总组合、{town_pair_count} 个区县对分片和 {len(town_boundaries)} 个乡镇街边界；仅统计 O/D 两端镇街字段均有效的记录。")
-    print("输出",OUT/"dashboard.json",(OUT/"dashboard.json").stat().st_size)
+    print("输出",OUT/"enterprise-relations.json",(OUT/"enterprise-relations.json").stat().st_size)
     print("输出",OUT/"township-index.json",town_pair_count,"个区县对分片")
     print("输出",OUT/"township-relations.json",len(town_records),"条全量镇街汇总")
 if __name__=="__main__":main()

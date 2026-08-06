@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import ThematicMap from "../thematic/thematic-map";
+import ThematicMap from "../mapkit/thematic-map";
 
 type CountyContext={residentPopulationWan:number;constructionAreaHa:number;commercialAreaHa:number;industryLogisticsAreaHa:number;publicServiceAreaHa:number;gatewayAreaHa:number};
 type CategoryNode={name:string;count:number;children?:CategoryNode[]};

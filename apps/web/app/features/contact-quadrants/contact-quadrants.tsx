@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { exportMapPng, numericLegend } from "./map-export";
-import DynamicMapLabels, { MapLabelCandidate } from "../thematic/map-labels";
-import useFujianBackdrop from "../thematic/fujian-backdrop";
+import { exportMapPng, numericLegend } from "../mapkit/map-export";
+import DynamicMapLabels, { MapLabelCandidate } from "../mapkit/map-labels";
+import useFujianBackdrop from "../mapkit/fujian-backdrop";
 
 type ModelParam={
   metric:string;
