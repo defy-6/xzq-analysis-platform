@@ -2,6 +2,15 @@
 .DS_Store
 **/.DS_Store
 
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Reasonix 工具本地状态（每人本地不同，不入库）
+.reasonix/
+reasonix.toml
+
 # Dependencies and package-manager caches
 **/node_modules/
 **/.pnp
@@ -43,6 +52,7 @@ data/raw/
 
 # Runtime state
 运行日志/*.pid
+**/.pnpm-store/
 
 # 大导出文件（可重新生成，不入库）
 data/processed/contact-network/
