@@ -671,3 +671,18 @@ main>.moduleTopRow{padding-top:6px}
 .moduleTopRow .locationTree>summary,
 .thematicControls .industryTree>summary,
 .thematicControls .locationTree>summary{align-content:center}
+
+/* 控件内文字：水平左对齐（覆盖原生 select 的系统差异），垂直居中（align-content:center） */
+.moduleTopRow label,
+.moduleTopRow .industryTree>summary,
+.moduleTopRow .locationTree>summary,
+.quadrantControls>label,
+.quadrantControls .industryTree>summary,
+.thematicControls>label,
+.thematicControls .industryTree>summary,
+.thematicControls .locationTree>summary{text-align:left}
+.moduleTopRow select,
+.moduleTopRow .industryTree>summary strong,
+.moduleTopRow .locationTree>summary strong,
+.quadrantControls select,
+.thematicControls select{text-align:left}
