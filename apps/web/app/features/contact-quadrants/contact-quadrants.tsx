@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { exportMapPng, numericLegend } from "../mapkit/map-export";
+import { exportMapPng, exportWithLabelsOn, numericLegend } from "../mapkit/map-export";
 import DynamicMapLabels, { MapLabelCandidate } from "../mapkit/map-labels";
+import MapDecorations from "../mapkit/map-scale";
+import MapScaleOverlay from "../mapkit/map-scale-overlay";
 import useFujianBackdrop from "../mapkit/fujian-backdrop";
 
 type ModelParam={
@@ -107,7 +109,9 @@ export default function QuadrantModule(){
   const [axisMode,setAxisMode]=useState<"密集展开"|"线性范围">("密集展开");
   const [selected,setSelected]=useState<QuadrantRow|null>(null);
   const [tooltip,setTooltip]=useState<{row:QuadrantRow;x:number;y:number}|null>(null);
+  const [rankingPage,setRankingPage]=useState(1);
   const [mapView,setMapView]=useState({x:0,y:0,k:1.1});
+  const [typeMapLabelsOn,setTypeMapLabelsOn]=useState(true);
   const chartRef=useRef<SVGSVGElement|null>(null);
   const typeMapRef=useRef<SVGSVGElement|null>(null);
   const mapDrag=useRef<{x:number;y:number;vx:number;vy:number}|null>(null);
@@ -129,6 +133,8 @@ export default function QuadrantModule(){
   })||[],[data,scope,quadrant,functionType]);
   const visiblePairs=useMemo(()=>new Set(filtered.map(row=>row.pair)),[filtered]);
   useEffect(()=>{if(selected&&!visiblePairs.has(selected.pair))setSelected(null)},[visiblePairs,selected]);
+  useEffect(()=>setRankingPage(1),[scope,quadrant,functionType]);
+  const rankingPageSize=14,rankingPageCount=Math.max(1,Math.ceil(filtered.length/rankingPageSize)),currentRankingPage=Math.min(rankingPage,rankingPageCount),rankingRows=filtered.slice((currentRankingPage-1)*rankingPageSize,currentRankingPage*rankingPageSize);
 
   const geometry=useMemo(()=>{
     if(!data)return null;
@@ -151,7 +157,7 @@ export default function QuadrantModule(){
     const counties=spatial.countyBoundaries.features.map(feature=>({...feature.properties,d:geometryPath(feature.geometry.coordinates,project)}));
     const centers:Record<string,[number,number]>={};Object.entries({...spatial.countyCenters,...governmentCenters}).forEach(([key,point])=>centers[key]=project(point));
     const backdrop=fujianBackdrop.map(feature=>({...feature.properties,d:geometryPath(feature.geometry.coordinates,project)}));
-    return{counties,centers,backdrop};
+    return{counties,centers,backdrop,kmPerPixel:111.32/(cos*scale)};
   },[spatial,governmentCenters,fujianBackdrop]);
   const zoomTypeMap=(factor:number)=>setMapView(current=>{const k=Math.min(5,Math.max(1,current.k*factor));return k===1?{x:0,y:0,k}:{x:450-(450-current.x)*k/current.k,y:300-(300-current.y)*k/current.k,k}});
   useEffect(()=>{const element=typeMapRef.current;if(!element||functionType==="ALL")return;const wheel=(event:WheelEvent)=>{event.preventDefault();event.stopPropagation();zoomTypeMap(event.deltaY<0?1.18:1/1.18)};element.addEventListener("wheel",wheel,{passive:false});return()=>element.removeEventListener("wheel",wheel)},[functionType]);
@@ -175,17 +181,17 @@ export default function QuadrantModule(){
   const typeCounts=Object.fromEntries(typeDefinitions.map(type=>[type.name,scopeRows.filter(row=>row.function_type===type.name).length]));
   const typeCountScope=scope==="跨市"?"跨市区县对":scope==="市内"?"市内区县对":"全部区县对";
   const exportLegend=[
-    {color:colors[1],label:"Ⅰ 成熟／潜在协调"},
-    {color:colors[2],label:"Ⅱ 人口流动先导"},
-    {color:colors[3],label:"Ⅲ 协同不足／边缘"},
-    {color:colors[4],label:"Ⅳ 企业先导"},
-    {color:"#c99a2e",label:"金色外圈：高绝对强度"},
+    {color:colors[1],label:shortQuadrant[1],shape:"circle" as const},
+    {color:colors[2],label:shortQuadrant[2],shape:"square" as const},
+    {color:colors[3],label:shortQuadrant[3],shape:"diamond" as const},
+    {color:colors[4],label:shortQuadrant[4],shape:"triangle" as const},
+    {color:"#c0352c",label:"高绝对强度",shape:"ring" as const},
   ];
   const chartTitle=`厦漳泉${scope==="全部"?"全域":scope}区县对人口流动—企业联系四象限`;
   const chartSubtitle=`${quadrant==="ALL"?"全部象限":shortQuadrant[Number(quadrant)]} · ${functionType==="ALL"?"全部功能类型":functionType} · ${filtered.length} 个区县对 · ${axisMode==="密集展开"?"密集区非线性展开":"线性完整范围"}`;
   const typeMapRows=functionType==="ALL"?[]:scopeRows.filter(row=>row.function_type===functionType);
   const typeMapBreaks=quantileBreaks(typeMapRows.map(row=>row.absolute_composite*100));
-  const typeMapLegend=numericLegend(mapColors,typeMapBreaks,typeMapRows.map(row=>row.absolute_composite*100),"分",1);
+  const typeMapLegend=numericLegend(mapColors,typeMapBreaks,typeMapRows.map(row=>row.absolute_composite*100),"分",1,[.8,1.1,1.55,2.15,3]);
   const typeMapTitle=`厦漳泉${scope==="全部"?"全域":scope}${displayFunctionType(functionType)}区县对分布图`;
   const typeMapSubtitle=`${typeMapRows.length} 个无向区县对 · 按人口流动—企业联系绝对综合强度分级`;
   const typeMapLabels=[...new Map(typeMapRows.flatMap(row=>[[`${row.city_a}|${row.county_a}`,{city:row.city_a,county:row.county_a,priority:row.absolute_composite}],[`${row.city_b}|${row.county_b}`,{city:row.city_b,county:row.county_b,priority:row.absolute_composite}]]) as Array<[string,{city:string;county:string;priority:number}]>).values()];
@@ -221,18 +227,18 @@ export default function QuadrantModule(){
     </section>
 
     {functionType!=="ALL"&&typeMapGeometry&&<section className="quadrantTypeMapCard">
-      <div className="cardHead"><div><h2>{typeMapTitle}</h2><p>{typeMapSubtitle}；点击连线查看区县对详情</p></div><div className="mapHeadActions"><button onClick={()=>exportMapPng(typeMapRef.current,{title:typeMapTitle,subtitle:typeMapSubtitle,legendTitle:"绝对综合强度",legend:typeMapLegend})}>导出 PNG</button></div></div>
-      <div className="quadrantTypeMapWrap"><svg ref={typeMapRef} viewBox="0 34 900 600" className="quadrantTypeMap" role="img" aria-label={`${displayFunctionType(functionType)}区县对空间分布图`} onPointerDown={event=>{event.currentTarget.setPointerCapture(event.pointerId);mapDrag.current={x:event.clientX,y:event.clientY,vx:mapView.x,vy:mapView.y}}} onPointerMove={event=>{if(!mapDrag.current)return;const ratio=900/event.currentTarget.getBoundingClientRect().width;setMapView(current=>({...current,x:mapDrag.current!.vx+(event.clientX-mapDrag.current!.x)*ratio,y:mapDrag.current!.vy+(event.clientY-mapDrag.current!.y)*ratio}))}} onPointerUp={()=>{mapDrag.current=null}} onPointerCancel={()=>{mapDrag.current=null}}>
+      <div className="cardHead"><div><h2>{typeMapTitle}</h2><p>{typeMapSubtitle}；点击连线查看区县对详情</p></div><div className="mapHeadActions"><label className="labelToggle"><input type="checkbox" checked={typeMapLabelsOn} onChange={event=>setTypeMapLabelsOn(event.target.checked)}/>标注</label><button onClick={()=>exportWithLabelsOn(typeMapLabelsOn,setTypeMapLabelsOn,()=>exportMapPng(typeMapRef.current,{title:typeMapTitle,subtitle:typeMapSubtitle,legendTitle:"绝对综合强度",legend:typeMapLegend,kmPerPixel:typeMapGeometry?.kmPerPixel}))}>导出 PNG</button></div></div>
+      <div className="quadrantTypeMapWrap"><svg ref={typeMapRef} viewBox="0 34 900 600" className="quadrantTypeMap" role="img" aria-label={`${displayFunctionType(functionType)}区县对空间分布图`} onPointerDown={event=>{event.currentTarget.setPointerCapture(event.pointerId);mapDrag.current={x:event.clientX,y:event.clientY,vx:mapView.x,vy:mapView.y}}} onPointerMove={event=>{const dragState=mapDrag.current;if(!dragState)return;const ratio=900/event.currentTarget.getBoundingClientRect().width;setMapView(current=>({...current,x:dragState.vx+(event.clientX-dragState.x)*ratio,y:dragState.vy+(event.clientY-dragState.y)*ratio}))}} onPointerUp={()=>{mapDrag.current=null}} onPointerCancel={()=>{mapDrag.current=null}}>
         <g transform={`translate(${mapView.x} ${mapView.y}) scale(${mapView.k})`}><g aria-hidden="true">{typeMapGeometry.backdrop.map(feature=><path key={`fujian-${feature.code}`} d={feature.d} className="fujianPrefectureBackdrop"/>)}</g><g>{typeMapGeometry.counties.map(feature=><path key={feature.code} d={feature.d} className="populationCounty"><title>{feature.city} · {feature.name}</title></path>)}</g>
         <g>{[...typeMapRows].sort((a,b)=>a.absolute_composite-b.absolute_composite).map(row=>{const start=typeMapGeometry.centers[`${row.city_a}|${row.county_a}`],end=typeMapGeometry.centers[`${row.city_b}|${row.county_b}`];if(!start||!end)return null;const grade=strengthBand(row.absolute_composite*100,typeMapBreaks),dx=end[0]-start[0],dy=end[1]-start[1],length=Math.max(1,Math.hypot(dx,dy)),bend=Math.min(32,Math.max(8,length*.08)),mx=(start[0]+end[0])/2-dy/length*bend,my=(start[1]+end[1])/2+dx/length*bend,d=`M${start} Q${mx},${my} ${end}`;return <g key={row.pair} onPointerDown={event=>event.stopPropagation()} onClick={()=>setSelected(row)}><path d={d} className="populationFlowHit" style={{strokeWidth:11}}/><path d={d} className="quadrantTypeLink" style={{stroke:mapColors[grade],strokeWidth:[.8,1.1,1.55,2.15,3][grade],opacity:.78}}><title>{row.pair}：{fmt(row.absolute_composite*100,1)}分</title></path></g>})}</g>
-        <DynamicMapLabels candidates={typeMapLabelCandidates} view={mapView} baseLimit={16}/></g>
-      </svg><div className="mapTools"><button onClick={()=>zoomTypeMap(1.25)}>＋</button><button onClick={()=>zoomTypeMap(.8)}>－</button><button onClick={()=>setMapView({x:0,y:0,k:1.1})}>复位</button></div><span className="mapHint">滚轮缩放 · 按住拖动</span></div>
-      <div className="populationLegend numericLegend"><strong>绝对综合强度</strong>{typeMapLegend.map(item=><span className="legendItem" key={`${item.color}-${item.label}`}><i style={{background:item.color}}/>{item.label}</span>)}</div>
+        {typeMapLabelsOn&&<DynamicMapLabels candidates={typeMapLabelCandidates} view={mapView} baseLimit={16}/>}</g>
+        <MapDecorations kmPerPixel={typeMapGeometry?.kmPerPixel} viewK={mapView.k} width={900} height={600}/>
+      </svg><MapScaleOverlay kmPerPixel={typeMapGeometry?.kmPerPixel} viewK={mapView.k}/><div className="mapTools"><button onClick={()=>zoomTypeMap(1.25)}>＋</button><button onClick={()=>zoomTypeMap(.8)}>－</button><button onClick={()=>setMapView({x:0,y:0,k:1.1})}>复位</button></div><span className="mapHint">滚轮缩放 · 按住拖动</span><div className="populationLegend numericLegend"><strong>绝对综合强度</strong>{typeMapLegend.map(item=><span className="legendItem" key={`${item.color}-${item.label}`}><i style={item.shape==="line"?{background:item.color,height:Math.max(1.5,Math.min(6.5,(item.lineWidth||1)*2.2)),borderRadius:2}:{background:item.color}}/>{item.label}</span>)}</div></div>
     </section>}
 
     <section className="quadrantWorkspace">
       <div className="quadrantChartCard">
-        <div className="cardHead"><div><h2>{chartTitle}</h2><p>{chartSubtitle}；点击散点查看实际值、模型预期与分类解释</p></div><div className="mapHeadActions quadrantChartActions"><div className="quadrantAxisToggle"><button className={axisMode==="密集展开"?"active":""} onClick={()=>setAxisMode("密集展开")}>展开密集区</button><button className={axisMode==="线性范围"?"active":""} onClick={()=>setAxisMode("线性范围")}>完整线性范围</button></div><button onClick={()=>exportMapPng(chartRef.current,{title:chartTitle,subtitle:chartSubtitle,legendTitle:"四象限分类",legend:exportLegend})}>导出 PNG</button></div></div>
+        <div className="cardHead"><div><h2>{chartTitle}</h2><p>{chartSubtitle}；点击散点查看实际值、模型预期与分类解释</p></div><div className="mapHeadActions quadrantChartActions"><div className="quadrantAxisToggle"><button className={axisMode==="密集展开"?"active":""} onClick={()=>setAxisMode("密集展开")}>展开密集区</button><button className={axisMode==="线性范围"?"active":""} onClick={()=>setAxisMode("线性范围")}>完整线性范围</button></div><button onClick={()=>exportMapPng(chartRef.current,{title:chartTitle,subtitle:chartSubtitle,legendTitle:"四象限分类",legend:exportLegend,legendPlacement:"bottom"})}>导出 PNG</button></div></div>
         <div className="quadrantChartWrap">
           <svg ref={chartRef} className="quadrantChart" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="区县人口流动与企业联系四象限散点图">
             <rect x={margin.left} y={margin.top} width={x0-margin.left} height={y0-margin.top} fill={colors[4]} opacity=".07"/>
@@ -260,7 +266,7 @@ export default function QuadrantModule(){
           <small>{axisMode==="密集展开"?"当前采用反双曲正弦坐标展开0值附近，保留正负方向和点的先后顺序。":"当前按标准化残差线性比例显示全部范围。"}</small>
         </div>
       </div>
-      <aside className="quadrantRanking"><div className="cardHead"><div><h2>区县对综合强度排名</h2><p>按绝对综合强度降序</p></div></div><div className="ranking">{filtered.slice(0,14).map((row,index)=><button key={row.pair} className={selected?.pair===row.pair?"active":""} onClick={()=>setSelected(row)}><b>{String(index+1).padStart(2,"0")}</b><span><strong>{row.pair}</strong><small><i style={{background:colors[row.quadrant]}}/>{shortQuadrant[row.quadrant]} · {displayFunctionType(row.function_type)}</small></span><em>{fmt(row.absolute_composite*100,1)}</em></button>)}</div></aside>
+      <aside className="quadrantRanking"><div className="cardHead"><div><h2>区县对综合强度排名</h2><p>按绝对综合强度降序 · 共 {fmt(filtered.length)} 对</p></div></div><div className="ranking">{rankingRows.map((row,index)=><button key={row.pair} className={selected?.pair===row.pair?"active":""} onClick={()=>setSelected(row)}><b>{String((currentRankingPage-1)*rankingPageSize+index+1).padStart(2,"0")}</b><span><strong>{row.pair}</strong><small><i style={{background:colors[row.quadrant]}}/>{shortQuadrant[row.quadrant]} · {displayFunctionType(row.function_type)}</small></span><em>{fmt(row.absolute_composite*100,1)}</em></button>)}</div><div className="populationPagination"><button disabled={currentRankingPage<=1} onClick={()=>setRankingPage(page=>Math.max(1,page-1))}>上一页</button><span>第 {currentRankingPage} / {rankingPageCount} 页</span><button disabled={currentRankingPage>=rankingPageCount} onClick={()=>setRankingPage(page=>Math.min(rankingPageCount,page+1))}>下一页</button></div></aside>
     </section>
 
     <section className="quadrantModelStrip">
@@ -268,6 +274,12 @@ export default function QuadrantModule(){
       <div><span>分支／投资／专利 R²</span><strong>{branchParam?.r2.toFixed(3)} / {investmentParam?.r2.toFixed(3)} / {patentParam?.r2.toFixed(3)}</strong></div>
       <div><span>企业综合权重</span><strong>{enterpriseWeight}</strong><small>分支／投资／专利</small></div>
       <p>横轴、纵轴均为控制人口规模、GDP规模和区县政府驻地双向驾车平均距离后的标准化残差；0轴表示模型预期。点越大，人口流动联系与企业联系的绝对综合强度越高。</p>
+    </section>
+    <section className="quadrantScoreGuide">
+      <div><span>① 单项绝对分位</span><p>人口流动、分支、投资、专利分别按实际数值在全部 {fmt(data.meta.pairCount)} 个区县对中的名次换算为 0~1 分位（并列取平均名次），数值最大者分位 = 1。</p></div>
+      <div><span>② 企业综合分位</span><p>分支、投资、专利三个分位按各自子模型 R² 归一化权重（{enterpriseWeight}）加权合计，反映企业三类联系的相对规模。</p></div>
+      <div><span>③ 综合得分</span><p>综合强度 = √(人口流动分位 × 企业综合分位)，再 ×100 得百分制得分；取几何平均，要求人口流动与企业联系两翼均衡。</p></div>
+      <div><span>④ 象限与绝对强度</span><p>象限由人口流动残差、企业综合残差的正负决定；绝对强度"高" = 人口分位与企业综合分位均 ≥ 0.8，否则为"低"。</p></div>
     </section>
 
     {selected&&<div className="quadrantDetail">

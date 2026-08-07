@@ -222,6 +222,31 @@ def simplify(ring,tolerance=0.00008):
     if closed:out.append(out[0])
     return out
 
+def polygon_centroid(polygons):
+    total_x = total_y = total_area = 0.0
+    for polygon in polygons:
+        for ring in polygon:
+            ring_area = 0.0
+            ring_x = ring_y = 0.0
+            for i in range(len(ring) - 1):
+                x1, y1 = ring[i]
+                x2, y2 = ring[i + 1]
+                cross = x1 * y2 - x2 * y1
+                ring_area += cross
+                ring_x += (x1 + x2) * cross
+                ring_y += (y1 + y2) * cross
+            ring_area /= 2.0
+            if abs(ring_area) < 1e-12:
+                continue
+            abs_area = abs(ring_area)
+            total_x += ring_x / (6.0 * ring_area) * abs_area
+            total_y += ring_y / (6.0 * ring_area) * abs_area
+            total_area += abs_area
+    if total_area <= 0:
+        return None
+    return [total_x / total_area, total_y / total_area]
+
+
 def load_town_boundaries(conn):
     tables={row[0] for row in conn.execute("select table_name from gpkg_contents")}
     if "厦漳泉乡镇街边界" not in tables:return []
@@ -229,7 +254,8 @@ def load_town_boundaries(conn):
     for city,county_name,town,blob in conn.execute('select [城市名称],[区县名称],[乡镇街名称],geom from [厦漳泉乡镇街边界]'):
         raw=parse_geom(gpkg_wkb(blob));points=[point for poly in raw for ring in poly for point in ring]
         if not points:continue
-        xs=[point[0] for point in points];ys=[point[1] for point in points];center=[(min(xs)+max(xs))/2,(min(ys)+max(ys))/2]
+        xs=[point[0] for point in points];ys=[point[1] for point in points]
+        center=polygon_centroid(raw) or [(min(xs)+max(xs))/2,(min(ys)+max(ys))/2]
         polys=[[simplify(r) for r in poly] for poly in raw]
         features.append({"type":"Feature","properties":{"city":txt(city),"county":county(county_name),"town":txt(town),"center":center},"geometry":{"type":"MultiPolygon","coordinates":polys}})
     return features

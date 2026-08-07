@@ -6,10 +6,13 @@ import QuadrantModule from "../contact-quadrants/contact-quadrants";
 import TransportAccessibilityModule from "../transport-accessibility/transport-accessibility";
 import LandUseModule from "../land-use/land-use";
 import PublicServicesModule from "../public-services/public-services";
-import { exportMapPng, numericLegend } from "../mapkit/map-export";
+import { exportMapPng, exportWithLabelsOn, numericLegend } from "../mapkit/map-export";
 import { ALL_CHAIN_CODES, CHAIN_BY_CODE, INDUSTRY_CHAINS, INDUSTRY_CHAIN_CODE_COUNT } from "./industry-chains";
 import LocationTreePicker, { buildLocationTree } from "./location-tree";
 import DynamicMapLabels, { MapLabelCandidate, mapDisplayName } from "../mapkit/map-labels";
+const quadraticPoints=(p0:[number,number],p1:[number,number],c:[number,number],segments=5):[number,number][]=>{const out:[number,number][]=[];for(let i=0;i<=segments;i++){const t=i/segments,u=1-t;out.push([u*u*p0[0]+2*u*t*c[0]+t*t*p1[0],u*u*p0[1]+2*u*t*c[1]+t*t*p1[1]])}return out};
+import MapDecorations from "../mapkit/map-scale";
+import MapScaleOverlay from "../mapkit/map-scale-overlay";
 import RegionalPerformance, { buildRegionPerformance } from "./regional-performance";
 import useFujianBackdrop from "../mapkit/fujian-backdrop";
 
@@ -29,7 +32,7 @@ type CompanyRecord=[string,string,number|null,string,string,string,string,string
 type CompanyIndustry={level:number;code:string;name:string}|null;
 type CompanyDisplay={o:string;d:string;amount:number|null;direction:string};
 type IndustryMode="逐级行业"|"产业链归纳";
-type GovernmentCenters={county:Record<string,[number,number]>;township:Record<string,[number,number]>};
+type GovernmentCenters={county:Record<string,[number,number]>;township:Record<string,[number,number]>;city:Record<string,[number,number]>};
 
 const fmt=(n:number,d=0)=>new Intl.NumberFormat("zh-CN",{maximumFractionDigits:d}).format(n);
 const fmtTime=(value:string)=>new Date(value).toLocaleString("zh-CN",{month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false});
@@ -84,11 +87,13 @@ export default function Home(){
   const [originLocation,setOriginLocation]=useState("ALL");
   const [destinationLocation,setDestinationLocation]=useState("ALL");
   const [profileRegion,setProfileRegion]=useState("");
+  const [labelsOn,setLabelsOn]=useState(true);
+  const [townLabelsOn,setTownLabelsOn]=useState(true);
   const [industryMode,setIndustryMode]=useState<IndustryMode>("逐级行业");
   const [chainId,setChainId]=useState("ALL");
   const [industry,setIndustry]=useState<IndustrySelection>({level:1,code:"ALL",name:"全部行业",path:"全部行业"});
   const [metric,setMetric]=useState<"count"|"amount">("count");
-  const [limit,setLimit]=useState(30);
+  const [limit,setLimit]=useState(60);
   const [selected,setSelected]=useState<Flow|null>(null);
   const [companyIndustry,setCompanyIndustry]=useState<CompanyIndustry>(null);
   const [companyRecords,setCompanyRecords]=useState<CompanyDisplay[]>([]);
@@ -101,10 +106,11 @@ export default function Home(){
   const [townBoundaries,setTownBoundaries]=useState<TownBoundaryPayload|null>(null);
   const [townDataKey,setTownDataKey]=useState("");
   const [townOpen,setTownOpen]=useState(false);
+  const [rankPage,setRankPage]=useState(0);
   const [townLoading,setTownLoading]=useState(false);
   const [townError,setTownError]=useState("");
   const [townMetric,setTownMetric]=useState<"count"|"amount">("count");
-  const [townLimit,setTownLimit]=useState(30);
+  const [townLimit,setTownLimit]=useState(60);
   const [view,setView]=useState({x:0,y:0,k:1.1});
   const [townView,setTownView]=useState({x:0,y:0,k:1});
   const mapRef=useRef<SVGSVGElement|null>(null);
@@ -156,13 +162,15 @@ export default function Home(){
   const flows=useMemo(()=>{
     if(!data)return [];
     const m=new Map<string,Flow>();
+    const originMatches=(key:string)=>originLocation==="ALL"||key===originLocation||key.startsWith(`${originLocation}|`);
+    const destinationMatches=(key:string)=>destinationLocation==="ALL"||key===destinationLocation||key.startsWith(`${destinationLocation}|`);
     if(analysisLevel!=="镇街")for(const r of data.records){
       if(r[0]!==relation||!matchesIndustry(r[1],r[2]))continue;
       if((scope==="跨市"&&r[4]===r[6])||(scope==="市内"&&r[4]!==r[6]))continue;
       const originKey=analysisLevel==="城市"?r[4]:`${r[4]}|${r[5]}`,destinationKey=analysisLevel==="城市"?r[6]:`${r[6]}|${r[7]}`;
       // 专利关系无向：数据仅按码位序存储单一方向，起终点筛选按“任一端包含”匹配。
-      if(originLocation!=="ALL"&&originKey!==originLocation&&(relation!=="专利"||destinationKey!==originLocation))continue;
-      if(destinationLocation!=="ALL"&&destinationKey!==destinationLocation&&(relation!=="专利"||originKey!==destinationLocation))continue;
+      if(!originMatches(originKey)&&(relation!=="专利"||!originMatches(destinationKey)))continue;
+      if(!destinationMatches(destinationKey)&&(relation!=="专利"||!destinationMatches(originKey)))continue;
       let oName=analysisLevel==="城市"?r[4]:r[5],dName=analysisLevel==="城市"?r[6]:r[7],oc=r[4],dc=r[6];
       // 城市层级专利按码位序规范化方向，与数据生成方向（Python sorted）保持一致。
       if(analysisLevel==="城市"&&relation==="专利"&&oName>dName){[oName,dName]=[dName,oName];[oc,dc]=[dc,oc]}
@@ -173,8 +181,8 @@ export default function Home(){
       if(r[0]!==relation||!matchesIndustry(r[1],r[2]))continue;
       if((scope==="跨市"&&r[4]===r[7])||(scope==="市内"&&r[4]!==r[7]))continue;
       if(r[4]===r[7]&&r[5]===r[8]&&r[6]===r[9])continue;
-      if(originLocation!=="ALL"&&`${r[4]}|${r[5]}|${r[6]}`!==originLocation&&(relation!=="专利"||`${r[7]}|${r[8]}|${r[9]}`!==originLocation))continue;
-      if(destinationLocation!=="ALL"&&`${r[7]}|${r[8]}|${r[9]}`!==destinationLocation&&(relation!=="专利"||`${r[4]}|${r[5]}|${r[6]}`!==destinationLocation))continue;
+      if(!originMatches(`${r[4]}|${r[5]}|${r[6]}`)&&(relation!=="专利"||!originMatches(`${r[7]}|${r[8]}|${r[9]}`)))continue;
+      if(!destinationMatches(`${r[7]}|${r[8]}|${r[9]}`)&&(relation!=="专利"||!destinationMatches(`${r[4]}|${r[5]}|${r[6]}`)))continue;
       const key=`${r[4]}${r[5]}${r[6]}${relation==="专利"?"—":"→"}${r[7]}${r[8]}${r[9]}`;
       const x=m.get(key)||{key,oc:r[4],o:r[5],ot:r[6],dc:r[7],d:r[8],dt:r[9],count:0,amount:0,amountCount:0,patents:0,pairs:0,maxPair:0,share:0,unmatched:0};
       x.count+=r[10];x.amount+=r[11];x.amountCount+=r[12];x.patents+=r[13]||0;x.pairs+=r[14]||0;x.maxPair=Math.max(x.maxPair,r[15]||0);x.share=Math.max(x.share,r[16]||0);x.unmatched+=r[17]||0;m.set(key,x);
@@ -182,15 +190,17 @@ export default function Home(){
     return [...m.values()].sort((a,b)=>(metric==="count"?b.count-a.count:b.amount-a.amount));
   },[data,allTownData,analysisLevel,relation,metric,scope,originLocation,destinationLocation,matchesIndustry]);
   const shown=limit===0?flows:flows.slice(0,limit);
+  useEffect(()=>setRankPage(0),[shown.length,analysisLevel,scope,relation,metric,industry.code,industryMode,chainId,originLocation,destinationLocation,limit]);
   const renderFlows=[...shown].reverse();
   const currentBreaks=quantileBreaks(shown.map(x=>metric==="count"?x.count:x.amount));
   const metricUnit=metric==="count"?"条":"万元";
-  const currentLegend=numericLegend(scale,currentBreaks,shown.map(x=>metric==="count"?x.count:x.amount),metricUnit,metric==="amount"?1:0);
+  const currentLegend=numericLegend(scale,currentBreaks,shown.map(x=>metric==="count"?x.count:x.amount),metricUnit,metric==="amount"?1:0,[.65,1,1.45,2.2,3.4]);
   const strength=(value:number)=>strengthBand(value,currentBreaks);
   const lineWidths=[.65,1,1.45,2.2,3.4];
   const reverseSelected=selected&&relation!=="专利"?flows.find(x=>x.key!==selected.key&&x.o===selected.d&&x.d===selected.o&&(analysisLevel!=="镇街"||(x.ot===selected.dt&&x.dt===selected.ot))):null;
+  const orderedFlows=[...renderFlows].sort((a,b)=>{const sa=a.key===selected?.key||(relation!=="专利"&&a.key===reverseSelected?.key)?1:0;const sb=b.key===selected?.key||(relation!=="专利"&&b.key===reverseSelected?.key)?1:0;return sa-sb});
   const openTown=async()=>{
-    setTownOpen(true);setTownMetric(relation==="专利"?"count":metric);setTownLimit(30);setTownView({x:0,y:0,k:1});setTownError("");
+    setTownOpen(true);setTownMetric(relation==="专利"?"count":metric);setTownLimit(60);setTownView({x:0,y:0,k:1});setTownError("");
     if(!selected)return;
     const pairKey=[`${selected.oc}|${selected.o}`,`${selected.dc}|${selected.d}`].sort().join("↔");
     if(townData&&townDataKey===pairKey)return;
@@ -224,7 +234,7 @@ export default function Home(){
   const displayedTownFlows=townLimit===0?townFlows:townFlows.slice(0,townLimit);
   const townTotals=townFlows.reduce((a,x)=>({count:a.count+x.count,amount:a.amount+x.amount,links:a.links+1,patents:a.patents+x.patents,pairs:a.pairs+x.pairs}),{count:0,amount:0,links:0,patents:0,pairs:0});
   const townBreaks=quantileBreaks(displayedTownFlows.map(x=>townMetric==="count"?x.count:x.amount));
-  const townLegend=numericLegend(scale,townBreaks,displayedTownFlows.map(x=>townMetric==="count"?x.count:x.amount),townMetric==="count"?"条":"万元",townMetric==="amount"?1:0);
+  const townLegend=numericLegend(scale,townBreaks,displayedTownFlows.map(x=>townMetric==="count"?x.count:x.amount),townMetric==="count"?"条":"万元",townMetric==="amount"?1:0,[.45,.7,1,1.5,2.3]);
   const townStrength=(value:number)=>strengthBand(value,townBreaks);
   const townRenderFlows=[...displayedTownFlows].reverse();
   const districtPairCount=selected?(selected.count+(relation!=="专利"?(reverseSelected?.count||0):0)):0;
@@ -285,34 +295,36 @@ export default function Home(){
     return{count:build("count"),amount:relation==="专利"?null:build("amount")};
   },[data,allTownData,analysisLevel,selected,relation,industry,industryMode,activeChainCodes,selectedChain]);
   const industryComposition=industryCompositions;
-  const zoom=(factor:number)=>setView(v=>{const k=Math.min(5,Math.max(1,v.k*factor));return k===1?{x:0,y:0,k}:{x:450-(450-v.x)*k/v.k,y:300-(300-v.y)*k/v.k,k}});
-  useEffect(()=>{const el=mapRef.current;if(!el)return;const onWheel=(e:WheelEvent)=>{e.preventDefault();e.stopPropagation();const factor=e.deltaY<0?1.18:1/1.18;setView(v=>{const k=Math.min(5,Math.max(1,v.k*factor));return k===1?{x:0,y:0,k}:{x:450-(450-v.x)*k/v.k,y:300-(300-v.y)*k/v.k,k}})};el.addEventListener("wheel",onWheel,{passive:false});return()=>el.removeEventListener("wheel",onWheel)},[data,analysisLevel,module,platformFeature]);
+  const zoom=(factor:number)=>setView(v=>{const k=Math.min(analysisLevel==="镇街"?10:5,Math.max(1,v.k*factor));return k===1?{x:0,y:0,k}:{x:450-(450-v.x)*k/v.k,y:300-(300-v.y)*k/v.k,k}});
+  useEffect(()=>{const el=mapRef.current;if(!el)return;const onWheel=(e:WheelEvent)=>{e.preventDefault();e.stopPropagation();const factor=e.deltaY<0?1.18:1/1.18;setView(v=>{const k=Math.min(analysisLevel==="镇街"?10:5,Math.max(1,v.k*factor));return k===1?{x:0,y:0,k}:{x:450-(450-v.x)*k/v.k,y:300-(300-v.y)*k/v.k,k}})};el.addEventListener("wheel",onWheel,{passive:false});return()=>el.removeEventListener("wheel",onWheel)},[data,analysisLevel,module,platformFeature]);
   const onPointerDown=(e:React.PointerEvent<SVGSVGElement>)=>{e.currentTarget.setPointerCapture(e.pointerId);drag.current={x:e.clientX,y:e.clientY,vx:view.x,vy:view.y}};
-  const onPointerMove=(e:React.PointerEvent<SVGSVGElement>)=>{if(!drag.current)return;const box=e.currentTarget.getBoundingClientRect(),s=900/box.width;setView(v=>({...v,x:drag.current!.vx+(e.clientX-drag.current!.x)*s,y:drag.current!.vy+(e.clientY-drag.current!.y)*s}))};
+  const onPointerMove=(e:React.PointerEvent<SVGSVGElement>)=>{const dragState=drag.current;if(!dragState)return;const box=e.currentTarget.getBoundingClientRect(),s=900/box.width;setView(v=>({...v,x:dragState.vx+(e.clientX-dragState.x)*s,y:dragState.vy+(e.clientY-dragState.y)*s}))};
   const onPointerUp=()=>{drag.current=null};
-  const zoomTown=(factor:number)=>setTownView(current=>{const k=Math.min(5,Math.max(1,current.k*factor));return k===1?{x:0,y:0,k}:{x:450-(450-current.x)*k/current.k,y:260-(260-current.y)*k/current.k,k}});
+  const zoomTown=(factor:number)=>setTownView(current=>{const k=Math.min(10,Math.max(1,current.k*factor));return k===1?{x:0,y:0,k}:{x:450-(450-current.x)*k/current.k,y:260-(260-current.y)*k/current.k,k}});
   useEffect(()=>{const element=townMapRef.current;if(!element||!townOpen)return;const wheel=(event:WheelEvent)=>{event.preventDefault();event.stopPropagation();zoomTown(event.deltaY<0?1.18:1/1.18)};element.addEventListener("wheel",wheel,{passive:false});return()=>element.removeEventListener("wheel",wheel)},[townOpen,townLoading]);
   const onTownPointerDown=(event:React.PointerEvent<SVGSVGElement>)=>{event.currentTarget.setPointerCapture(event.pointerId);townDrag.current={x:event.clientX,y:event.clientY,vx:townView.x,vy:townView.y}};
-  const onTownPointerMove=(event:React.PointerEvent<SVGSVGElement>)=>{if(!townDrag.current)return;const ratio=900/event.currentTarget.getBoundingClientRect().width;setTownView(current=>({...current,x:townDrag.current!.vx+(event.clientX-townDrag.current!.x)*ratio,y:townDrag.current!.vy+(event.clientY-townDrag.current!.y)*ratio}))};
+  const onTownPointerMove=(event:React.PointerEvent<SVGSVGElement>)=>{const dragState=townDrag.current;if(!dragState)return;const ratio=900/event.currentTarget.getBoundingClientRect().width;setTownView(current=>({...current,x:dragState.vx+(event.clientX-dragState.x)*ratio,y:dragState.vy+(event.clientY-dragState.y)*ratio}))};
   const onTownPointerUp=()=>{townDrag.current=null};
   const geo=useMemo(()=>{
     if(!data)return null;const pts:any[]=[];
     data.boundaries.features.forEach(f=>f.geometry.coordinates.flat(2).forEach((p:any)=>pts.push(p)));
     const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys),centerX=(minX+maxX)/2,centerY=(minY+maxY)/2,cosLatitude=Math.cos(centerY*Math.PI/180),xSpan=Math.max((maxX-minX)*cosLatitude,.0001),ySpan=Math.max(maxY-minY,.0001),mapScale=Math.min(820/xSpan,500/ySpan)/1.08;
     const project=(p:[number,number]):[number,number]=>[450+(p[0]-centerX)*cosLatitude*mapScale,300-(p[1]-centerY)*mapScale];
-    const paths=data.boundaries.features.map(f=>({
+    const cityNames=["厦门市","泉州市","漳州市"];
+    const prefectureFeatures=analysisLevel==="城市"?fujianBackdrop.filter(feature=>cityNames.includes(feature.properties.name)):[];
+    const paths=(analysisLevel==="城市"&&prefectureFeatures.length?prefectureFeatures:data.boundaries.features).map(f=>({
       name:f.properties.name,
       d:f.geometry.coordinates
         .map((poly:any)=>poly.map((ring:any)=>ring.map((p:any,i:number)=>(i?"L":"M")+project(p).join(",")).join("")+"Z").join(""))
         .join("")
     }));
     const centers:Record<string,[number,number]>={};Object.entries(data.centers).forEach(([k,v])=>centers[k]=project(v));Object.entries(governmentCenters?.county||{}).forEach(([key,point])=>centers[key.split("|")[1]]=project(point));
-    const cityParts=new Map<string,[number,number][]>();Object.entries(governmentCenters?.county||{}).forEach(([key,point])=>{const city=key.split("|")[0],items=cityParts.get(city)||[];items.push(project(point));cityParts.set(city,items)});const cityCenters:Record<string,[number,number]>={};cityParts.forEach((items,city)=>cityCenters[city]=[items.reduce((sum,item)=>sum+item[0],0)/items.length,items.reduce((sum,item)=>sum+item[1],0)/items.length]);
+    const cityParts=new Map<string,[number,number][]>();Object.entries(governmentCenters?.county||{}).forEach(([key,point])=>{const city=key.split("|")[0],items=cityParts.get(city)||[];items.push(project(point));cityParts.set(city,items)});const cityCenters:Record<string,[number,number]>={};cityParts.forEach((items,city)=>cityCenters[city]=[items.reduce((sum,item)=>sum+item[0],0)/items.length,items.reduce((sum,item)=>sum+item[1],0)/items.length]);if(governmentCenters?.city)Object.entries(governmentCenters.city).forEach(([city,point])=>cityCenters[city]=project(point));
     const townPaths=(townBoundaries?.features||[]).map(feature=>({...feature.properties,d:feature.geometry.coordinates.map((poly:any)=>poly.map((ring:any)=>ring.map((point:any,index:number)=>(index?"L":"M")+project(point).join(",")).join("")+"Z").join("")).join("")}));
     const townCenters:Record<string,[number,number]>={};(townBoundaries?.features||[]).forEach(feature=>{const point=project(feature.properties.center);townCenters[`${feature.properties.city}|${feature.properties.county}|${feature.properties.town}`]=point;townCenters[`${feature.properties.city}|${feature.properties.county}|~${normalizeTown(feature.properties.town)}`]=point});Object.entries(governmentCenters?.township||{}).forEach(([key,point])=>{const projected=project(point),parts=key.split("|");townCenters[key]=projected;townCenters[`${parts[0]}|${parts[1]}|~${normalizeTown(parts[2])}`]=projected});
-    const backdrop=fujianBackdrop.map(feature=>({...feature.properties,d:feature.geometry.coordinates.map((poly:any)=>poly.map((ring:any)=>ring.map((point:any,index:number)=>(index?"L":"M")+project(point).join(",")).join("")+"Z").join("")).join("")}));
-    return{paths,centers,cityCenters,townPaths,townCenters,backdrop};
-  },[data,townBoundaries,governmentCenters,fujianBackdrop]);
+    const backdrop=(analysisLevel==="城市"?fujianBackdrop.filter(feature=>!cityNames.includes(feature.properties.name)):fujianBackdrop).map(feature=>({...feature.properties,d:feature.geometry.coordinates.map((poly:any)=>poly.map((ring:any)=>ring.map((point:any,index:number)=>(index?"L":"M")+project(point).join(",")).join("")+"Z").join("")).join("")}));
+    return{paths,centers,cityCenters,townPaths,townCenters,backdrop,kmPerPixel:111.32/(cosLatitude*mapScale)};
+  },[data,townBoundaries,governmentCenters,fujianBackdrop,analysisLevel]);
   const townGeo=useMemo(()=>{
     if(!townBoundaries||!data||!selected)return null;
     const selectedCountyNames=new Set([selected.o,selected.d]);
@@ -330,7 +342,7 @@ export default function Home(){
     const countyPaths=data.boundaries.features.map(feature=>({name:feature.properties.name,d:feature.geometry.coordinates.map((poly:any)=>poly.map((ring:any)=>ring.map((point:any,index:number)=>(index?"L":"M")+project(point).join(",")).join("")+"Z").join("")).join("")}));
     const centers:Record<string,[number,number]>={};selectedTownFeatures.forEach(feature=>{const point=project(feature.properties.center);centers[`${feature.properties.city}|${feature.properties.county}|${feature.properties.town}`]=point;centers[`${feature.properties.city}|${feature.properties.county}|~${normalizeTown(feature.properties.town)}`]=point});Object.entries(governmentCenters?.township||{}).forEach(([key,point])=>{const parts=key.split("|");if(!selectedCountyNames.has(parts[1]))return;const projected=project(point);centers[key]=projected;centers[`${parts[0]}|${parts[1]}|~${normalizeTown(parts[2])}`]=projected});
     const backdrop=fujianBackdrop.map(feature=>({...feature.properties,d:feature.geometry.coordinates.map((poly:any)=>poly.map((ring:any)=>ring.map((point:any,index:number)=>(index?"L":"M")+project(point).join(",")).join("")+"Z").join("")).join("")}));
-    return{paths,countyPaths,centers,backdrop};
+    return{paths,countyPaths,centers,backdrop,kmPerPixel:111.32/(cosLatitude*mapScale)};
   },[townBoundaries,data,selected,governmentCenters,fujianBackdrop]);
   const endpointName=(flow:Flow,side:"o"|"d")=>mapDisplayName(analysisLevel==="镇街"?(side==="o"?flow.ot||flow.o:flow.dt||flow.d):(side==="o"?flow.o:flow.d));
   const endpointContext=(flow:Flow,side:"o"|"d")=>analysisLevel==="城市"?(side==="o"?flow.oc:flow.dc):(side==="o"?`${flow.oc} · ${flow.o}`:`${flow.dc} · ${flow.d}`);
@@ -348,6 +360,32 @@ export default function Home(){
     {key:`${flow.oc}|${flow.o}|~${normalizeTown(flow.ot)}`,name:flow.ot,point:townGeo?townCenter(townGeo.centers,flow.oc,flow.o,flow.ot):undefined,priority:displayedTownFlows.length-index},
     {key:`${flow.dc}|${flow.d}|~${normalizeTown(flow.dt)}`,name:flow.dt,point:townGeo?townCenter(townGeo.centers,flow.dc,flow.d,flow.dt):undefined,priority:displayedTownFlows.length-index}
   ]).map(item=>[item.key,item] as const)).values()].filter(item=>Boolean(item.point)) as MapLabelCandidate[];
+  const flowObstacles=useMemo<[number,number][]>(()=>{
+    if(!geo)return[];
+    const rows=limit===0?flows:flows.slice(0,limit);
+    const out:[number,number][]=[];
+    for(const flow of rows){
+      const a=mainCenter(flow,"o"),b=mainCenter(flow,"d");
+      if(!a||!b)continue;
+      const dx=b[0]-a[0],dy=b[1]-a[1];
+      if(dx===0&&dy===0){out.push(a);continue}
+      const len=Math.max(1,Math.hypot(dx,dy)),bend=Math.min(52,Math.max(18,len*.16)),mx=(a[0]+b[0])/2-dy/len*bend,my=(a[1]+b[1])/2+dx/len*bend;
+      for(const point of quadraticPoints(a,b,[mx,my]))out.push(point);
+    }
+    return out;
+  },[geo,flows,limit,analysisLevel]);
+  const townObstacles=useMemo<[number,number][]>(()=>{
+    if(!townGeo)return[];
+    const rows=townLimit===0?townFlows:townFlows.slice(0,townLimit);
+    const out:[number,number][]=[];
+    for(const flow of rows){
+      const a=townCenter(townGeo.centers,flow.oc,flow.o,flow.ot),b=townCenter(townGeo.centers,flow.dc,flow.d,flow.dt);
+      if(!a||!b)continue;
+      const dx=b[0]-a[0],dy=b[1]-a[1],length=Math.max(1,Math.hypot(dx,dy)),bend=Math.min(24,Math.max(8,length*.1)),mx=(a[0]+b[0])/2-dy/length*bend,my=(a[1]+b[1])/2+dx/length*bend;
+      for(const point of quadraticPoints(a,b,[mx,my]))out.push(point);
+    }
+    return out;
+  },[townGeo,townFlows,townLimit]);
   const scopeTitle=scope==="跨市"?"跨市":scope==="市内"?"市内":"全域";
   const mapTitle=`厦漳泉${scopeTitle}${analysisLevel}${relation}${relation==="专利"?"联系网络":"关系流向图"} · ${activeIndustryName}`;
   const mapSubtitle=`${activeIndustryPath} · ${metric==="count"?"关系数量":"金额（万元人民币）"} · ${limit===0?`全部 ${flows.length} 条`:`强度前 ${Math.min(limit,flows.length)} 条`}`;
@@ -390,8 +428,8 @@ export default function Home(){
       <label>分析层级<select value={analysisLevel} onChange={e=>changeAnalysisLevel(e.target.value as "城市"|"区县"|"镇街")}><option>城市</option><option>区县</option><option>镇街</option></select></label>
       <label>关系类型<select value={relation} onChange={e=>setRelation(e.target.value)}>{["投资","分支","专利"].map(x=><option key={x}>{x}</option>)}</select></label>
       <label>联系范围<select value={scope} onChange={e=>setScope(e.target.value as "全部"|"跨市"|"市内")}><option value="全部">全部{analysisLevel}联系</option><option value="跨市">仅跨市{analysisLevel}联系</option><option value="市内">仅市内{analysisLevel}联系</option></select></label>
-      <LocationTreePicker label={`起点${analysisLevel}`} level={analysisLevel} value={originLocation} onChange={value=>{setOriginLocation(value);setSelected(null);setTownOpen(false)}} tree={locationTree} allLabel={`全部起点${analysisLevel}`}/>
-      <LocationTreePicker label={`终点${analysisLevel}`} level={analysisLevel} value={destinationLocation} onChange={value=>{setDestinationLocation(value);setSelected(null);setTownOpen(false)}} tree={locationTree} allLabel={`全部终点${analysisLevel}`}/>
+      <LocationTreePicker label={`起点${analysisLevel}`} level={analysisLevel} value={originLocation} onChange={value=>{setOriginLocation(value);setSelected(null);setTownOpen(false)}} tree={locationTree} allLabel={`全部起点${analysisLevel}`} allowCity/>
+      <LocationTreePicker label={`终点${analysisLevel}`} level={analysisLevel} value={destinationLocation} onChange={value=>{setDestinationLocation(value);setSelected(null);setTownOpen(false)}} tree={locationTree} allLabel={`全部终点${analysisLevel}`} allowCity/>
       <div className="industrySelectorGroup">
         <label>行业口径<select value={industryMode} onChange={e=>{setIndustryMode(e.target.value as IndustryMode);setSelected(null);setTownOpen(false)}}><option>逐级行业</option><option>产业链归纳</option></select></label>
         {industryMode==="逐级行业"?<details className="industryTree"><summary><span>{relation==="专利"?"相关行业（任一企业端）":"D端行业（展开选择）"}</span><strong>{industry.path}</strong></summary><div className="treePanel"><button className={industry.code==="ALL"?"chosen":""} onClick={()=>setIndustry(relation==="专利"?{level:0,code:"ALL",name:"全部行业",path:"全部行业"}:{level:1,code:"ALL",name:"全部行业",path:"全部行业"})}>全部行业</button>{industryTree.map(a=><details key={a.code}><summary>{a.code} · {a.name}</summary><button className={industry.code===a.code?"chosen levelChoice":"levelChoice"} onClick={()=>setIndustry({level:1,code:a.code,name:a.name,path:a.name})}>选择“{a.name}”全部</button><div>{a.children.map(b=><details key={b.code}><summary>{b.code} · {b.name}</summary><button className={industry.code===b.code?"chosen levelChoice":"levelChoice"} onClick={()=>setIndustry({level:2,code:b.code,name:b.name,path:`${a.name} / ${b.name}`})}>选择“{b.name}”全部</button><div>{b.children.map(c=><button key={c.code} className={industry.code===c.code?"chosen":""} onClick={()=>setIndustry({level:3,code:c.code,name:c.name,path:`${a.name} / ${b.name} / ${c.name}`})}>{c.code} · {c.name}</button>)}</div></details>)}</div></details>)}</div></details>:<label className="chainSelector">{relation==="专利"?"相关产业链（任一企业端）":"D端产业链"}<select value={chainId} onChange={e=>{setChainId(e.target.value);setSelected(null);setTownOpen(false)}}><option value="ALL">全部产业链（{INDUSTRY_CHAIN_CODE_COUNT}个二级行业）</option>{INDUSTRY_CHAINS.map(chain=><option key={chain.id} value={chain.id}>{chain.name}（{chain.codes.length}个行业）</option>)}</select><small>{selectedChain?selectedChain.codes.join("、"):`${INDUSTRY_CHAINS.length}条产业链，覆盖全部${INDUSTRY_CHAIN_CODE_COUNT}个二级行业`}</small></label>}
@@ -401,7 +439,7 @@ export default function Home(){
     <section className="enterpriseAnalysisStage">
       <section className="stats"><article><span>{relation==="专利"?"专利—企业对关系":`跨${analysisLevel}关系`}</span><strong>{fmt(totals.count)}</strong><small>{relation==="专利"?(industryMode==="产业链归纳"?"按产业链行业关联次数":"按名称无向去重后"):"条去重关系"}</small></article><article><span>{relation==="专利"?`无向${analysisLevel}对`:"OD方向"}</span><strong>{fmt(totals.links)}</strong><small>{relation==="专利"?`个有效${analysisLevel}对`:"个有效流向"}</small></article><article><span>{relation==="专利"?`${analysisLevel}对内唯一专利名合计`:"金额合计"}</span><strong>{relation==="专利"?fmt(totals.patents):fmt(totals.amount,1)}</strong><small>{relation==="专利"?"同一专利名跨行业可出现":"万元人民币"}</small></article><article><span>{industryMode==="产业链归纳"?"当前产业链":"当前行业"}</span><strong className="industryName">{activeIndustryName}</strong><small>{activeIndustryPath}</small></article></section>
       <section className="workspace">
-      <div className="mapCard"><div className="cardHead"><div><h2>{mapTitle}</h2><p>{mapSubtitle}；点击连线查看详情</p></div><div className="mapHeadActions"><select value={limit} onChange={e=>setLimit(+e.target.value)}><option value="30">前30</option><option value="60">前60</option><option value="120">前120</option><option value="200">前200</option><option value="0">全部</option></select><button onClick={()=>exportMapPng(mapRef.current,{title:mapTitle,subtitle:mapSubtitle,legendTitle:`${metric==="count"?"关系数量":"金额"}分级`,legend:currentLegend})}>导出 PNG</button></div></div>
+      <div className="mapCard"><div className="cardHead"><div><h2>{mapTitle}</h2><p>{mapSubtitle}；点击连线查看详情</p></div><div className="mapHeadActions"><select value={limit} onChange={e=>setLimit(+e.target.value)}><option value="30">前30</option><option value="60">前60</option><option value="120">前120</option><option value="200">前200</option><option value="0">全部</option></select><label className="labelToggle"><input type="checkbox" checked={labelsOn} onChange={event=>setLabelsOn(event.target.checked)}/>标注</label><button onClick={()=>exportWithLabelsOn(labelsOn,setLabelsOn,()=>exportMapPng(mapRef.current,{title:mapTitle,subtitle:mapSubtitle,legendTitle:`${metric==="count"?"关系数量":"金额"}分级`,legend:currentLegend,kmPerPixel:geo?.kmPerPixel}))}>导出 PNG</button></div></div>
         <div className="mapWrap">
           <svg ref={mapRef} viewBox="0 34 900 600" className="map" role="img" aria-label={`可缩放、可拖动的厦漳泉${analysisLevel}企业关系地图`} onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp}>
             <defs><marker id="flowArrow" markerWidth={5/view.k} markerHeight={5/view.k} refX={4.7/view.k} refY={2.5/view.k} orient="auto" markerUnits="userSpaceOnUse"><path d={`M0,0 L${5/view.k},${2.5/view.k} L0,${5/view.k} Z`} fill="context-stroke"/></marker></defs>
@@ -410,18 +448,20 @@ export default function Home(){
               <g>{geo.paths.map(p=><path key={p.name} d={p.d} className="county"><title>{p.name}</title></path>)}</g>
               {analysisLevel==="镇街"&&<g>{geo.townPaths.map(path=><path key={`${path.city}-${path.county}-${path.town}`} d={path.d} className="enterpriseTownBoundary"><title>{path.city} · {path.county} · {path.town}</title></path>)}</g>}
               {analysisLevel==="镇街"&&<g>{geo.paths.map(path=><path key={`town-county-overlay-${path.name}`} d={path.d} className="townshipCountyOverlay"/>)}</g>}
-              <g>{renderFlows.map(x=>{const a=mainCenter(x,"o"),b=mainCenter(x,"d");if(!a||!b)return null;const val=metric==="count"?x.count:x.amount,dx=b[0]-a[0],dy=b[1]-a[1];let d;if(dx===0&&dy===0){d=`M${a[0]},${a[1]} C${a[0]+26},${a[1]-38} ${a[0]+34},${a[1]+14} ${a[0]+10},${a[1]+4}`}else{const len=Math.max(1,Math.hypot(dx,dy)),bend=Math.min(52,Math.max(18,len*.16));const mx=(a[0]+b[0])/2-dy/len*bend,my=(a[1]+b[1])/2+dx/len*bend;d=`M${a} Q${mx},${my} ${b}`}const band=strength(val),width=lineWidths[band];return <g key={x.key} onPointerDown={e=>e.stopPropagation()} onClick={()=>setSelected(x)}><path d={d} className="flowHit" style={{strokeWidth:width+9}}/><path d={d} className="flow" markerEnd={relation==="专利"?undefined:"url(#flowArrow)"} style={{stroke:scale[band],strokeWidth:width,opacity:.48+band*.1}}><title>{x.key}：{metric==="count"?fmt(x.count)+"条":fmt(x.amount,2)+"万元"}</title></path></g>})}</g>
-              <DynamicMapLabels candidates={mainLabelCandidates} view={view} baseLimit={analysisLevel==="镇街"?10:17}/>
+              {labelsOn&&<DynamicMapLabels candidates={mainLabelCandidates} view={view} baseLimit={analysisLevel==="镇街"?10:17} obstacles={flowObstacles}/>}
+              <g>{orderedFlows.map(x=>{const a=mainCenter(x,"o"),b=mainCenter(x,"d");if(!a||!b)return null;const val=metric==="count"?x.count:x.amount,dx=b[0]-a[0],dy=b[1]-a[1];let d;if(dx===0&&dy===0){d=`M${a[0]},${a[1]} C${a[0]+26},${a[1]-38} ${a[0]+34},${a[1]+14} ${a[0]+10},${a[1]+4}`}else{const len=Math.max(1,Math.hypot(dx,dy)),bend=Math.min(52,Math.max(18,len*.16));const mx=(a[0]+b[0])/2-dy/len*bend,my=(a[1]+b[1])/2+dx/len*bend;d=`M${a} Q${mx},${my} ${b}`}const band=strength(val),width=lineWidths[band],highlighted=x.key===selected?.key||(relation!=="专利"&&x.key===reverseSelected?.key),dimmed=Boolean(selected&&!highlighted);return <g key={x.key} onPointerDown={e=>e.stopPropagation()} onClick={()=>setSelected(x)}><path d={d} className="flowHit" style={{strokeWidth:width+9}}/><path d={d} className={highlighted?"flow flowSelected":"flow"} markerEnd={relation==="专利"?undefined:"url(#flowArrow)"} style={{stroke:scale[band],strokeWidth:highlighted?width+2.5:width,opacity:highlighted?1:dimmed?.12:.48+band*.1}}><title>{x.key}：{metric==="count"?fmt(x.count)+"条":fmt(x.amount,2)+"万元"}</title></path></g>})}</g>
             </g>
+            <MapDecorations kmPerPixel={geo?.kmPerPixel} viewK={view.k} width={900} height={600}/>
           </svg>
+          <MapScaleOverlay kmPerPixel={geo?.kmPerPixel} viewK={view.k}/>
           {analysisLevel==="镇街"&&directTownLoading&&<div className="enterpriseTownState">正在载入全量镇街关系与边界…</div>}
           {analysisLevel==="镇街"&&directTownError&&<div className="enterpriseTownState error">{directTownError}</div>}
           <div className="mapTools"><button onClick={()=>zoom(1.25)} aria-label="放大地图">＋</button><button onClick={()=>zoom(.8)} aria-label="缩小地图">－</button><button onClick={()=>setView({x:0,y:0,k:1.1})} aria-label="重置地图">复位</button></div>
           <span className="mapHint">滚轮缩放 · 按住拖动</span>
+          <div className="legend numericLegend"><span>{metric==="count"?"关系数量":"金额"}分级</span>{currentLegend.map(item=><span className="legendItem" key={`${item.color}-${item.label}`}><i style={item.shape==="line"?{background:item.color,height:Math.max(1.5,Math.min(6.5,(item.lineWidth||1)*2.2)),borderRadius:2}:{background:item.color}}/>{item.label}</span>)}</div>
         </div>
-        <div className="legend numericLegend"><span>{metric==="count"?"关系数量":"金额"}分级</span>{currentLegend.map(item=><span className="legendItem" key={`${item.color}-${item.label}`}><i style={{background:item.color}}/>{item.label}</span>)}</div>
       </div>
-      <aside><div className="cardHead"><div><h2>{relation==="专利"?`${analysisLevel}对排名`:"OD 排名"}</h2><p>按当前指标降序</p></div></div><div className="ranking">{shown.slice(0,12).map((x,i)=><button key={x.key} onClick={()=>setSelected(x)}><b>{String(i+1).padStart(2,"0")}</b><span><strong>{endpointName(x,"o")} {relation==="专利"?"—":"→"} {endpointName(x,"d")}</strong><small>{endpointContext(x,"o")} · {endpointContext(x,"d")}</small></span><em>{metric==="count"?fmt(x.count):fmt(x.amount,1)}</em></button>)}</div></aside>
+      <aside><div className="cardHead"><div><h2>{relation==="专利"?`${analysisLevel}对排名`:"OD 排名"}</h2><p>按当前指标降序</p></div></div><div className="ranking">{shown.slice(rankPage*12,rankPage*12+12).map((x,i)=><button key={x.key} onClick={()=>setSelected(x)}><b>{String(rankPage*12+i+1).padStart(2,"0")}</b><span><strong>{endpointName(x,"o")} {relation==="专利"?"—":"→"} {endpointName(x,"d")}</strong><small>{endpointContext(x,"o")} · {endpointContext(x,"d")}</small></span><em>{metric==="count"?fmt(x.count):fmt(x.amount,1)}</em></button>)}<div className="rankingPager"><button disabled={rankPage===0} onClick={()=>setRankPage(page=>Math.max(0,page-1))}>‹ 上一页</button><span>{rankPage+1} / {Math.max(1,Math.ceil(shown.length/12))}</span><button disabled={rankPage>=Math.ceil(shown.length/12)-1} onClick={()=>setRankPage(page=>page+1)}>下一页 ›</button></div></div></aside>
       </section>
     </section>
     <RegionalPerformance title={`${analysisLevel}${relation}区域表现 · ${activeIndustryName}`} rows={performanceRows} selected={activeProfile} onSelect={setProfileRegion} unit={metric==="count"?"条":"万元"} digits={metric==="amount"?1:0} rankBasis={metric==="count"?`对外${relation}关系总量`:`对外${relation}金额总量`}/>
@@ -432,16 +472,17 @@ export default function Home(){
         <div className="townHeader"><span>{relation} · 镇街级产业联系</span><h2>{selected.o} {relation==="专利"?"—":"⇄"} {selected.d}</h2><p>{activeIndustryPath} · 仅统计 O/D 两端镇街字段均有效的记录</p></div>
         {townLoading?<div className="townState townLoadingState">正在载入镇街关系与边界地图…</div>:townError?<div className="townState error">{townError}</div>:<>
           {townGeo&&<div className="townNetworkMap">
-            <div className="townMapCaption"><div><strong>{townMapTitle}</strong><span>{townMapSubtitle}；仅展开所选两个区县的镇街边界</span></div><div className="mapHeadActions"><small>按当前列表动态分级</small><button onClick={()=>exportMapPng(townMapRef.current,{title:townMapTitle,subtitle:townMapSubtitle,legendTitle:`${townMetric==="count"?"关系数量":"金额"}分级`,legend:townLegend})}>导出 PNG</button></div></div>
+            <div className="townMapCaption"><div><strong>{townMapTitle}</strong><span>{townMapSubtitle}；仅展开所选两个区县的镇街边界</span></div><div className="mapHeadActions"><small>按当前列表动态分级</small><label className="labelToggle"><input type="checkbox" checked={townLabelsOn} onChange={event=>setTownLabelsOn(event.target.checked)}/>标注</label><button onClick={()=>exportWithLabelsOn(townLabelsOn,setTownLabelsOn,()=>exportMapPng(townMapRef.current,{title:townMapTitle,subtitle:townMapSubtitle,legendTitle:`${townMetric==="count"?"关系数量":"金额"}分级`,legend:[{heading:true,label:"区县"},{color:"#9fb9d9",label:selected.o},{color:"#d9bdcc",label:selected.d},{heading:true,label:"强度分级"},...townLegend],kmPerPixel:townGeo?.kmPerPixel}))}>导出 PNG</button></div></div>
             <svg ref={townMapRef} viewBox="0 0 900 520" role="img" aria-label={`${selected.o}与${selected.d}镇街级产业联系地图`} onPointerDown={onTownPointerDown} onPointerMove={onTownPointerMove} onPointerUp={onTownPointerUp} onPointerCancel={onTownPointerUp}>
               <defs><marker id="townArrow" markerWidth={4/townView.k} markerHeight={4/townView.k} refX={3.8/townView.k} refY={2/townView.k} orient="auto" markerUnits="userSpaceOnUse"><path d={`M0,0 L${4/townView.k},${2/townView.k} L0,${4/townView.k} Z`} fill="context-stroke"/></marker></defs><g transform={`translate(${townView.x} ${townView.y}) scale(${townView.k})`}>
               <g aria-hidden="true">{townGeo.backdrop.map(feature=><path key={`town-fujian-${feature.code}`} d={feature.d} className="fujianPrefectureBackdrop"/>)}</g>
               <g>{townGeo.countyPaths.map(path=><path key={`county-${path.name}`} d={path.d} className="townCountyBackground"><title>{path.name}</title></path>)}</g>
               <g>{townGeo.paths.map(path=>{const sideA=path.city===selected.oc&&path.county===selected.o,sideB=path.city===selected.dc&&path.county===selected.d;if(!sideA&&!sideB)return null;return <path key={`${path.city}-${path.county}-${path.town}`} d={path.d} className={`townBoundary selected ${sideA?"sideA":"sideB"}`}><title>{path.city} · {path.county} · {path.town}</title></path>})}</g>
-              <g>{townRenderFlows.map(flow=>{const a=townCenter(townGeo.centers,flow.oc,flow.o,flow.ot),b=townCenter(townGeo.centers,flow.dc,flow.d,flow.dt);if(!a||!b)return null;const value=townMetric==="count"?flow.count:flow.amount,band=townStrength(value),dx=b[0]-a[0],dy=b[1]-a[1],length=Math.max(1,Math.hypot(dx,dy)),bend=Math.min(24,Math.max(8,length*.1)),mx=(a[0]+b[0])/2-dy/length*bend,my=(a[1]+b[1])/2+dx/length*bend,d=`M${a} Q${mx},${my} ${b}`;return <path key={flow.key} d={d} className="townFlow" markerEnd={relation==="专利"?undefined:"url(#townArrow)"} style={{stroke:scale[band],strokeWidth:[.45,.7,1,1.5,2.3][band],opacity:.5+band*.1}}><title>{flow.ot} {relation==="专利"?"—":"→"} {flow.dt}：{townMetric==="count"?fmt(flow.count)+"条":fmt(flow.amount,2)+"万元"}</title></path>})}</g>
-              <DynamicMapLabels candidates={townLabelCandidates} view={townView} baseLimit={16}/></g>
-            </svg><div className="mapTools"><button onClick={()=>zoomTown(1.25)}>＋</button><button onClick={()=>zoomTown(.8)}>－</button><button onClick={()=>setTownView({x:0,y:0,k:1})}>复位</button></div>
-            <div className="townMapLegend"><span><i className="sideA"/>{selected.o}</span><span><i className="sideB"/>{selected.d}</span><span className="townStrengthLegend">{townLegend.map(item=><span className="legendItem" key={`${item.color}-${item.label}`}><i style={{background:item.color}}/>{item.label}</span>)}</span></div>
+              {townLabelsOn&&<DynamicMapLabels candidates={townLabelCandidates} view={townView} width={900} height={520} baseLimit={16} obstacles={townObstacles}/>}
+              <g>{townRenderFlows.map(flow=>{const a=townCenter(townGeo.centers,flow.oc,flow.o,flow.ot),b=townCenter(townGeo.centers,flow.dc,flow.d,flow.dt);if(!a||!b)return null;const value=townMetric==="count"?flow.count:flow.amount,band=townStrength(value),dx=b[0]-a[0],dy=b[1]-a[1],length=Math.max(1,Math.hypot(dx,dy)),bend=Math.min(24,Math.max(8,length*.1)),mx=(a[0]+b[0])/2-dy/length*bend,my=(a[1]+b[1])/2+dx/length*bend,d=`M${a} Q${mx},${my} ${b}`;return <path key={flow.key} d={d} className="townFlow" markerEnd={relation==="专利"?undefined:"url(#townArrow)"} style={{stroke:scale[band],strokeWidth:[.45,.7,1,1.5,2.3][band],opacity:.5+band*.1}}><title>{flow.ot} {relation==="专利"?"—":"→"} {flow.dt}：{townMetric==="count"?fmt(flow.count)+"条":fmt(flow.amount,2)+"万元"}</title></path>})}</g></g>
+              <MapDecorations kmPerPixel={townGeo?.kmPerPixel} viewK={1} width={900} height={520}/>
+            </svg><MapScaleOverlay kmPerPixel={townGeo?.kmPerPixel} viewK={townView.k}/><div className="mapTools"><button onClick={()=>zoomTown(1.25)}>＋</button><button onClick={()=>zoomTown(.8)}>－</button><button onClick={()=>setTownView({x:0,y:0,k:1})}>复位</button></div>
+            <div className="populationLegend"><strong>区县</strong><span className="legendItem"><i className="drillSide sideA"/>{selected.o}</span><span className="legendItem"><i className="drillSide sideB"/>{selected.d}</span><strong>强度分级</strong>{townLegend.map(item=><span className="legendItem" key={`${item.color}-${item.label}`}><i style={item.shape==="line"?{background:item.color,height:Math.max(1.5,Math.min(6.5,(item.lineWidth||1)*2.2)),borderRadius:2}:{background:item.color}}/>{item.label}</span>)}</div>
           </div>}
           <div className="townSummary"><article><span>镇街联系</span><strong>{fmt(townTotals.links)}</strong><small>个有效组合</small></article><article><span>{relation==="专利"?"专利—企业对关系":"关系数量"}</span><strong>{fmt(townTotals.count)}</strong><small>镇街字段覆盖 {fmt(townCoverage*100,1)}%</small></article><article><span>{relation==="专利"?"唯一专利名合计":"金额合计"}</span><strong>{relation==="专利"?fmt(townTotals.patents):fmt(townTotals.amount,1)}</strong><small>{relation==="专利"?"按镇街组合合计":"万元人民币"}</small></article></div>
           <div className="townToolbar"><div><strong>镇街联系明细</strong><span>按当前指标降序，共 {townFlows.length} 条</span></div><div className="townToggle"><select value={townLimit} onChange={event=>setTownLimit(+event.target.value)}><option value="30">前30</option><option value="60">前60</option><option value="120">前120</option><option value="200">前200</option><option value="0">全部</option></select><button className={townMetric==="count"?"active":""} onClick={()=>setTownMetric("count")}>关系数量</button><button disabled={relation==="专利"} className={townMetric==="amount"?"active":""} onClick={()=>setTownMetric("amount")}>金额</button></div></div>

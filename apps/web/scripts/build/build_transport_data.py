@@ -23,6 +23,52 @@ def avg(values):
     return sum(values) / len(values) if values else 0.0
 
 
+def simplify_route(points, epsilon=0.002):
+    """Douglas-Peucker 抽稀, epsilon 单位=度(约 200m)。"""
+    if len(points) < 3:
+        return points
+    keep = {0, len(points) - 1}
+    stack = [(0, len(points) - 1)]
+    while stack:
+        start, end = stack.pop()
+        ax, ay = points[start]
+        bx, by = points[end]
+        dx, dy = bx - ax, by - ay
+        length = (dx * dx + dy * dy) ** 0.5 or 1e-9
+        max_d, index = 0.0, -1
+        for i in range(start + 1, end):
+            x, y = points[i]
+            d = abs(dx * (ay - y) - dy * (ax - x)) / length
+            if d > max_d:
+                max_d, index = d, i
+        if max_d > epsilon and index >= 0:
+            keep.add(index)
+            stack.append((start, index))
+            stack.append((index, end))
+    return [points[i] for i in sorted(keep)]
+
+
+def parse_route(wkt, end_point):
+    """解析高德 LINESTRING WKT; 兼容 Excel 32767 字符截断(截断后以直线补到终点)。"""
+    if not isinstance(wkt, str) or not wkt.startswith("LINESTRING"):
+        return None
+    body = wkt[wkt.index("(") + 1 : wkt.rindex(")")]
+    points, truncated = [], False
+    for segment in body.split(","):
+        parts = segment.strip().split()
+        try:
+            lon, lat = float(parts[0]), float(parts[1])
+            points.append([lon, lat])
+        except (ValueError, IndexError):
+            truncated = True
+            break
+    if len(points) < 2:
+        return None
+    if truncated and end_point:
+        points.append(end_point)
+    return points
+
+
 def build_township(population):
     workbook = load_workbook(TOWNSHIP_SOURCE, read_only=True, data_only=True)
     sheet = workbook.active
@@ -122,7 +168,7 @@ def main():
     required = [
         "O_cityname", "O_adname", "O_wgs84_经", "O_wgs84_纬",
         "D_cityname", "D_adname", "D_wgs84_经", "D_wgs84_纬",
-        "耗时", "里程（米）", "过路费（元）",
+        "耗时", "里程（米）", "过路费（元）", "路线",
     ]
     missing = [name for name in required if name not in index]
     if missing:
@@ -130,6 +176,7 @@ def main():
 
     records = []
     centers = {}
+    county_routes = {}
     by_direction = {}
     node_outbound = defaultdict(list)
     for values in sheet.iter_rows(min_row=2, values_only=True):
@@ -144,6 +191,9 @@ def main():
         dx, dy = float(values[index["D_wgs84_经"]]), float(values[index["D_wgs84_纬"]])
         item = [oc, county_o, dc, county_d, duration_seconds, duration_seconds / 60, distance_meters, distance_meters / 1000, toll]
         records.append(item)
+        route = parse_route(values[index["路线"]], [dx, dy])
+        if route:
+            county_routes[f"{oc}|{county_o}|{dc}|{county_d}"] = simplify_route(route)
         by_direction[(oc, county_o, dc, county_d)] = item
         node_outbound[(oc, county_o)].append(item)
         centers[f"{oc}|{county_o}"] = [ox, oy]
@@ -216,6 +266,7 @@ def main():
         "nodeStats": node_stats,
         "cityPairStats": city_pair_stats,
         "incompletePairs": incomplete_pairs,
+        "countyRoutes": county_routes,
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")

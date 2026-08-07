@@ -59,6 +59,11 @@
 
 仓库地址：`https://github.com/defy-6/xzq-analysis-platform.git`
 
+### 一键 Git 同步（免命令行）
+
+- **Windows**：双击 `一键拉取.bat`（GitHub → 本地，`git pull`）或 `一键推送.bat`（本地 → GitHub，自动 `git add -A` → 输入提交说明 → `git commit` → 先 `git pull` 合并远程 → `git push`）。
+- **macOS**：双击 `一键拉取.command` / `一键推送.command`，行为与 Windows 版一致。首次双击无反应时先执行 `chmod +x 一键拉取.command 一键推送.command`。
+
 ```bash
 # 克隆（首次）
 git clone https://github.com/defy-6/xzq-analysis-platform.git

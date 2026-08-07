@@ -25,25 +25,31 @@ export function buildLocationTree(entries:LocationEntry[]):LocationTreeCity[]{
   }));
 }
 
-export default function LocationTreePicker({label,level,value,onChange,tree,allLabel}:{label:string;level:LocationLevel;value:string;onChange:(value:string)=>void;tree:LocationTreeCity[];allLabel:string}){
+export default function LocationTreePicker({label,level,value,onChange,tree,allLabel,allowCity=false}:{label:string;level:LocationLevel;value:string;onChange:(value:string)=>void;tree:LocationTreeCity[];allLabel:string;allowCity?:boolean}){
   const root=useRef<HTMLDetailsElement|null>(null);
   const parts=value.split("|");
-  const display=value==="ALL"?allLabel:level==="城市"?parts[0]:level==="区县"?`${parts[0]} / ${parts[1]}`:`${parts[0]} / ${parts[1]} / ${mapDisplayName(parts[2]||"")}`;
+  const display=value==="ALL"?allLabel:level==="城市"?parts[0]:value.indexOf("|")<0?parts[0]:level==="区县"?`${parts[0]} / ${parts[1]}`:`${parts[0]} / ${parts[1]} / ${mapDisplayName(parts[2]||"")}`;
   const choose=(next:string)=>{onChange(next);if(root.current)root.current.open=false};
   return <details ref={root} className="locationTree">
     <summary><span>{label}</span><strong>{display}</strong></summary>
     <div className="locationTreePanel">
       <button type="button" className={value==="ALL"?"chosen":""} onClick={()=>choose("ALL")}>{allLabel}</button>
-      {tree.map(city=>level==="城市"?<button type="button" key={city.city} className={value===city.city?"chosen":""} onClick={()=>choose(city.city)}>{city.city}</button>:<details key={city.city}>
-        <summary>{city.city}</summary>
+      {tree.map(city=>level==="城市"?<button type="button" key={city.city} className={value===city.city?"chosen":""} onClick={()=>choose(city.city)}>{city.city}</button>:<div key={city.city} className="locationTreeCity">
+        {allowCity&&<button type="button" className={`cityAll${value===city.city?" chosen":""}`} onClick={()=>choose(city.city)}>{city.city}（全部{level}）</button>}
+        <details>
+        <summary>{allowCity?`按${level}选择`:city.city}</summary>
         <div>{city.counties.map(county=>level==="区县"
           ?<button type="button" key={county.county} className={value===`${city.city}|${county.county}`?"chosen":""} onClick={()=>choose(`${city.city}|${county.county}`)}>{county.county}</button>
-          :<details key={county.county}>
+          :<div key={county.county} className="locationTreeCounty">
+            {allowCity&&<button type="button" className={value===`${city.city}|${county.county}`?"chosen":""} onClick={()=>choose(`${city.city}|${county.county}`)}>{county.county}（全部镇街）</button>}
+            <details>
             <summary>{county.county}</summary>
             <div>{county.towns.map(town=><button type="button" key={town} className={value===`${city.city}|${county.county}|${town}`?"chosen":""} onClick={()=>choose(`${city.city}|${county.county}|${town}`)}>{mapDisplayName(town)}</button>)}</div>
-          </details>
+            </details>
+          </div>
         )}</div>
-      </details>)}
+        </details>
+      </div>)}
     </div>
   </details>;
 }

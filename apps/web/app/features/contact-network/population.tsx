@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { exportMapPng, numericLegend } from "../mapkit/map-export";
+import { exportMapPng, exportWithLabelsOn, numericLegend } from "../mapkit/map-export";
 import LocationTreePicker, { buildLocationTree } from "./location-tree";
+import MapDecorations from "../mapkit/map-scale";
+import MapScaleOverlay from "../mapkit/map-scale-overlay";
 import DynamicMapLabels, { MapLabelCandidate, mapDisplayName } from "../mapkit/map-labels";
+const quadraticPoints=(p0:[number,number],p1:[number,number],c:[number,number],segments=5):[number,number][]=>{const out:[number,number][]=[];for(let i=0;i<=segments;i++){const t=i/segments,u=1-t;out.push([u*u*p0[0]+2*u*t*c[0]+t*t*p1[0],u*u*p0[1]+2*u*t*c[1]+t*t*p1[1]])}return out};
 import RegionalPerformance, { buildRegionPerformance } from "./regional-performance";
 import useFujianBackdrop from "../mapkit/fujian-backdrop";
 
@@ -20,7 +23,7 @@ type PopulationPayload={
   townRecords:TownRecord[];
 };
 type TownBoundaryPayload={type:"FeatureCollection";features:TownBoundaryFeature[]};
-type GovernmentCenters={county:Record<string,[number,number]>;township:Record<string,[number,number]>};
+type GovernmentCenters={county:Record<string,[number,number]>;township:Record<string,[number,number]>;city:Record<string,[number,number]>};
 type PopulationFlow={key:string;oc:string;o:string;ot:string;dc:string;d:string;dt:string;population:number;rows:number};
 
 const fmt=(value:number,digits=0)=>new Intl.NumberFormat("zh-CN",{maximumFractionDigits:digits}).format(value);
@@ -42,12 +45,15 @@ export default function PopulationModule({toolbar}:{toolbar?:ReactNode}){
   const [originCounty,setOriginCounty]=useState("ALL");
   const [destinationCounty,setDestinationCounty]=useState("ALL");
   const [profileRegion,setProfileRegion]=useState("");
-  const [limit,setLimit]=useState(30);
+  const [limit,setLimit]=useState(60);
   const [listPage,setListPage]=useState(1);
   const [selected,setSelected]=useState<PopulationFlow|null>(null);
   const [loadingTown,setLoadingTown]=useState(false);
   const [drillOpen,setDrillOpen]=useState(false);
-  const [drillLimit,setDrillLimit]=useState(30);
+  const [rankPage,setRankPage]=useState(0);
+  const [labelsOn,setLabelsOn]=useState(true);
+  const [drillLabelsOn,setDrillLabelsOn]=useState(true);
+  const [drillLimit,setDrillLimit]=useState(60);
   const [view,setView]=useState({x:0,y:0,k:1.1});
   const [drillView,setDrillView]=useState({x:0,y:0,k:1});
   const mapRef=useRef<SVGSVGElement|null>(null);
@@ -65,7 +71,7 @@ export default function PopulationModule({toolbar}:{toolbar?:ReactNode}){
   useEffect(()=>setListPage(1),[level,scope,originCounty,destinationCounty]);
   useEffect(()=>setDrillOpen(false),[selected?.key,level]);
   const openDrill=async()=>{
-    setDrillOpen(true);setDrillLimit(30);setDrillView({x:0,y:0,k:1});
+    setDrillOpen(true);setDrillLimit(60);setDrillView({x:0,y:0,k:1});
     if(townBoundaries||loadingTown)return;
     setLoadingTown(true);
     try{const response=await fetch("/data/township-boundaries.json");setTownBoundaries(await response.json())}
@@ -94,17 +100,19 @@ export default function PopulationModule({toolbar}:{toolbar?:ReactNode}){
     if(scope==="市内"&&flow.oc!==flow.dc)return false;
     const originKey=level==="城市"?flow.oc:level==="区县"?`${flow.oc}|${flow.o}`:`${flow.oc}|${flow.o}|${flow.ot}`;
     const destinationKey=level==="城市"?flow.dc:level==="区县"?`${flow.dc}|${flow.d}`:`${flow.dc}|${flow.d}|${flow.dt}`;
-    if(originCounty!=="ALL"&&originKey!==originCounty)return false;
-    if(destinationCounty!=="ALL"&&destinationKey!==destinationCounty)return false;
+    if(originCounty!=="ALL"&&originKey!==originCounty&&!originKey.startsWith(`${originCounty}|`))return false;
+    if(destinationCounty!=="ALL"&&destinationKey!==destinationCounty&&!destinationKey.startsWith(`${destinationCounty}|`))return false;
     return true;
   }).sort((a,b)=>b.population-a.population),[allFlows,scope,originCounty,destinationCounty,level]);
   const shown=limit===0?flows:flows.slice(0,limit);
+  useEffect(()=>setRankPage(0),[shown.length,level,scope,originCounty,destinationCounty,limit]);
   const renderFlows=[...shown].reverse();
   const breaks=quantileBreaks(shown.map(flow=>flow.population));
-  const legend=numericLegend(colors,breaks,shown.map(flow=>flow.population),"人");
+  const legend=numericLegend(colors,breaks,shown.map(flow=>flow.population),"人",0,[.55,.85,1.25,1.8,2.8]);
   const totalPopulation=flows.reduce((sum,flow)=>sum+flow.population,0);
   const crossCityPopulation=flows.reduce((sum,flow)=>sum+(flow.oc!==flow.dc?flow.population:0),0);
   const reverseSelected=selected?allFlows.find(flow=>flow.key!==selected.key&&flow.oc===selected.dc&&flow.o===selected.d&&flow.ot===selected.dt&&flow.dc===selected.oc&&flow.d===selected.o&&flow.dt===selected.ot):null;
+  const orderedFlows=[...renderFlows].sort((a,b)=>{const sa=a.key===selected?.key||a.key===reverseSelected?.key?1:0;const sb=b.key===selected?.key||b.key===reverseSelected?.key?1:0;return sa-sb});
   const pageSize=50;
   const listPageCount=Math.max(1,Math.ceil(flows.length/pageSize));
   const currentListPage=Math.min(listPage,listPageCount);
@@ -114,21 +122,25 @@ export default function PopulationModule({toolbar}:{toolbar?:ReactNode}){
 
   const mapGeometry=useMemo(()=>{
     if(!data)return null;
+    const cityNames=["厦门市","泉州市","漳州市"];
     const selectedCountyKeys=new Set([originCounty,destinationCounty].filter(value=>value!=="ALL").map(value=>value.split("|").slice(0,2).join("|")));
-    const focusFeatures=selectedCountyKeys.size===2?data.countyBoundaries.features.filter(feature=>selectedCountyKeys.has(`${feature.properties.city}|${feature.properties.name}`)):data.countyBoundaries.features;
+    const cityFeatures=level==="城市"?fujianBackdrop.filter(feature=>cityNames.includes(feature.properties.name)&&(selectedCountyKeys.size===0||selectedCountyKeys.has(feature.properties.name))):[];
+    const focusFeatures=level==="城市"
+      ?(cityFeatures.length?cityFeatures:data.countyBoundaries.features)
+      :(selectedCountyKeys.size===2?data.countyBoundaries.features.filter(feature=>[...selectedCountyKeys].some(selected=>selected.indexOf("|")<0?feature.properties.city===selected:selected===`${feature.properties.city}|${feature.properties.name}`)):data.countyBoundaries.features);
     let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
     for(const feature of focusFeatures)for(const polygon of feature.geometry.coordinates)for(const ring of polygon)for(const point of ring){if(point[0]<minX)minX=point[0];if(point[0]>maxX)maxX=point[0];if(point[1]<minY)minY=point[1];if(point[1]>maxY)maxY=point[1]}
     const centerX=(minX+maxX)/2,centerY=(minY+maxY)/2,cosLatitude=Math.cos(centerY*Math.PI/180),xSpan=Math.max((maxX-minX)*cosLatitude,.0001),ySpan=Math.max(maxY-minY,.0001),scale=Math.min(820/xSpan,500/ySpan)/1.08;
     const project=(point:[number,number]):[number,number]=>[450+(point[0]-centerX)*cosLatitude*scale,300-(point[1]-centerY)*scale];
-    const counties=data.countyBoundaries.features.map(feature=>({...feature.properties,d:geometryPath(feature.geometry.coordinates,project)}));
+    const counties=(level==="城市"&&cityFeatures.length?cityFeatures:data.countyBoundaries.features).map(feature=>{const properties=feature.properties as {code:string;name:string;city?:string};return{...properties,city:properties.city??properties.name,d:geometryPath(feature.geometry.coordinates,project)}});
     const countyCenters:Record<string,[number,number]>={};Object.entries(governmentCenters?.county||data.countyCenters).forEach(([key,point])=>countyCenters[key]=project(point));
     const cityCenterParts=new Map<string,[number,number][]>();Object.entries(governmentCenters?.county||data.countyCenters).forEach(([key,point])=>{const city=key.split("|")[0],items=cityCenterParts.get(city)||[];items.push(project(point));cityCenterParts.set(city,items)});
-    const cityCenters:Record<string,[number,number]>={};cityCenterParts.forEach((items,city)=>cityCenters[city]=[items.reduce((sum,item)=>sum+item[0],0)/items.length,items.reduce((sum,item)=>sum+item[1],0)/items.length]);
+    const cityCenters:Record<string,[number,number]>={};if(governmentCenters?.city)Object.entries(governmentCenters.city).forEach(([city,point])=>cityCenters[city]=project(point));cityCenterParts.forEach((items,city)=>{if(!cityCenters[city])cityCenters[city]=[items.reduce((sum,item)=>sum+item[0],0)/items.length,items.reduce((sum,item)=>sum+item[1],0)/items.length]});
     const towns=(townBoundaries?.features||[]).map(feature=>({...feature.properties,d:geometryPath(feature.geometry.coordinates,project),point:project(feature.properties.center)}));
     const townCenters:Record<string,[number,number]>={};Object.entries({...data.townCenters,...(governmentCenters?.township||{})}).forEach(([key,point])=>townCenters[key]=project(point));
-    const backdrop=fujianBackdrop.map(feature=>({...feature.properties,d:geometryPath(feature.geometry.coordinates,project)}));
-    return{counties,countyCenters,cityCenters,towns,townCenters,backdrop};
-  },[data,townBoundaries,originCounty,destinationCounty,governmentCenters,fujianBackdrop]);
+    const backdrop=(level==="城市"?fujianBackdrop.filter(feature=>!cityNames.includes(feature.properties.name)):fujianBackdrop).map(feature=>({...feature.properties,d:geometryPath(feature.geometry.coordinates,project)}));
+    return{counties,countyCenters,cityCenters,towns,townCenters,backdrop,kmPerPixel:111.32/(cosLatitude*scale)};
+  },[data,townBoundaries,originCounty,destinationCounty,governmentCenters,fujianBackdrop,level]);
 
   const drillFlows=useMemo<PopulationFlow[]>(()=>{
     if(!data||!selected||level!=="区县")return [];
@@ -140,7 +152,7 @@ export default function PopulationModule({toolbar}:{toolbar?:ReactNode}){
   },[data,selected,level]);
   const displayedDrillFlows=drillLimit===0?drillFlows:drillFlows.slice(0,drillLimit);
   const drillBreaks=quantileBreaks(displayedDrillFlows.map(flow=>flow.population));
-  const drillLegend=numericLegend(colors,drillBreaks,displayedDrillFlows.map(flow=>flow.population),"人");
+  const drillLegend=numericLegend(colors,drillBreaks,displayedDrillFlows.map(flow=>flow.population),"人",0,[.45,.7,1,1.5,2.3]);
   const drillRenderFlows=[...displayedDrillFlows].reverse();
   const drillTotals=drillFlows.reduce((result,flow)=>({population:result.population+flow.population,rows:result.rows+flow.rows,links:result.links+1}),{population:0,rows:0,links:0});
   const drillLabelKeys=new Set(drillFlows.slice(0,18).flatMap(flow=>[`${flow.oc}|${flow.o}|${flow.ot}`,`${flow.dc}|${flow.d}|${flow.dt}`]));
@@ -154,9 +166,9 @@ export default function PopulationModule({toolbar}:{toolbar?:ReactNode}){
     const project=(point:[number,number]):[number,number]=>[450+(point[0]-centerX)*cosLatitude*scale,260-(point[1]-centerY)*scale];
     const counties=data.countyBoundaries.features.map(feature=>({...feature.properties,d:geometryPath(feature.geometry.coordinates,project)}));
     const towns=townBoundaries.features.filter(feature=>selectedCountyKeys.has(`${feature.properties.city}|${feature.properties.county}`)).map(feature=>({...feature.properties,d:geometryPath(feature.geometry.coordinates,project)}));
-    const townCenters:Record<string,[number,number]>={};Object.entries({...data.townCenters,...(governmentCenters?.township||{})}).forEach(([key,point])=>{const parts=key.split("|");if(selectedCountyKeys.has(`${parts[0]}|${parts[1]}`))townCenters[key]=project(point)});
+    const townCenters:Record<string,[number,number]>={};Object.entries({...data.townCenters,...(governmentCenters?.township||{})}).forEach(([key,point])=>{const parts=key.split("|");if(selectedCountyKeys.has(`${parts[0]}|${parts[1]}`)){townCenters[key]=project(point);const clean=mapDisplayName(parts[2]);if(clean!==parts[2])townCenters[`${parts[0]}|${parts[1]}|${clean}`]=project(point)}});
     const backdrop=fujianBackdrop.map(feature=>({...feature.properties,d:geometryPath(feature.geometry.coordinates,project)}));
-    return{counties,towns,townCenters,backdrop};
+    return{counties,towns,townCenters,backdrop,kmPerPixel:111.32/(cosLatitude*scale)};
   },[data,selected,townBoundaries,level,governmentCenters,fujianBackdrop]);
 
   const centerFor=(flow:PopulationFlow,side:"o"|"d")=>{
@@ -167,19 +179,45 @@ export default function PopulationModule({toolbar}:{toolbar?:ReactNode}){
   const drillCenterFor=(flow:PopulationFlow,side:"o"|"d")=>{
     if(!drillGeometry)return undefined;
     const city=side==="o"?flow.oc:flow.dc,county=side==="o"?flow.o:flow.d,town=side==="o"?flow.ot:flow.dt;
-    return drillGeometry.townCenters[`${city}|${county}|${town}`];
+    return drillGeometry.townCenters[`${city}|${county}|${mapDisplayName(town)}`];
   };
   const labelCandidates=useMemo<MapLabelCandidate[]>(()=>shown.flatMap((flow,index)=>(["o","d"] as const).map(side=>{const city=side==="o"?flow.oc:flow.dc,county=side==="o"?flow.o:flow.d,town=side==="o"?flow.ot:flow.dt,point=centerFor(flow,side),name=level==="城市"?city:level==="区县"?county:town,key=level==="城市"?city:level==="区县"?`${city}|${county}`:`${city}|${county}|${town}`;return{key,name,point:point!,priority:shown.length-index,selected:Boolean(selected&&(key===(level==="城市"?selected.oc:`${selected.oc}|${selected.o}${level==="镇街"?`|${selected.ot}`:""}`)||key===(level==="城市"?selected.dc:`${selected.dc}|${selected.d}${level==="镇街"?`|${selected.dt}`:""}`)))}})).filter(item=>Boolean(item.point)),[shown,mapGeometry,level,selected]);
-  const drillLabelCandidates=useMemo<MapLabelCandidate[]>(()=>displayedDrillFlows.flatMap((flow,index)=>(["o","d"] as const).map(side=>{const city=side==="o"?flow.oc:flow.dc,county=side==="o"?flow.o:flow.d,town=side==="o"?flow.ot:flow.dt;return{key:`${city}|${county}|${town}`,name:town,point:drillCenterFor(flow,side)!,priority:displayedDrillFlows.length-index}})).filter(item=>Boolean(item.point)),[displayedDrillFlows,drillGeometry]);
-  const zoom=(factor:number)=>setView(current=>{const k=Math.min(5,Math.max(1,current.k*factor));return k===1?{x:0,y:0,k}:{x:450-(450-current.x)*k/current.k,y:300-(300-current.y)*k/current.k,k}});
-  useEffect(()=>{const element=mapRef.current;if(!element)return;const onWheel=(event:WheelEvent)=>{event.preventDefault();event.stopPropagation();const factor=event.deltaY<0?1.18:1/1.18;setView(current=>{const k=Math.min(5,Math.max(1,current.k*factor));return k===1?{x:0,y:0,k}:{x:450-(450-current.x)*k/current.k,y:300-(300-current.y)*k/current.k,k}})};element.addEventListener("wheel",onWheel,{passive:false});return()=>element.removeEventListener("wheel",onWheel)},[data,level]);
+  const drillLabelCandidates=useMemo<MapLabelCandidate[]>(()=>displayedDrillFlows.flatMap((flow,index)=>(["o","d"] as const).map(side=>{const city=side==="o"?flow.oc:flow.dc,county=side==="o"?flow.o:flow.d,town=side==="o"?flow.ot:flow.dt;return{key:`${city}|${county}|${mapDisplayName(town)}`,name:mapDisplayName(town),point:drillCenterFor(flow,side)!,priority:displayedDrillFlows.length-index}})).filter(item=>Boolean(item.point)),[displayedDrillFlows,drillGeometry]);
+  const flowObstacles=useMemo<[number,number][]>(()=>{
+    if(!mapGeometry)return[];
+    const rows=limit===0?flows:flows.slice(0,limit);
+    const out:[number,number][]=[];
+    for(const flow of rows){
+      const start=centerFor(flow,"o"),end=centerFor(flow,"d");
+      if(!start||!end)continue;
+      const dx=end[0]-start[0],dy=end[1]-start[1];
+      if(dx===0&&dy===0){out.push(start);continue}
+      const length=Math.max(1,Math.hypot(dx,dy)),bend=Math.min(46,Math.max(13,length*.13)),mx=(start[0]+end[0])/2-dy/length*bend,my=(start[1]+end[1])/2+dx/length*bend;
+      for(const point of quadraticPoints(start,end,[mx,my]))out.push(point);
+    }
+    return out;
+  },[mapGeometry,flows,limit,level]);
+  const drillObstacles=useMemo<[number,number][]>(()=>{
+    if(!drillGeometry)return[];
+    const rows=drillLimit===0?drillFlows:drillFlows.slice(0,drillLimit);
+    const out:[number,number][]=[];
+    for(const flow of rows){
+      const start=drillCenterFor(flow,"o"),end=drillCenterFor(flow,"d");
+      if(!start||!end)continue;
+      const dx=end[0]-start[0],dy=end[1]-start[1],length=Math.max(1,Math.hypot(dx,dy)),bend=Math.min(24,Math.max(8,length*.1)),mx=(start[0]+end[0])/2-dy/length*bend,my=(start[1]+end[1])/2+dx/length*bend;
+      for(const point of quadraticPoints(start,end,[mx,my]))out.push(point);
+    }
+    return out;
+  },[drillGeometry,drillFlows,drillLimit]);
+  const zoom=(factor:number)=>setView(current=>{const k=Math.min(level==="镇街"?10:5,Math.max(1,current.k*factor));return k===1?{x:0,y:0,k}:{x:450-(450-current.x)*k/current.k,y:300-(300-current.y)*k/current.k,k}});
+  useEffect(()=>{const element=mapRef.current;if(!element)return;const onWheel=(event:WheelEvent)=>{event.preventDefault();event.stopPropagation();const factor=event.deltaY<0?1.18:1/1.18;setView(current=>{const k=Math.min(level==="镇街"?10:5,Math.max(1,current.k*factor));return k===1?{x:0,y:0,k}:{x:450-(450-current.x)*k/current.k,y:300-(300-current.y)*k/current.k,k}})};element.addEventListener("wheel",onWheel,{passive:false});return()=>element.removeEventListener("wheel",onWheel)},[data,level]);
   const onPointerDown=(event:React.PointerEvent<SVGSVGElement>)=>{event.currentTarget.setPointerCapture(event.pointerId);drag.current={x:event.clientX,y:event.clientY,vx:view.x,vy:view.y}};
-  const onPointerMove=(event:React.PointerEvent<SVGSVGElement>)=>{if(!drag.current)return;const box=event.currentTarget.getBoundingClientRect(),scale=900/box.width;setView(current=>({...current,x:drag.current!.vx+(event.clientX-drag.current!.x)*scale,y:drag.current!.vy+(event.clientY-drag.current!.y)*scale}))};
+  const onPointerMove=(event:React.PointerEvent<SVGSVGElement>)=>{const dragState=drag.current;if(!dragState)return;const box=event.currentTarget.getBoundingClientRect(),scale=900/box.width;setView(current=>({...current,x:dragState.vx+(event.clientX-dragState.x)*scale,y:dragState.vy+(event.clientY-dragState.y)*scale}))};
   const onPointerUp=()=>{drag.current=null};
-  const zoomDrill=(factor:number)=>setDrillView(current=>{const k=Math.min(5,Math.max(1,current.k*factor));return k===1?{x:0,y:0,k}:{x:450-(450-current.x)*k/current.k,y:260-(260-current.y)*k/current.k,k}});
+  const zoomDrill=(factor:number)=>setDrillView(current=>{const k=Math.min(10,Math.max(1,current.k*factor));return k===1?{x:0,y:0,k}:{x:450-(450-current.x)*k/current.k,y:260-(260-current.y)*k/current.k,k}});
   useEffect(()=>{const element=drillMapRef.current;if(!element||!drillOpen)return;const wheel=(event:WheelEvent)=>{event.preventDefault();event.stopPropagation();zoomDrill(event.deltaY<0?1.18:1/1.18)};element.addEventListener("wheel",wheel,{passive:false});return()=>element.removeEventListener("wheel",wheel)},[drillOpen,loadingTown]);
   const onDrillPointerDown=(event:React.PointerEvent<SVGSVGElement>)=>{event.currentTarget.setPointerCapture(event.pointerId);drillDrag.current={x:event.clientX,y:event.clientY,vx:drillView.x,vy:drillView.y}};
-  const onDrillPointerMove=(event:React.PointerEvent<SVGSVGElement>)=>{if(!drillDrag.current)return;const ratio=900/event.currentTarget.getBoundingClientRect().width;setDrillView(current=>({...current,x:drillDrag.current!.vx+(event.clientX-drillDrag.current!.x)*ratio,y:drillDrag.current!.vy+(event.clientY-drillDrag.current!.y)*ratio}))};
+  const onDrillPointerMove=(event:React.PointerEvent<SVGSVGElement>)=>{const dragState=drillDrag.current;if(!dragState)return;const ratio=900/event.currentTarget.getBoundingClientRect().width;setDrillView(current=>({...current,x:dragState.vx+(event.clientX-dragState.x)*ratio,y:dragState.vy+(event.clientY-dragState.y)*ratio}))};
   const onDrillPointerUp=()=>{drillDrag.current=null};
 
   if(!data||!mapGeometry)return <section className="populationLoading">正在载入人口流动数据…</section>;
@@ -191,7 +229,7 @@ export default function PopulationModule({toolbar}:{toolbar?:ReactNode}){
   const mapTitle=`厦漳泉${scopeTitle}${level}人口流向图`;
   const mapSubtitle=`${originLabel} → ${destinationLabel} · ${limit===0?`全部 ${flows.length} 条 OD`:`人口流量前 ${Math.min(limit,flows.length)} 条 OD`}`;
   const drillMapTitle=selected?`${selected.o}—${selected.d}镇街人口流动图`:"镇街人口流动图";
-  const drillMapSubtitle=selected?`${selected.oc}与${selected.dc} · 双向 ${drillFlows.length} 条镇街 OD`:"";
+  const drillMapSubtitle=selected?`${selected.o} → ${selected.d} · ${drillLimit===0?`全部 ${drillFlows.length} 条镇街 OD`:`人口流量前 ${Math.min(drillLimit,drillFlows.length)} 条镇街 OD`}`:"";
   const performanceRows=buildRegionPerformance(flows,flow=>level==="城市"?flow.oc:level==="区县"?flow.o:flow.ot,flow=>flow.population);
   const activeProfile=performanceRows.some(row=>row.name===profileRegion)?profileRegion:(performanceRows[0]?.name||"");
 
@@ -199,8 +237,8 @@ export default function PopulationModule({toolbar}:{toolbar?:ReactNode}){
     <div className="moduleTopRow">{toolbar}<section className="populationControls">
       <label>分析层级<select value={level} onChange={event=>{const next=event.target.value as "城市"|"区县"|"镇街";setLevel(next);if(next==="城市")setScope("跨市");setOriginCounty("ALL");setDestinationCounty("ALL")}}><option>城市</option><option>区县</option><option>镇街</option></select></label>
       <label>联系范围<select value={scope} onChange={event=>setScope(event.target.value as "全部"|"跨市"|"市内")}><option value="全部">全部联系</option><option value="跨市">仅跨市联系</option><option value="市内">仅市内联系</option></select></label>
-      <LocationTreePicker label={`起点${level}`} level={level} value={originCounty} onChange={setOriginCounty} tree={locationTree} allLabel={`全部起点${level}`}/>
-      <LocationTreePicker label={`终点${level}`} level={level} value={destinationCounty} onChange={setDestinationCounty} tree={locationTree} allLabel={`全部终点${level}`}/>
+      <LocationTreePicker label={`起点${level}`} level={level} value={originCounty} onChange={setOriginCounty} tree={locationTree} allLabel={`全部起点${level}`} allowCity/>
+      <LocationTreePicker label={`终点${level}`} level={level} value={destinationCounty} onChange={setDestinationCounty} tree={locationTree} allLabel={`全部终点${level}`} allowCity/>
     </section></div>
     <section className="mapFirstStage"><section className="populationStats">
       <article><span>人口流量</span><strong>{fmt(totalPopulation)}</strong><small>人 · 当前筛选合计</small></article>
@@ -209,26 +247,28 @@ export default function PopulationModule({toolbar}:{toolbar?:ReactNode}){
       <article><span>首位联系</span><strong className="populationTopName">{topFlow?`${endpointLabel(topFlow,"o")} → ${endpointLabel(topFlow,"d")}`:"暂无"}</strong><small>{topFlow?`${fmt(topFlow.population)} 人`:"当前筛选无记录"}</small></article>
     </section>
     <section className="populationWorkspace">
-      <div className="populationMapCard"><div className="cardHead"><div><h2>{mapTitle}</h2><p>{mapSubtitle}；点击连线查看双向关系</p></div><div className="mapHeadActions"><select value={limit} onChange={event=>setLimit(+event.target.value)}><option value="30">前30</option><option value="60">前60</option><option value="120">前120</option><option value="200">前200</option><option value="0">全部</option></select><button onClick={()=>exportMapPng(mapRef.current,{title:mapTitle,subtitle:mapSubtitle,legendTitle:"人口流量分级",legend})}>导出 PNG</button></div></div>
+      <div className="populationMapCard"><div className="cardHead"><div><h2>{mapTitle}</h2><p>{mapSubtitle}；点击连线查看双向关系</p></div><div className="mapHeadActions"><select value={limit} onChange={event=>setLimit(+event.target.value)}><option value="30">前30</option><option value="60">前60</option><option value="120">前120</option><option value="200">前200</option><option value="0">全部</option></select><label className="labelToggle"><input type="checkbox" checked={labelsOn} onChange={event=>setLabelsOn(event.target.checked)}/>标注</label><button onClick={()=>exportWithLabelsOn(labelsOn,setLabelsOn,()=>exportMapPng(mapRef.current,{title:mapTitle,subtitle:mapSubtitle,legendTitle:"人口流量分级",legend,kmPerPixel:mapGeometry.kmPerPixel}))}>导出 PNG</button></div></div>
         <div className="populationMapWrap">
           <svg ref={mapRef} viewBox="0 34 900 600" className="populationMap" role="img" aria-label={`可缩放、可拖动的厦漳泉${level}人口流动地图`} onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp}>
             <defs><marker id="populationArrow" markerWidth={4/view.k} markerHeight={4/view.k} refX={3.8/view.k} refY={2/view.k} orient="auto" markerUnits="userSpaceOnUse"><path d={`M0,0 L${4/view.k},${2/view.k} L0,${4/view.k} Z`} fill="context-stroke"/></marker></defs>
             <g transform={`translate(${view.x} ${view.y}) scale(${view.k})`}>
               <g aria-hidden="true">{mapGeometry.backdrop.map(feature=><path key={`fujian-${feature.code}`} d={feature.d} className="fujianPrefectureBackdrop"/>)}</g>
-              <g>{mapGeometry.counties.map(feature=><path key={feature.code} d={feature.d} className="populationCounty"><title>{feature.city} · {feature.name}</title></path>)}</g>
+              <g>{mapGeometry.counties.map(feature=><path key={feature.code} d={feature.d} className="populationCounty"><title>{level==="城市"?feature.name:`${feature.city} · ${feature.name}`}</title></path>)}</g>
               {level==="镇街"&&<g>{mapGeometry.towns.map(feature=><path key={`${feature.city}-${feature.county}-${feature.town}`} d={feature.d} className="populationTown"><title>{feature.city} · {feature.county} · {feature.town}</title></path>)}</g>}
               {level==="镇街"&&<g>{mapGeometry.counties.map(feature=><path key={`town-county-overlay-${feature.code}`} d={feature.d} className="townshipCountyOverlay"/>)}</g>}
-              <g>{renderFlows.map(flow=>{const start=centerFor(flow,"o"),end=centerFor(flow,"d");if(!start||!end)return null;const band=strengthBand(flow.population,breaks),dx=end[0]-start[0],dy=end[1]-start[1];let d;if(dx===0&&dy===0){d=`M${start[0]},${start[1]} C${start[0]+26},${start[1]-38} ${start[0]+34},${start[1]+14} ${start[0]+10},${start[1]+4}`}else{const length=Math.max(1,Math.hypot(dx,dy)),bend=Math.min(46,Math.max(13,length*.13)),middleX=(start[0]+end[0])/2-dy/length*bend,middleY=(start[1]+end[1])/2+dx/length*bend;d=`M${start} Q${middleX},${middleY} ${end}`}const width=[.55,.85,1.25,1.8,2.8][band];return <g key={flow.key} onPointerDown={event=>event.stopPropagation()} onClick={()=>setSelected(flow)}><path d={d} className="populationFlowHit" style={{strokeWidth:width+9}}/><path d={d} className="populationFlow" markerEnd="url(#populationArrow)" style={{stroke:colors[band],strokeWidth:width,opacity:.5+band*.1}}><title>{endpointLabel(flow,"o")} → {endpointLabel(flow,"d")}：{fmt(flow.population)}人</title></path></g>})}</g>
-              <DynamicMapLabels candidates={labelCandidates} view={view} baseLimit={level==="镇街"?10:16}/>
+              {labelsOn&&<DynamicMapLabels candidates={labelCandidates} view={view} baseLimit={level==="镇街"?10:16} obstacles={flowObstacles}/>}
+              <g>{orderedFlows.map(flow=>{const start=centerFor(flow,"o"),end=centerFor(flow,"d");if(!start||!end)return null;const band=strengthBand(flow.population,breaks),dx=end[0]-start[0],dy=end[1]-start[1];let d;if(dx===0&&dy===0){d=`M${start[0]},${start[1]} C${start[0]+26},${start[1]-38} ${start[0]+34},${start[1]+14} ${start[0]+10},${start[1]+4}`}else{const length=Math.max(1,Math.hypot(dx,dy)),bend=Math.min(46,Math.max(13,length*.13)),middleX=(start[0]+end[0])/2-dy/length*bend,middleY=(start[1]+end[1])/2+dx/length*bend;d=`M${start} Q${middleX},${middleY} ${end}`}const width=[.55,.85,1.25,1.8,2.8][band],highlighted=flow.key===selected?.key||flow.key===reverseSelected?.key,dimmed=Boolean(selected&&!highlighted);return <g key={flow.key} onPointerDown={event=>event.stopPropagation()} onClick={()=>setSelected(flow)}><path d={d} className="populationFlowHit" style={{strokeWidth:width+9}}/><path d={d} className={highlighted?"populationFlow flowSelected":"populationFlow"} markerEnd="url(#populationArrow)" style={{stroke:colors[band],strokeWidth:highlighted?width+2.5:width,opacity:highlighted?1:dimmed?.12:.5+band*.1}}><title>{endpointLabel(flow,"o")} → {endpointLabel(flow,"d")}：{fmt(flow.population)}人</title></path></g>})}</g>
             </g>
+            <MapDecorations kmPerPixel={mapGeometry.kmPerPixel} viewK={view.k} width={900} height={600}/>
           </svg>
+          <MapScaleOverlay kmPerPixel={mapGeometry.kmPerPixel} viewK={view.k}/>
           <div className="mapTools"><button onClick={()=>zoom(1.25)} aria-label="放大人口地图">＋</button><button onClick={()=>zoom(.8)} aria-label="缩小人口地图">－</button><button onClick={()=>setView({x:0,y:0,k:1.1})} aria-label="重置人口地图">复位</button></div>
           <span className="mapHint">滚轮缩放 · 按住拖动</span>
           {level==="镇街"&&loadingTown&&<div className="populationMapLoading">正在载入镇街边界…</div>}
+          <div className="populationLegend numericLegend"><strong>人口流量分级</strong>{legend.map(item=><span className="legendItem" key={`${item.color}-${item.label}`}><i style={item.shape==="line"?{background:item.color,height:Math.max(1.5,Math.min(6.5,(item.lineWidth||1)*2.2)),borderRadius:2}:{background:item.color}}/>{item.label}</span>)}</div>
         </div>
-        <div className="populationLegend numericLegend"><strong>人口流量分级</strong>{legend.map(item=><span className="legendItem" key={`${item.color}-${item.label}`}><i style={{background:item.color}}/>{item.label}</span>)}</div>
       </div>
-      <aside className="populationRanking"><div className="cardHead"><div><h2>人口 OD 排名</h2><p>按人口数量降序</p></div></div><div className="ranking">{shown.slice(0,12).map((flow,index)=><button key={flow.key} onClick={()=>setSelected(flow)}><b>{String(index+1).padStart(2,"0")}</b><span><strong>{endpointLabel(flow,"o")} → {endpointLabel(flow,"d")}</strong><small>{flow.oc} · {flow.dc}</small></span><em>{fmt(flow.population)}</em></button>)}</div></aside>
+      <aside className="populationRanking"><div className="cardHead"><div><h2>人口 OD 排名</h2><p>按人口数量降序</p></div></div><div className="ranking">{shown.slice(rankPage*12,rankPage*12+12).map((flow,index)=><button key={flow.key} onClick={()=>setSelected(flow)}><b>{String(rankPage*12+index+1).padStart(2,"0")}</b><span><strong>{endpointLabel(flow,"o")} → {endpointLabel(flow,"d")}</strong><small>{flow.oc} · {flow.dc}</small></span><em>{fmt(flow.population)}</em></button>)}<div className="rankingPager"><button disabled={rankPage===0} onClick={()=>setRankPage(page=>Math.max(0,page-1))}>‹ 上一页</button><span>{rankPage+1} / {Math.max(1,Math.ceil(shown.length/12))}</span><button disabled={rankPage>=Math.ceil(shown.length/12)-1} onClick={()=>setRankPage(page=>page+1)}>下一页 ›</button></div></div></aside>
     </section></section>
     <RegionalPerformance title={`${level}人口流动表现`} rows={performanceRows} selected={activeProfile} onSelect={setProfileRegion} unit="人" rankBasis="对外流动总量"/>
     <section className="populationOdList">
@@ -242,16 +282,17 @@ export default function PopulationModule({toolbar}:{toolbar?:ReactNode}){
         <div className="townHeader"><span>人口流动 · 镇街级联系</span><h2>{selected.o} ⇄ {selected.d}</h2><p>{selected.oc} 与 {selected.dc} · 同时展示两个方向</p></div>
         {loadingTown?<div className="townState townLoadingState">正在载入镇街边界…</div>:drillGeometry?<>
           <div className="townNetworkMap">
-            <div className="townMapCaption"><div><strong>{drillMapTitle}</strong><span>{drillMapSubtitle}；等比例投影并自动聚焦两区县</span></div><div className="mapHeadActions"><small>按当前联系动态分级</small><button onClick={()=>exportMapPng(drillMapRef.current,{title:drillMapTitle,subtitle:drillMapSubtitle,legendTitle:"人口流量分级",legend:drillLegend})}>导出 PNG</button></div></div>
+            <div className="townMapCaption"><div><strong>{drillMapTitle}</strong><span>{drillMapSubtitle}；等比例投影并自动聚焦两区县</span></div><div className="mapHeadActions"><small>按当前联系动态分级</small><label className="labelToggle"><input type="checkbox" checked={drillLabelsOn} onChange={event=>setDrillLabelsOn(event.target.checked)}/>标注</label><button onClick={()=>exportWithLabelsOn(drillLabelsOn,setDrillLabelsOn,()=>exportMapPng(drillMapRef.current,{title:drillMapTitle,subtitle:drillMapSubtitle,legendTitle:"人口流量分级",legend:[{heading:true,label:"区县"},{color:"#9fb9d9",label:selected.o},{color:"#d9bdcc",label:selected.d},{heading:true,label:"强度分级"},...drillLegend],kmPerPixel:drillGeometry?.kmPerPixel}))}>导出 PNG</button></div></div>
             <svg ref={drillMapRef} viewBox="0 0 900 520" role="img" aria-label={`${selected.o}与${selected.d}镇街人口流动地图`} onPointerDown={onDrillPointerDown} onPointerMove={onDrillPointerMove} onPointerUp={onDrillPointerUp} onPointerCancel={onDrillPointerUp}>
               <defs><marker id="populationDrillArrow" markerWidth={4/drillView.k} markerHeight={4/drillView.k} refX={3.8/drillView.k} refY={2/drillView.k} orient="auto" markerUnits="userSpaceOnUse"><path d={`M0,0 L${4/drillView.k},${2/drillView.k} L0,${4/drillView.k} Z`} fill="context-stroke"/></marker></defs><g transform={`translate(${drillView.x} ${drillView.y}) scale(${drillView.k})`}>
               <g aria-hidden="true">{drillGeometry.backdrop.map(feature=><path key={`drill-fujian-${feature.code}`} d={feature.d} className="fujianPrefectureBackdrop"/>)}</g>
               <g>{drillGeometry.counties.map(feature=><path key={`population-county-${feature.code}`} d={feature.d} className="townCountyBackground"><title>{feature.city} · {feature.name}</title></path>)}</g>
               <g>{drillGeometry.towns.map(feature=>{const sideA=feature.city===selected.oc&&feature.county===selected.o;return <path key={`${feature.city}-${feature.county}-${feature.town}`} d={feature.d} className={`townBoundary selected ${sideA?"sideA":"sideB"}`}><title>{feature.city} · {feature.county} · {feature.town}</title></path>})}</g>
-              <g>{drillRenderFlows.map(flow=>{const start=drillCenterFor(flow,"o"),end=drillCenterFor(flow,"d");if(!start||!end)return null;const band=strengthBand(flow.population,drillBreaks),dx=end[0]-start[0],dy=end[1]-start[1],length=Math.max(1,Math.hypot(dx,dy)),bend=Math.min(24,Math.max(8,length*.1)),middleX=(start[0]+end[0])/2-dy/length*bend,middleY=(start[1]+end[1])/2+dx/length*bend,d=`M${start} Q${middleX},${middleY} ${end}`;return <path key={flow.key} d={d} className="townFlow" markerEnd="url(#populationDrillArrow)" style={{stroke:colors[band],strokeWidth:[.45,.7,1,1.5,2.3][band],opacity:.5+band*.1}}><title>{flow.ot} → {flow.dt}：{fmt(flow.population)}人</title></path>})}</g>
-              <DynamicMapLabels candidates={drillLabelCandidates} view={drillView} baseLimit={16}/></g>
-            </svg><div className="mapTools"><button onClick={()=>zoomDrill(1.25)}>＋</button><button onClick={()=>zoomDrill(.8)}>－</button><button onClick={()=>setDrillView({x:0,y:0,k:1})}>复位</button></div>
-            <div className="townMapLegend"><span><i className="sideA"/>{selected.o}</span><span><i className="sideB"/>{selected.d}</span><span className="townStrengthLegend">{drillLegend.map(item=><span className="legendItem" key={`${item.color}-${item.label}`}><i style={{background:item.color}}/>{item.label}</span>)}</span></div>
+              {drillLabelsOn&&<DynamicMapLabels candidates={drillLabelCandidates} view={drillView} width={900} height={520} baseLimit={16} obstacles={drillObstacles}/>}
+              <g>{drillRenderFlows.map(flow=>{const start=drillCenterFor(flow,"o"),end=drillCenterFor(flow,"d");if(!start||!end)return null;const band=strengthBand(flow.population,drillBreaks),dx=end[0]-start[0],dy=end[1]-start[1],length=Math.max(1,Math.hypot(dx,dy)),bend=Math.min(24,Math.max(8,length*.1)),middleX=(start[0]+end[0])/2-dy/length*bend,middleY=(start[1]+end[1])/2+dx/length*bend,d=`M${start} Q${middleX},${middleY} ${end}`;return <path key={flow.key} d={d} className="townFlow" markerEnd="url(#populationDrillArrow)" style={{stroke:colors[band],strokeWidth:[.45,.7,1,1.5,2.3][band],opacity:.5+band*.1}}><title>{flow.ot} → {flow.dt}：{fmt(flow.population)}人</title></path>})}</g></g>
+              <MapDecorations kmPerPixel={drillGeometry?.kmPerPixel} viewK={1} width={900} height={520}/>
+            </svg><MapScaleOverlay kmPerPixel={drillGeometry?.kmPerPixel} viewK={drillView.k}/><div className="mapTools"><button onClick={()=>zoomDrill(1.25)}>＋</button><button onClick={()=>zoomDrill(.8)}>－</button><button onClick={()=>setDrillView({x:0,y:0,k:1})}>复位</button></div>
+            <div className="populationLegend"><strong>区县</strong><span className="legendItem"><i className="drillSide sideA"/>{selected.o}</span><span className="legendItem"><i className="drillSide sideB"/>{selected.d}</span><strong>强度分级</strong>{drillLegend.map(item=><span className="legendItem" key={`${item.color}-${item.label}`}><i style={item.shape==="line"?{background:item.color,height:Math.max(1.5,Math.min(6.5,(item.lineWidth||1)*2.2)),borderRadius:2}:{background:item.color}}/>{item.label}</span>)}</div>
           </div>
           <div className="townSummary"><article><span>镇街联系</span><strong>{fmt(drillTotals.links)}</strong><small>个双向OD组合</small></article><article><span>人口流量</span><strong>{fmt(drillTotals.population)}</strong><small>人</small></article><article><span>源记录</span><strong>{fmt(drillTotals.rows)}</strong><small>条</small></article></div>
           <div className="townToolbar"><div><strong>镇街人口联系明细</strong><span>按人口数量降序，共 {drillFlows.length} 条</span></div><div className="townToggle"><select value={drillLimit} onChange={event=>setDrillLimit(+event.target.value)}><option value="30">前30</option><option value="60">前60</option><option value="120">前120</option><option value="200">前200</option><option value="0">全部</option></select></div></div>

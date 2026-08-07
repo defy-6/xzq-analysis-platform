@@ -15,8 +15,17 @@ POPULATION_DIR = PLATFORM_ROOT / "data" / "raw" / "population"
 SOURCE_FILE = POPULATION_DIR / "厦漳泉乡镇级人口流动_汇总版.xlsx"
 GPKG = PLATFORM_ROOT / "data" / "raw" / "spatial" / "fujian.gpkg"
 OUT = Path(__file__).resolve().parents[2] / "public" / "data" / "population-flow.json"
+# 高德 API 批量获取的镇街政府驻地经纬度（WGS84）OD 表，作为镇街中心点最优先来源
+AMAP_COORDS_FILE = PLATFORM_ROOT / "data" / "raw" / "transport" / "driving" / "township-government" / "厦漳泉乡镇街政府经纬度_WGS84_OD_驾车结果.xlsx"
 CITY_CODES = {"3502": "厦门市", "3505": "泉州市", "3506": "漳州市"}
 CITIES = set(CITY_CODES.values())
+
+
+COUNTIES = (
+    "思明区", "湖里区", "集美区", "海沧区", "同安区", "翔安区",
+    "芗城区", "龙文区", "龙海区", "长泰区", "漳浦县", "云霄县", "东山县", "诏安县", "南靖县", "平和县", "华安县",
+    "鲤城区", "丰泽区", "洛江区", "泉港区", "石狮市", "晋江市", "南安市", "惠安县", "安溪县", "永春县", "德化县",
+)
 
 
 def text(value):
@@ -25,10 +34,65 @@ def text(value):
 
 def normalize_town(value):
     name = text(value)
-    for suffix in ("街道办事处", "街道", "民族乡", "镇", "乡"):
+    # 去掉镇街名开头的区县前缀，如 "芗城区通北街道" → "通北街道"（与前端 mapDisplayName 一致）
+    for county in COUNTIES:
+        if name.startswith(county):
+            name = name[len(county):]
+            break
+    for suffix in ("街道办事处", "街道", "民族乡", "畲族乡", "镇", "乡"):
         if name.endswith(suffix):
             return name[: -len(suffix)]
     return name
+
+
+def polygon_centroid(polygons):
+    """多个多边形（含内环）的面积加权质心；退化时返回 None。"""
+    total_x = total_y = total_area = 0.0
+    for polygon in polygons:
+        for ring in polygon:
+            ring_area = 0.0
+            ring_x = ring_y = 0.0
+            for i in range(len(ring) - 1):
+                x1, y1 = ring[i]
+                x2, y2 = ring[i + 1]
+                cross = x1 * y2 - x2 * y1
+                ring_area += cross
+                ring_x += (x1 + x2) * cross
+                ring_y += (y1 + y2) * cross
+            ring_area /= 2.0
+            if abs(ring_area) < 1e-12:
+                continue
+            abs_area = abs(ring_area)
+            total_x += ring_x / (6.0 * ring_area) * abs_area
+            total_y += ring_y / (6.0 * ring_area) * abs_area
+            total_area += abs_area
+    if total_area <= 0:
+        return None
+    return [total_x / total_area, total_y / total_area]
+
+
+def load_amap_town_centers():
+    """从高德 OD 驾车结果表读取镇街政府驻地坐标（WGS84），键为 区县|~归一化镇街名。"""
+    centers = {}
+    try:
+        workbook = load_workbook(AMAP_COORDS_FILE, read_only=True)
+        worksheet = workbook[workbook.sheetnames[0]]
+        header = [text(cell.value) for cell in next(worksheet.iter_rows(min_row=1, max_row=1))]
+        columns = {name: index for index, name in enumerate(header)}
+        for row in worksheet.iter_rows(min_row=2, values_only=True):
+            for side in ("O", "D"):
+                city = row[columns.get(side + "_城市名称", -1)]
+                county = row[columns.get(side + "_区县名称", -1)]
+                town = row[columns.get(side + "_乡镇街名称", -1)]
+                lon = row[columns.get(side + "_wgs84_经", -1)]
+                lat = row[columns.get(side + "_wgs84_纬", -1)]
+                if city and county and town and lon is not None and lat is not None:
+                    key = f"{county}|~{normalize_town(town)}"
+                    centers.setdefault(key, [float(lon), float(lat)])
+        workbook.close()
+    except Exception:
+        pass
+    return centers
 
 
 def gpkg_wkb(blob):
@@ -131,13 +195,16 @@ def load_boundaries(connection):
     """
     for city, county, town, area, blob in connection.execute(query):
         polygons = parse_geometry(gpkg_wkb(blob))
-        bbox = bounds(polygons)
+        centroid = polygon_centroid(polygons)
+        if centroid is None:
+            bbox = bounds(polygons)
+            centroid = [(bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2]
         towns.append(
             {
                 "city": text(city),
                 "county": text(county),
                 "town": text(town),
-                "center": [(bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2],
+                "center": centroid,
             }
         )
 
@@ -181,6 +248,7 @@ def main():
     town_centers = {}
     boundary_town_centers = {}
     normalized_boundary_town_centers = {}
+    amap_centers = load_amap_town_centers()
     for town in towns:
         exact_key = f'{town["city"]}|{town["county"]}|{town["town"]}'
         normalized_key = f'{town["city"]}|{town["county"]}|~{normalize_town(town["town"])}'
@@ -222,7 +290,8 @@ def main():
             if key in town_centers:
                 continue
             normalized_key = f"{city}|{county}|~{normalize_town(town)}"
-            center = boundary_town_centers.get(key) or normalized_boundary_town_centers.get(normalized_key)
+            amap_key = f"{county}|~{normalize_town(town)}"
+            center = amap_centers.get(amap_key) or boundary_town_centers.get(key) or normalized_boundary_town_centers.get(normalized_key)
             if center is None:
                 center = county_centers.get(f"{city}|{county}")
                 fallback_town_names.add(key)
