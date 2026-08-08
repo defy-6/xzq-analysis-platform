@@ -31,6 +31,11 @@ const localBindingConfig = {
         },
       ]
     : [],
+  // 本地开发把系统环境变量透传给 Worker（智能分析模块用；生产环境由部署平台注入同名 secret）
+  vars: {
+    ...(process.env.DASHSCOPE_API_KEY ? { DASHSCOPE_API_KEY: process.env.DASHSCOPE_API_KEY } : {}),
+    ...(process.env.DEEPSEEK_API_KEY ? { DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY } : {}),
+  },
 };
 
 export default defineConfig(async () => {

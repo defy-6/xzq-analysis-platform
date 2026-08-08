@@ -1,19 +1,22 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { exportMapPng, numericLegend } from "./map-export";
+import { exportMapPng, numericLegend, type MapLegendItem } from "./map-export";
 import DynamicMapLabels, { MapLabelCandidate } from "./map-labels";
 import MapDecorations from "./map-scale";
 import MapScaleOverlay from "./map-scale-overlay";
 import useFujianBackdrop from "./fujian-backdrop";
 
-type BoundaryFeature={properties:{city:string;name:string;code:string};geometry:{type:"MultiPolygon";coordinates:any[]}};
+type OdRing2 = [number, number][];
+type OdPolygon2 = OdRing2[];
+type OdMultiPolygon2 = OdPolygon2[];
+type BoundaryFeature={properties:{city:string;name:string;code:string};geometry:{type:"MultiPolygon";coordinates:OdMultiPolygon2}};
 const colors=["#dceae4","#acd2c5","#72ae9d","#e5b85b","#b9513f"];
 const quantiles=(values:number[])=>{const sorted=values.filter(Number.isFinite).sort((a,b)=>a-b);if(!sorted.length)return [];return [.2,.4,.6,.8].map(q=>sorted[Math.min(sorted.length-1,Math.floor((sorted.length-1)*q))])};
 const band=(value:number,breaks:number[])=>{if(!breaks.length||breaks.every(item=>item===breaks[0]))return 2;if(value<=breaks[0])return 0;if(value<=breaks[1])return 1;if(value<=breaks[2])return 2;if(value<=breaks[3])return 3;return 4};
-const geometryPath=(coordinates:any[],project:(point:[number,number])=>[number,number])=>coordinates.map((polygon:any)=>polygon.map((ring:any)=>ring.map((point:any,index:number)=>(index?"L":"M")+project(point).join(",")).join("")+"Z").join("")).join("");
+const geometryPath=(coordinates:OdMultiPolygon2,project:(point:[number,number])=>[number,number])=>coordinates.map((polygon:OdPolygon2)=>polygon.map((ring:OdRing2)=>ring.map((point:number[],index:number)=>(index?"L":"M")+project(point as [number,number]).join(",")).join("")+"Z").join("")).join("");
 
-export default function ThematicMap({features,values,activeCounties,selected,onSelect,title,subtitle,legendTitle,unit,digits=1}:{features:BoundaryFeature[];values:Map<string,number>;activeCounties:Set<string>;selected:string|null;onSelect:(county:string)=>void;title:string;subtitle:string;legendTitle:string;unit:string;digits?:number}){
+export default function ThematicMap({features,values,activeCounties,selected,onSelect,title,subtitle,legendTitle,unit,digits=1,exportable=true,svgRefCallback}:{features:BoundaryFeature[];values:Map<string,number>;activeCounties:Set<string>;selected:string|null;onSelect:(county:string)=>void;title:string;subtitle:string;legendTitle:string;unit:string;digits?:number;exportable?:boolean;svgRefCallback?:(el:SVGSVGElement|null)=>void}){
   const [view,setView]=useState({x:0,y:0,k:1.1});
   const [labelsOn,setLabelsOn]=useState(true);
   const [exporting,setExporting]=useState(false);
@@ -36,9 +39,11 @@ export default function ThematicMap({features,values,activeCounties,selected,onS
   const currentValues=[...values.entries()].filter(([county])=>activeCounties.has(county)).map(([,value])=>value),breaks=quantiles(currentValues),legend=numericLegend(colors,breaks,currentValues,unit,digits);
   const zoom=(factor:number)=>setView(current=>{const k=Math.min(5,Math.max(1,current.k*factor));return k===1?{x:0,y:0,k}:{x:450-(450-current.x)*k/current.k,y:300-(300-current.y)*k/current.k,k}});
   useEffect(()=>{const element=mapRef.current;if(!element)return;const wheel=(event:WheelEvent)=>{event.preventDefault();event.stopPropagation();zoom(event.deltaY<0?1.18:1/1.18)};element.addEventListener("wheel",wheel,{passive:false});return()=>element.removeEventListener("wheel",wheel)},[]);
-  useEffect(()=>setView({x:0,y:0,k:1.1}),[title]);
-  return <div className="thematicMapCard"><div className="cardHead"><div><h2>{title}</h2><p>{subtitle}；点击区县查看详情</p></div><div className="mapHeadActions"><label className="labelToggle"><input type="checkbox" checked={labelsOn} onChange={event=>setLabelsOn(event.target.checked)}/>标注</label><button onClick={()=>{const run=()=>exportMapPng(mapRef.current,{title,subtitle,legendTitle,legend,kmPerPixel:geometry?.kmPerPixel});const doExport=()=>{if(!selected){run();return}setExporting(true);requestAnimationFrame(()=>requestAnimationFrame(()=>{run();setExporting(false)}))};if(labelsOn){doExport();return}setLabelsOn(true);requestAnimationFrame(()=>requestAnimationFrame(()=>{doExport();setLabelsOn(false)}))}}>导出 PNG</button></div></div>
-    <div className="thematicMapWrap"><svg ref={mapRef} viewBox="0 34 900 600" className="thematicMap" role="img" aria-label={title} onPointerDown={event=>{event.currentTarget.setPointerCapture(event.pointerId);drag.current={x:event.clientX,y:event.clientY,vx:view.x,vy:view.y}}} onPointerMove={event=>{const dragState=drag.current;if(!dragState)return;const ratio=900/event.currentTarget.getBoundingClientRect().width;setView(current=>({...current,x:dragState.vx+(event.clientX-dragState.x)*ratio,y:dragState.vy+(event.clientY-dragState.y)*ratio}))}} onPointerUp={()=>{drag.current=null}} onPointerCancel={()=>{drag.current=null}}>
+  useEffect(()=>{const id=requestAnimationFrame(()=>setView({x:0,y:0,k:1.1}));return()=>cancelAnimationFrame(id)},[title]);
+  // 挂载完整导出参数，供图表选择器批量导出复用（带样式注入 + 标题图例）
+  useEffect(()=>{const el=mapRef.current;if(el&&geometry){(el as unknown as {__odExport?:{title:string;subtitle:string;legendTitle:string;legend:MapLegendItem[]}}).__odExport={title,subtitle,legendTitle,legend}}},[title,subtitle,legendTitle,legend,geometry]);
+  return <div className="thematicMapCard"><div className="cardHead"><div><h2>{title}</h2><p>{subtitle}；点击区县查看详情</p></div><div className="mapHeadActions"><label className="labelToggle"><input type="checkbox" checked={labelsOn} onChange={event=>setLabelsOn(event.target.checked)}/>标注</label>{exportable&&<button onClick={()=>{const run=()=>exportMapPng(mapRef.current,{title,subtitle,legendTitle,legend,kmPerPixel:geometry?.kmPerPixel});const doExport=()=>{if(!selected){run();return}setExporting(true);requestAnimationFrame(()=>requestAnimationFrame(()=>{run();setExporting(false)}))};if(labelsOn){doExport();return}setLabelsOn(true);requestAnimationFrame(()=>requestAnimationFrame(()=>{doExport();setLabelsOn(false)}))}}>导出 PNG</button>}</div></div>
+    <div className="thematicMapWrap"><svg ref={(el)=>{mapRef.current=el;svgRefCallback?.(el)}} viewBox="0 34 900 600" className="thematicMap" role="img" aria-label={title} onPointerDown={event=>{event.currentTarget.setPointerCapture(event.pointerId);drag.current={x:event.clientX,y:event.clientY,vx:view.x,vy:view.y}}} onPointerMove={event=>{const dragState=drag.current;if(!dragState)return;const ratio=900/event.currentTarget.getBoundingClientRect().width;setView(current=>({...current,x:dragState.vx+(event.clientX-dragState.x)*ratio,y:dragState.vy+(event.clientY-dragState.y)*ratio}))}} onPointerUp={()=>{drag.current=null}} onPointerCancel={()=>{drag.current=null}}>
       <g transform={`translate(${view.x} ${view.y}) scale(${view.k})`}>
         <g aria-hidden="true">{geometry.backdrop.map(feature=><path key={`fujian-${feature.code}`} d={feature.d} className="fujianPrefectureBackdrop"/>)}</g>
         {geometry.counties.map(feature=>{const active=activeCounties.has(feature.name),value=values.get(feature.name),grade=value===undefined?0:band(value,breaks);return <path key={feature.code} d={feature.d} className={`thematicCounty${active?" active":" muted"}`} style={active&&value!==undefined?{fill:colors[grade]}:undefined} onPointerDown={event=>event.stopPropagation()} onClick={()=>active&&onSelect(feature.name)}><title>{feature.city} · {feature.name}{value===undefined?"":`：${new Intl.NumberFormat("zh-CN",{maximumFractionDigits:digits}).format(value)}${unit}`}</title></path>})}

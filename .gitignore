@@ -59,3 +59,9 @@ data/raw/
 
 # 大导出文件（可重新生成，不入库）
 data/processed/contact-network/
+
+# 用户私有分析报告草稿，不入库
+/厦漳泉都市圈综合分析报告.docx
+
+# 用户私有报告草稿不入库
+*.docx

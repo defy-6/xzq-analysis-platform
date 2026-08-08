@@ -120,6 +120,7 @@ export async function exportMapPng(svg:SVGSVGElement|null,options:{title:string;
     .drivingRoute{fill:none;stroke:#e67e22;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;opacity:.62;vector-effect:non-scaling-stroke}
     .drivingRoute.routeBack{stroke:#3d7dd8;stroke-width:1.6;opacity:.35;stroke-dasharray:5 3}
     .flowHit,.populationFlowHit{display:none}
+    .mapDecorations text{font-size:13px;fill:#65716c;stroke:none}
     circle{fill:#173f38}
     text{font-size:10px;fill:#37554d;paint-order:stroke;stroke:#f7faf7;stroke-width:3px}
     .quadrantGrid{stroke:#dce4df;stroke-width:1}
@@ -172,7 +173,7 @@ export async function exportMapPng(svg:SVGSVGElement|null,options:{title:string;
     let legendTotalWidth=0;for(const item of options.legend){legendTotalWidth+=shapeSize+14+context.measureText(item.label).width+legendGap}
     legendTotalWidth-=legendGap;
     context.textAlign="center";context.fillStyle="#173f38";context.font='600 26px "PingFang SC","Microsoft YaHei",sans-serif';context.fillText(options.legendTitle,exportWidth/2,legendY);context.textAlign="left";
-    let legendX=(exportWidth-legendTotalWidth)/2,legendRow=legendY+56;
+    let legendX=(exportWidth-legendTotalWidth)/2;const legendRow=legendY+56;
     context.font='22px "PingFang SC","Microsoft YaHei",sans-serif';
     for(const item of options.legend){
       drawLegendShape(context,item,legendX,legendRow-26,shapeSize);

@@ -1,0 +1,4389 @@
+{
+  "generatedAt": "2026-08-07T09:14:54.797Z",
+  "source": "由 build_ai_summary.mjs 从 public/data 各模块汇总 JSON 自动生成",
+  "note": "金额单位：万元（企业投资金额与分支注册资金，双向合计）；人口单位：人；用地单位：公顷；驾车时间单位：分钟；POI 相对倍数=该区县某中类数量/28 区县该中类平均数量。跨市指厦门/漳州/泉州三市之间。",
+  "overview": {
+    "cities": [
+      "厦门市",
+      "漳州市",
+      "泉州市"
+    ],
+    "countyCount": 28,
+    "enterprise": {
+      "投资": {
+        "count": 159561,
+        "amount": 423517174.18,
+        "crossCityCount": 37779,
+        "crossCityShare": 0.24
+      },
+      "分支": {
+        "count": 52869,
+        "amount": 2550,
+        "crossCityCount": 15390,
+        "crossCityShare": 0.29
+      },
+      "专利": {
+        "count": 22687,
+        "amount": 0,
+        "crossCityCount": 8064,
+        "crossCityShare": 0.36
+      }
+    },
+    "population": {
+      "total": 24835960,
+      "crossCity": 7718345,
+      "withinCity": 17117615,
+      "crossCityShare": 0.31
+    },
+    "transport": {
+      "directedOdCount": 756,
+      "countyPairCount": 378,
+      "nodeCount": 28
+    },
+    "land": {
+      "countyCount": 28,
+      "unit": "公顷"
+    },
+    "services": {
+      "poiTotal": 1218223,
+      "middleCategoryCount": 230
+    },
+    "quadrant": {
+      "pairCount": 378,
+      "quadrantCounts": {
+        "1": 102,
+        "2": 80,
+        "3": 126,
+        "4": 70
+      },
+      "crossCityCount": 253
+    }
+  },
+  "cities": {
+    "企业联系": {
+      "厦门市": {
+        "count": 280878,
+        "amount": 554490304.34
+      },
+      "泉州市": {
+        "count": 128075,
+        "amount": 186682726.81
+      },
+      "漳州市": {
+        "count": 61281,
+        "amount": 105866417.21
+      }
+    },
+    "企业城市对": [
+      {
+        "pair": "厦门市→厦门市",
+        "count": 111920,
+        "amount": 236871840.43
+      },
+      {
+        "pair": "泉州市→泉州市",
+        "count": 46225,
+        "amount": 67357042.71
+      },
+      {
+        "pair": "漳州市→漳州市",
+        "count": 15739,
+        "amount": 34229241.7
+      },
+      {
+        "pair": "厦门市→泉州市",
+        "count": 21545,
+        "amount": 29715840.79
+      },
+      {
+        "pair": "厦门市→漳州市",
+        "count": 19995,
+        "amount": 26020739.33
+      },
+      {
+        "pair": "泉州市→厦门市",
+        "count": 9885,
+        "amount": 17937824.74
+      },
+      {
+        "pair": "漳州市→厦门市",
+        "count": 5613,
+        "amount": 7072218.63
+      },
+      {
+        "pair": "泉州市→漳州市",
+        "count": 2788,
+        "amount": 3451766.94
+      },
+      {
+        "pair": "漳州市→泉州市",
+        "count": 1407,
+        "amount": 863208.91
+      }
+    ],
+    "人口净流入": [
+      {
+        "city": "泉州市",
+        "net": 3550,
+        "crossIn": 2110798,
+        "crossOut": 2107248
+      },
+      {
+        "city": "厦门市",
+        "net": -334,
+        "crossIn": 3213731,
+        "crossOut": 3214065
+      },
+      {
+        "city": "漳州市",
+        "net": -3216,
+        "crossIn": 2393816,
+        "crossOut": 2397032
+      }
+    ],
+    "人口城市对": [
+      {
+        "pair": "厦门市→厦门市",
+        "count": 7691416
+      },
+      {
+        "pair": "泉州市→泉州市",
+        "count": 6227259
+      },
+      {
+        "pair": "漳州市→漳州市",
+        "count": 3198940
+      },
+      {
+        "pair": "漳州市→厦门市",
+        "count": 1758216
+      },
+      {
+        "pair": "厦门市→漳州市",
+        "count": 1742083
+      },
+      {
+        "pair": "厦门市→泉州市",
+        "count": 1471982
+      },
+      {
+        "pair": "泉州市→厦门市",
+        "count": 1455515
+      },
+      {
+        "pair": "泉州市→漳州市",
+        "count": 651733
+      },
+      {
+        "pair": "漳州市→泉州市",
+        "count": 638816
+      }
+    ],
+    "用地": {
+      "厦门市": {
+        "countyCount": 6,
+        "totalAreaHa": 169878.3,
+        "constructionAreaHa": 54546.8,
+        "developmentIntensity": 0.45,
+        "commercialShare": 0.07,
+        "publicServiceShare": 0.07,
+        "landUseMix": 0.83
+      },
+      "泉州市": {
+        "countyCount": 11,
+        "totalAreaHa": 1129519.8,
+        "constructionAreaHa": 168499.7,
+        "developmentIntensity": 0.29,
+        "commercialShare": 0.03,
+        "publicServiceShare": 0.05,
+        "landUseMix": 0.72
+      },
+      "漳州市": {
+        "countyCount": 11,
+        "totalAreaHa": 1289153.2,
+        "constructionAreaHa": 112169.9,
+        "developmentIntensity": 0.14,
+        "commercialShare": 0.03,
+        "publicServiceShare": 0.04,
+        "landUseMix": 0.72
+      }
+    },
+    "公共服务": {
+      "漳州市": {
+        "countyCount": 11,
+        "poiTotal": 260882,
+        "poiPerWan": 514,
+        "residentPopulationWan": 507.6
+      },
+      "泉州市": {
+        "countyCount": 11,
+        "poiTotal": 576273,
+        "poiPerWan": 646.5,
+        "residentPopulationWan": 891.4
+      },
+      "厦门市": {
+        "countyCount": 6,
+        "poiTotal": 381068,
+        "poiPerWan": 712.3,
+        "residentPopulationWan": 535
+      }
+    },
+    "交通城市对": [
+      {
+        "pair": "厦门市↔泉州市",
+        "avgTime": 86.2,
+        "avgDistance": 93.9,
+        "odCount": 24
+      },
+      {
+        "pair": "厦门市↔漳州市",
+        "avgTime": 65.1,
+        "avgDistance": 54.7,
+        "odCount": 0
+      },
+      {
+        "pair": "泉州市↔厦门市",
+        "avgTime": 84.4,
+        "avgDistance": 102.6,
+        "odCount": 31
+      },
+      {
+        "pair": "泉州市↔漳州市",
+        "avgTime": 102.6,
+        "avgDistance": 135.1,
+        "odCount": 60
+      },
+      {
+        "pair": "漳州市↔厦门市",
+        "avgTime": 64.4,
+        "avgDistance": 55.5,
+        "odCount": 0
+      },
+      {
+        "pair": "漳州市↔泉州市",
+        "avgTime": 104.1,
+        "avgDistance": 126.9,
+        "odCount": 52
+      }
+    ]
+  },
+  "topFlows": {
+    "企业区县对": [
+      {
+        "pair": "厦门市·思明区↔厦门市·湖里区",
+        "count": 19668,
+        "amount": 61130802.02
+      },
+      {
+        "pair": "厦门市·湖里区↔厦门市·思明区",
+        "count": 15693,
+        "amount": 37697059.93
+      },
+      {
+        "pair": "厦门市·湖里区↔厦门市·翔安区",
+        "count": 5792,
+        "amount": 19341955.4
+      },
+      {
+        "pair": "厦门市·思明区↔厦门市·集美区",
+        "count": 6445,
+        "amount": 15543661.77
+      },
+      {
+        "pair": "厦门市·湖里区↔厦门市·集美区",
+        "count": 9534,
+        "amount": 11920590.19
+      },
+      {
+        "pair": "厦门市·湖里区↔厦门市·同安区",
+        "count": 3393,
+        "amount": 11897004.11
+      },
+      {
+        "pair": "厦门市·湖里区↔厦门市·海沧区",
+        "count": 4380,
+        "amount": 10645826.65
+      },
+      {
+        "pair": "厦门市·思明区↔厦门市·翔安区",
+        "count": 3000,
+        "amount": 10050560.88
+      },
+      {
+        "pair": "厦门市·思明区↔厦门市·海沧区",
+        "count": 3792,
+        "amount": 7876171.16
+      },
+      {
+        "pair": "厦门市·思明区↔厦门市·同安区",
+        "count": 2337,
+        "amount": 7216465.43
+      },
+      {
+        "pair": "漳州市·龙海区↔漳州市·芗城区",
+        "count": 912,
+        "amount": 6858836.44
+      },
+      {
+        "pair": "厦门市·海沧区↔厦门市·湖里区",
+        "count": 4251,
+        "amount": 6647505.21
+      },
+      {
+        "pair": "泉州市·丰泽区↔泉州市·鲤城区",
+        "count": 3565,
+        "amount": 6271824.79
+      },
+      {
+        "pair": "厦门市·思明区↔漳州市·龙海区",
+        "count": 1292,
+        "amount": 6195601.26
+      },
+      {
+        "pair": "厦门市·湖里区↔泉州市·惠安县",
+        "count": 852,
+        "amount": 6054044.25
+      },
+      {
+        "pair": "厦门市·集美区↔厦门市·湖里区",
+        "count": 5430,
+        "amount": 5477592.45
+      },
+      {
+        "pair": "厦门市·翔安区↔厦门市·湖里区",
+        "count": 2694,
+        "amount": 5127288.51
+      },
+      {
+        "pair": "厦门市·湖里区↔泉州市·晋江市",
+        "count": 2167,
+        "amount": 4947996.52
+      }
+    ],
+    "人口区县对": [
+      {
+        "pair": "厦门市·湖里区↔厦门市·思明区",
+        "count": 1587987
+      },
+      {
+        "pair": "厦门市·思明区↔厦门市·湖里区",
+        "count": 1569007
+      },
+      {
+        "pair": "漳州市·龙文区↔漳州市·芗城区",
+        "count": 500824
+      },
+      {
+        "pair": "漳州市·芗城区↔漳州市·龙文区",
+        "count": 498941
+      },
+      {
+        "pair": "厦门市·湖里区↔厦门市·集美区",
+        "count": 421579
+      },
+      {
+        "pair": "厦门市·集美区↔厦门市·湖里区",
+        "count": 403544
+      },
+      {
+        "pair": "泉州市·鲤城区↔泉州市·丰泽区",
+        "count": 396464
+      },
+      {
+        "pair": "泉州市·丰泽区↔泉州市·鲤城区",
+        "count": 390424
+      },
+      {
+        "pair": "厦门市·海沧区↔漳州市·龙海区",
+        "count": 376650
+      },
+      {
+        "pair": "泉州市·石狮市↔泉州市·晋江市",
+        "count": 376539
+      },
+      {
+        "pair": "漳州市·龙海区↔厦门市·海沧区",
+        "count": 375609
+      },
+      {
+        "pair": "泉州市·晋江市↔泉州市·石狮市",
+        "count": 372946
+      },
+      {
+        "pair": "泉州市·晋江市↔泉州市·丰泽区",
+        "count": 372462
+      },
+      {
+        "pair": "泉州市·丰泽区↔泉州市·晋江市",
+        "count": 363873
+      },
+      {
+        "pair": "泉州市·南安市↔泉州市·晋江市",
+        "count": 321487
+      }
+    ],
+    "区县净流入": [
+      {
+        "county": "厦门市·湖里区",
+        "net": 49187,
+        "crossIn": 703887,
+        "crossOut": 654700
+      },
+      {
+        "county": "泉州市·泉港区",
+        "net": 24832,
+        "crossIn": 107157,
+        "crossOut": 82325
+      },
+      {
+        "county": "厦门市·翔安区",
+        "net": 20253,
+        "crossIn": 347094,
+        "crossOut": 326841
+      },
+      {
+        "county": "漳州市·龙文区",
+        "net": 8581,
+        "crossIn": 211842,
+        "crossOut": 203261
+      },
+      {
+        "county": "泉州市·惠安县",
+        "net": 5336,
+        "crossIn": 149705,
+        "crossOut": 144369
+      },
+      {
+        "county": "漳州市·华安县",
+        "net": 5043,
+        "crossIn": 62008,
+        "crossOut": 56965
+      },
+      {
+        "county": "漳州市·南靖县",
+        "net": 4990,
+        "crossIn": 92709,
+        "crossOut": 87719
+      },
+      {
+        "county": "漳州市·芗城区",
+        "net": 4878,
+        "crossIn": 193397,
+        "crossOut": 188519
+      },
+      {
+        "county": "厦门市·海沧区",
+        "net": 3859,
+        "crossIn": 627515,
+        "crossOut": 623656
+      },
+      {
+        "county": "泉州市·南安市",
+        "net": 3408,
+        "crossIn": 507761,
+        "crossOut": 504353
+      },
+      {
+        "county": "泉州市·永春县",
+        "net": 974,
+        "crossIn": 46792,
+        "crossOut": 45818
+      },
+      {
+        "county": "泉州市·洛江区",
+        "net": 680,
+        "crossIn": 36550,
+        "crossOut": 35870
+      },
+      {
+        "county": "泉州市·鲤城区",
+        "net": 502,
+        "crossIn": 77780,
+        "crossOut": 77278
+      },
+      {
+        "county": "漳州市·诏安县",
+        "net": -268,
+        "crossIn": 200069,
+        "crossOut": 200337
+      },
+      {
+        "county": "漳州市·东山县",
+        "net": -1092,
+        "crossIn": 39498,
+        "crossOut": 40590
+      },
+      {
+        "county": "漳州市·云霄县",
+        "net": -2454,
+        "crossIn": 73094,
+        "crossOut": 75548
+      },
+      {
+        "county": "漳州市·长泰区",
+        "net": -2811,
+        "crossIn": 128699,
+        "crossOut": 131510
+      },
+      {
+        "county": "泉州市·德化县",
+        "net": -3332,
+        "crossIn": 43341,
+        "crossOut": 46673
+      },
+      {
+        "county": "泉州市·丰泽区",
+        "net": -3416,
+        "crossIn": 191259,
+        "crossOut": 194675
+      },
+      {
+        "county": "漳州市·平和县",
+        "net": -4081,
+        "crossIn": 110063,
+        "crossOut": 114144
+      },
+      {
+        "county": "漳州市·龙海区",
+        "net": -6362,
+        "crossIn": 1075796,
+        "crossOut": 1082158
+      },
+      {
+        "county": "泉州市·石狮市",
+        "net": -7209,
+        "crossIn": 139506,
+        "crossOut": 146715
+      },
+      {
+        "county": "厦门市·同安区",
+        "net": -7352,
+        "crossIn": 353570,
+        "crossOut": 360922
+      },
+      {
+        "county": "泉州市·晋江市",
+        "net": -8263,
+        "crossIn": 538203,
+        "crossOut": 546466
+      },
+      {
+        "county": "漳州市·漳浦县",
+        "net": -9640,
+        "crossIn": 206641,
+        "crossOut": 216281
+      },
+      {
+        "county": "泉州市·安溪县",
+        "net": -9962,
+        "crossIn": 272744,
+        "crossOut": 282706
+      },
+      {
+        "county": "厦门市·思明区",
+        "net": -24701,
+        "crossIn": 644468,
+        "crossOut": 669169
+      },
+      {
+        "county": "厦门市·集美区",
+        "net": -41580,
+        "crossIn": 537197,
+        "crossOut": 578777
+      }
+    ],
+    "人口镇街对": [
+      {
+        "pair": "漳州市·龙海区·角美镇↔厦门市·海沧区·东孚街道办事处",
+        "count": 89005
+      },
+      {
+        "pair": "厦门市·海沧区·东孚街道办事处↔漳州市·龙海区·角美镇",
+        "count": 86196
+      },
+      {
+        "pair": "漳州市·龙海区·角美镇↔厦门市·海沧区·海沧街道办事处",
+        "count": 85368
+      },
+      {
+        "pair": "厦门市·海沧区·海沧街道办事处↔漳州市·龙海区·角美镇",
+        "count": 84846
+      },
+      {
+        "pair": "漳州市·龙海区·角美镇↔厦门市·海沧区·嵩屿街道办事处",
+        "count": 52051
+      },
+      {
+        "pair": "厦门市·海沧区·嵩屿街道办事处↔漳州市·龙海区·角美镇",
+        "count": 51696
+      },
+      {
+        "pair": "泉州市·南安市·石井镇↔厦门市·翔安区·新店镇",
+        "count": 45934
+      },
+      {
+        "pair": "厦门市·翔安区·新店镇↔泉州市·南安市·石井镇",
+        "count": 45245
+      },
+      {
+        "pair": "厦门市·海沧区·新阳街道办事处↔漳州市·龙海区·角美镇",
+        "count": 41681
+      },
+      {
+        "pair": "漳州市·龙海区·角美镇↔厦门市·海沧区·新阳街道办事处",
+        "count": 36712
+      },
+      {
+        "pair": "漳州市·龙海区·角美镇↔厦门市·湖里区·殿前街道办事处",
+        "count": 28598
+      },
+      {
+        "pair": "厦门市·湖里区·殿前街道办事处↔漳州市·龙海区·角美镇",
+        "count": 26553
+      },
+      {
+        "pair": "厦门市·集美区·灌口镇↔漳州市·龙海区·角美镇",
+        "count": 25578
+      },
+      {
+        "pair": "漳州市·龙海区·角美镇↔厦门市·湖里区·湖里街道办事处",
+        "count": 24940
+      },
+      {
+        "pair": "漳州市·龙海区·角美镇↔厦门市·集美区·灌口镇",
+        "count": 24293
+      },
+      {
+        "pair": "厦门市·思明区·筼筜街道办事处↔漳州市·龙海区·角美镇",
+        "count": 22169
+      },
+      {
+        "pair": "漳州市·龙海区·角美镇↔厦门市·思明区·筼筜街道办事处",
+        "count": 21089
+      },
+      {
+        "pair": "厦门市·湖里区·禾山街道办事处↔漳州市·龙海区·角美镇",
+        "count": 19903
+      },
+      {
+        "pair": "厦门市·湖里区·湖里街道办事处↔漳州市·龙海区·角美镇",
+        "count": 19792
+      },
+      {
+        "pair": "厦门市·思明区·莲前街道办事处↔漳州市·龙海区·角美镇",
+        "count": 19184
+      },
+      {
+        "pair": "漳州市·龙海区·角美镇↔厦门市·湖里区·禾山街道办事处",
+        "count": 18990
+      },
+      {
+        "pair": "漳州市·龙海区·角美镇↔厦门市·集美区·杏林街道",
+        "count": 17889
+      },
+      {
+        "pair": "厦门市·集美区·杏林街道↔漳州市·龙海区·角美镇",
+        "count": 17479
+      },
+      {
+        "pair": "漳州市·龙海区·角美镇↔厦门市·集美区·杏滨街道",
+        "count": 16923
+      },
+      {
+        "pair": "漳州市·龙海区·角美镇↔厦门市·思明区·莲前街道办事处",
+        "count": 16125
+      },
+      {
+        "pair": "厦门市·集美区·杏滨街道↔漳州市·龙海区·角美镇",
+        "count": 15862
+      },
+      {
+        "pair": "漳州市·龙海区·角美镇↔厦门市·集美区·后溪镇",
+        "count": 15221
+      },
+      {
+        "pair": "厦门市·翔安区·马巷镇↔泉州市·南安市·水头镇",
+        "count": 13787
+      },
+      {
+        "pair": "厦门市·集美区·后溪镇↔漳州市·龙海区·角美镇",
+        "count": 13683
+      },
+      {
+        "pair": "厦门市·海沧区·海沧街道办事处↔漳州市·龙海区·招商局漳州开发区",
+        "count": 13523
+      },
+      {
+        "pair": "厦门市·翔安区·内厝镇↔泉州市·南安市·水头镇",
+        "count": 13514
+      },
+      {
+        "pair": "漳州市·龙海区·招商局漳州开发区↔厦门市·海沧区·海沧街道办事处",
+        "count": 12858
+      },
+      {
+        "pair": "漳州市·龙海区·招商局漳州开发区↔厦门市·思明区·鼓浪屿街道办事处",
+        "count": 12857
+      },
+      {
+        "pair": "泉州市·南安市·水头镇↔厦门市·翔安区·内厝镇",
+        "count": 12748
+      },
+      {
+        "pair": "厦门市·翔安区·马巷镇↔泉州市·南安市·石井镇",
+        "count": 12164
+      },
+      {
+        "pair": "厦门市·思明区·鼓浪屿街道办事处↔漳州市·龙海区·招商局漳州开发区",
+        "count": 12061
+      },
+      {
+        "pair": "厦门市·集美区·后溪镇↔漳州市·诏安县·白洋乡",
+        "count": 11925
+      },
+      {
+        "pair": "漳州市·龙海区·角美镇↔厦门市·海沧区·第一农场",
+        "count": 11924
+      },
+      {
+        "pair": "厦门市·海沧区·第一农场↔漳州市·龙海区·角美镇",
+        "count": 11833
+      },
+      {
+        "pair": "泉州市·南安市·水头镇↔厦门市·翔安区·马巷镇",
+        "count": 11400
+      }
+    ]
+  },
+  "industry": {
+    "byAmount": [
+      {
+        "name": "租赁和商务服务业",
+        "count": 16275,
+        "amount": 39740158.87,
+        "invest": 12834,
+        "branch": 3346,
+        "patent": 95,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "制造业",
+        "count": 8724,
+        "amount": 21251517.23,
+        "invest": 5307,
+        "branch": 826,
+        "patent": 2591,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "房地产业",
+        "count": 3639,
+        "amount": 20053338.65,
+        "invest": 2869,
+        "branch": 758,
+        "patent": 12,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "金融业",
+        "count": 2863,
+        "amount": 13479152.86,
+        "invest": 2396,
+        "branch": 466,
+        "patent": 1,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "建筑业",
+        "count": 6880,
+        "amount": 10975604.11,
+        "invest": 2630,
+        "branch": 3271,
+        "patent": 979,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "批发和零售业",
+        "count": 13055,
+        "amount": 8827187,
+        "invest": 8040,
+        "branch": 4829,
+        "patent": 186,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "科学研究和技术服务业",
+        "count": 10731,
+        "amount": 8264498.8,
+        "invest": 8224,
+        "branch": 1046,
+        "patent": 1461,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "交通运输、仓储和邮政业",
+        "count": 1617,
+        "amount": 4133444.07,
+        "invest": 967,
+        "branch": 644,
+        "patent": 6,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "信息传输、软件和信息技术服务业",
+        "count": 5751,
+        "amount": 3932094.05,
+        "invest": 4997,
+        "branch": 330,
+        "patent": 424,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "水利、环境和公共设施管理业",
+        "count": 775,
+        "amount": 3635944.43,
+        "invest": 539,
+        "branch": 189,
+        "patent": 47,
+        "strongestDir": "泉州市↔泉州市"
+      },
+      {
+        "name": "卫生和社会工作",
+        "count": 547,
+        "amount": 1942756.33,
+        "invest": 458,
+        "branch": 85,
+        "patent": 4,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "农、林、牧、渔业",
+        "count": 779,
+        "amount": 1347715.83,
+        "invest": 665,
+        "branch": 77,
+        "patent": 37,
+        "strongestDir": "漳州市↔漳州市"
+      },
+      {
+        "name": "电力、热力、燃气及水生产和供应业",
+        "count": 1114,
+        "amount": 1146058.69,
+        "invest": 450,
+        "branch": 406,
+        "patent": 258,
+        "strongestDir": "泉州市↔泉州市"
+      },
+      {
+        "name": "住宿和餐饮业",
+        "count": 1295,
+        "amount": 1129503.18,
+        "invest": 521,
+        "branch": 774,
+        "patent": 0,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "文化、体育和娱乐业",
+        "count": 1542,
+        "amount": 784577.97,
+        "invest": 1312,
+        "branch": 225,
+        "patent": 5,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "教育",
+        "count": 443,
+        "amount": 199966.82,
+        "invest": 369,
+        "branch": 69,
+        "patent": 5,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "居民服务、修理和其他服务业",
+        "count": 742,
+        "amount": 168421.22,
+        "invest": 495,
+        "branch": 246,
+        "patent": 1,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "采矿业",
+        "count": 115,
+        "amount": 149692.28,
+        "invest": 108,
+        "branch": 2,
+        "patent": 5,
+        "strongestDir": "泉州市↔泉州市"
+      },
+      {
+        "name": "公共管理、社会保障和社会组织",
+        "count": 6,
+        "amount": 199,
+        "invest": 2,
+        "branch": 0,
+        "patent": 4,
+        "strongestDir": "厦门市↔漳州市"
+      }
+    ],
+    "byChain": [
+      {
+        "name": "金融商务与租赁",
+        "count": 19138,
+        "amount": 53219311.73,
+        "invest": 15230,
+        "branch": 3812,
+        "patent": 96,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "建筑与房地产",
+        "count": 10727,
+        "amount": 31028942.76,
+        "invest": 5499,
+        "branch": 4029,
+        "patent": 1199,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "商贸物流",
+        "count": 14672,
+        "amount": 12960626.07,
+        "invest": 9006,
+        "branch": 5473,
+        "patent": 193,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "电子信息与数字",
+        "count": 7623,
+        "amount": 12078428.04,
+        "invest": 5878,
+        "branch": 384,
+        "patent": 1361,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "科技教育医疗",
+        "count": 11553,
+        "amount": 8607083.46,
+        "invest": 8878,
+        "branch": 1160,
+        "patent": 1515,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "能源资源与生态公用",
+        "count": 2058,
+        "amount": 4946815.41,
+        "invest": 1116,
+        "branch": 604,
+        "patent": 338,
+        "strongestDir": "泉州市↔泉州市"
+      },
+      {
+        "name": "生活文旅与社会服务",
+        "count": 3799,
+        "amount": 3882839.86,
+        "invest": 2503,
+        "branch": 1285,
+        "patent": 11,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "石化医药与新材料",
+        "count": 1369,
+        "amount": 3838809.68,
+        "invest": 728,
+        "branch": 76,
+        "patent": 565,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "先进装备制造",
+        "count": 2968,
+        "amount": 3577084.88,
+        "invest": 1155,
+        "branch": 155,
+        "patent": 1658,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "农业食品",
+        "count": 1728,
+        "amount": 2565074.96,
+        "invest": 1321,
+        "branch": 299,
+        "patent": 108,
+        "strongestDir": "厦门市↔厦门市"
+      },
+      {
+        "name": "纺织鞋服与消费品",
+        "count": 1166,
+        "amount": 2381171.19,
+        "invest": 860,
+        "branch": 150,
+        "patent": 156,
+        "strongestDir": "泉州市↔泉州市"
+      },
+      {
+        "name": "建材家居",
+        "count": 1434,
+        "amount": 2075638.36,
+        "invest": 1008,
+        "branch": 162,
+        "patent": 264,
+        "strongestDir": "厦门市↔厦门市"
+      }
+    ],
+    "byChainCountyPair": [
+      {
+        "name": "金融商务与租赁",
+        "pair": "厦门市·湖里区↔泉州市·晋江市",
+        "invest": 141,
+        "branch": 61,
+        "patent": 0,
+        "amount": 172119.5,
+        "cross": true
+      },
+      {
+        "name": "金融商务与租赁",
+        "pair": "厦门市·湖里区↔泉州市·丰泽区",
+        "invest": 120,
+        "branch": 80,
+        "patent": 12,
+        "amount": 114322.73,
+        "cross": true
+      },
+      {
+        "name": "金融商务与租赁",
+        "pair": "厦门市·思明区↔泉州市·晋江市",
+        "invest": 109,
+        "branch": 62,
+        "patent": 0,
+        "amount": 116932.28,
+        "cross": true
+      },
+      {
+        "name": "商贸物流",
+        "pair": "厦门市·湖里区↔泉州市·晋江市",
+        "invest": 94,
+        "branch": 48,
+        "patent": 0,
+        "amount": 56606.3,
+        "cross": true
+      },
+      {
+        "name": "金融商务与租赁",
+        "pair": "泉州市·晋江市↔厦门市·湖里区",
+        "invest": 116,
+        "branch": 16,
+        "patent": 0,
+        "amount": 189083.64,
+        "cross": true
+      },
+      {
+        "name": "金融商务与租赁",
+        "pair": "泉州市·晋江市↔厦门市·思明区",
+        "invest": 120,
+        "branch": 2,
+        "patent": 0,
+        "amount": 268092.61,
+        "cross": true
+      },
+      {
+        "name": "建筑与房地产",
+        "pair": "厦门市·湖里区↔漳州市·龙海区",
+        "invest": 83,
+        "branch": 32,
+        "patent": 8,
+        "amount": 421034.8,
+        "cross": true
+      },
+      {
+        "name": "建筑与房地产",
+        "pair": "厦门市·思明区↔漳州市·芗城区",
+        "invest": 79,
+        "branch": 33,
+        "patent": 1,
+        "amount": 206878.69,
+        "cross": true
+      },
+      {
+        "name": "金融商务与租赁",
+        "pair": "厦门市·思明区↔泉州市·丰泽区",
+        "invest": 59,
+        "branch": 52,
+        "patent": 1,
+        "amount": 69767.15,
+        "cross": true
+      },
+      {
+        "name": "金融商务与租赁",
+        "pair": "厦门市·思明区↔漳州市·芗城区",
+        "invest": 53,
+        "branch": 57,
+        "patent": 0,
+        "amount": 41753.99,
+        "cross": true
+      },
+      {
+        "name": "建筑与房地产",
+        "pair": "厦门市·思明区↔漳州市·龙海区",
+        "invest": 80,
+        "branch": 29,
+        "patent": 5,
+        "amount": 498875.94,
+        "cross": true
+      },
+      {
+        "name": "商贸物流",
+        "pair": "泉州市·晋江市↔厦门市·湖里区",
+        "invest": 80,
+        "branch": 22,
+        "patent": 0,
+        "amount": 126851.96,
+        "cross": true
+      },
+      {
+        "name": "商贸物流",
+        "pair": "漳州市·龙海区↔厦门市·思明区",
+        "invest": 31,
+        "branch": 63,
+        "patent": 0,
+        "amount": 86331,
+        "cross": true
+      },
+      {
+        "name": "金融商务与租赁",
+        "pair": "厦门市·湖里区↔漳州市·龙文区",
+        "invest": 61,
+        "branch": 32,
+        "patent": 0,
+        "amount": 55315.78,
+        "cross": true
+      },
+      {
+        "name": "金融商务与租赁",
+        "pair": "厦门市·湖里区↔漳州市·芗城区",
+        "invest": 39,
+        "branch": 53,
+        "patent": 0,
+        "amount": 28325.83,
+        "cross": true
+      },
+      {
+        "name": "金融商务与租赁",
+        "pair": "厦门市·思明区↔厦门市·湖里区",
+        "invest": 1983,
+        "branch": 224,
+        "patent": 22,
+        "amount": 10343029.7,
+        "cross": false
+      },
+      {
+        "name": "金融商务与租赁",
+        "pair": "厦门市·湖里区↔厦门市·思明区",
+        "invest": 1746,
+        "branch": 211,
+        "patent": 0,
+        "amount": 8036766.33,
+        "cross": false
+      },
+      {
+        "name": "商贸物流",
+        "pair": "厦门市·思明区↔厦门市·湖里区",
+        "invest": 819,
+        "branch": 377,
+        "patent": 16,
+        "amount": 1367926.74,
+        "cross": false
+      },
+      {
+        "name": "商贸物流",
+        "pair": "厦门市·湖里区↔厦门市·思明区",
+        "invest": 644,
+        "branch": 341,
+        "patent": 0,
+        "amount": 700128.27,
+        "cross": false
+      },
+      {
+        "name": "科技教育医疗",
+        "pair": "厦门市·思明区↔厦门市·湖里区",
+        "invest": 844,
+        "branch": 21,
+        "patent": 119,
+        "amount": 1046946.63,
+        "cross": false
+      },
+      {
+        "name": "金融商务与租赁",
+        "pair": "厦门市·湖里区↔厦门市·集美区",
+        "invest": 712,
+        "branch": 91,
+        "patent": 7,
+        "amount": 2143352.85,
+        "cross": false
+      },
+      {
+        "name": "科技教育医疗",
+        "pair": "厦门市·湖里区↔厦门市·思明区",
+        "invest": 719,
+        "branch": 27,
+        "patent": 0,
+        "amount": 359317.19,
+        "cross": false
+      },
+      {
+        "name": "电子信息与数字",
+        "pair": "厦门市·思明区↔厦门市·湖里区",
+        "invest": 719,
+        "branch": 12,
+        "patent": 89,
+        "amount": 982644.54,
+        "cross": false
+      }
+    ],
+    "chainByScope": {
+      "金融商务与租赁": {
+        "count": 19138,
+        "crossCount": 4352,
+        "withinCount": 14786,
+        "crossShare": 0.23
+      },
+      "纺织鞋服与消费品": {
+        "count": 1166,
+        "crossCount": 390,
+        "withinCount": 776,
+        "crossShare": 0.33
+      },
+      "电子信息与数字": {
+        "count": 7623,
+        "crossCount": 1798,
+        "withinCount": 5825,
+        "crossShare": 0.24
+      },
+      "科技教育医疗": {
+        "count": 11553,
+        "crossCount": 2943,
+        "withinCount": 8610,
+        "crossShare": 0.25
+      },
+      "商贸物流": {
+        "count": 14672,
+        "crossCount": 3376,
+        "withinCount": 11296,
+        "crossShare": 0.23
+      },
+      "建筑与房地产": {
+        "count": 10727,
+        "crossCount": 3483,
+        "withinCount": 7244,
+        "crossShare": 0.32
+      },
+      "生活文旅与社会服务": {
+        "count": 3799,
+        "crossCount": 899,
+        "withinCount": 2900,
+        "crossShare": 0.24
+      },
+      "能源资源与生态公用": {
+        "count": 2058,
+        "crossCount": 480,
+        "withinCount": 1578,
+        "crossShare": 0.23
+      },
+      "建材家居": {
+        "count": 1434,
+        "crossCount": 583,
+        "withinCount": 851,
+        "crossShare": 0.41
+      },
+      "先进装备制造": {
+        "count": 2968,
+        "crossCount": 1085,
+        "withinCount": 1883,
+        "crossShare": 0.37
+      },
+      "石化医药与新材料": {
+        "count": 1369,
+        "crossCount": 383,
+        "withinCount": 986,
+        "crossShare": 0.28
+      },
+      "农业食品": {
+        "count": 1728,
+        "crossCount": 599,
+        "withinCount": 1129,
+        "crossShare": 0.35
+      }
+    }
+  },
+  "quadrant": {
+    "counts": {
+      "1": 102,
+      "2": 80,
+      "3": 126,
+      "4": 70
+    },
+    "topPairs": [
+      {
+        "pair": "安溪县—华安县",
+        "cities": "泉州市↔漳州市",
+        "flowType": "跨市区县流动",
+        "populationFlow": 30194,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "潜在成长型",
+        "populationZ": 2.88,
+        "enterpriseZ": 2.77,
+        "distanceKm": 142.9
+      },
+      {
+        "pair": "南靖县—芗城区",
+        "cities": "漳州市↔漳州市",
+        "flowType": "市内流动",
+        "populationFlow": 174197,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "成熟协调型",
+        "populationZ": 2.58,
+        "enterpriseZ": 2.69,
+        "distanceKm": 42.2
+      },
+      {
+        "pair": "华安县—芗城区",
+        "cities": "漳州市↔漳州市",
+        "flowType": "市内流动",
+        "populationFlow": 62526,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "潜在成长型",
+        "populationZ": 3.21,
+        "enterpriseZ": 1.82,
+        "distanceKm": 71.2
+      },
+      {
+        "pair": "华安县—长泰区",
+        "cities": "漳州市↔漳州市",
+        "flowType": "市内流动",
+        "populationFlow": 26910,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "潜在成长型",
+        "populationZ": 3.09,
+        "enterpriseZ": 1.29,
+        "distanceKm": 63
+      },
+      {
+        "pair": "泉港区—诏安县",
+        "cities": "泉州市↔漳州市",
+        "flowType": "跨市区县流动",
+        "populationFlow": 13895,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "潜在成长型",
+        "populationZ": 2.48,
+        "enterpriseZ": 1.47,
+        "distanceKm": 285
+      },
+      {
+        "pair": "华安县—龙文区",
+        "cities": "漳州市↔漳州市",
+        "flowType": "市内流动",
+        "populationFlow": 21539,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "潜在成长型",
+        "populationZ": 2.85,
+        "enterpriseZ": 1.09,
+        "distanceKm": 79.7
+      },
+      {
+        "pair": "诏安县—龙文区",
+        "cities": "漳州市↔漳州市",
+        "flowType": "市内流动",
+        "populationFlow": 12959,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "潜在成长型",
+        "populationZ": 1.37,
+        "enterpriseZ": 2.55,
+        "distanceKm": 152.9
+      },
+      {
+        "pair": "泉港区—东山县",
+        "cities": "泉州市↔漳州市",
+        "flowType": "跨市区县流动",
+        "populationFlow": 3018,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "潜在成长型",
+        "populationZ": 1.54,
+        "enterpriseZ": 2.34,
+        "distanceKm": 273.4
+      },
+      {
+        "pair": "南靖县—龙文区",
+        "cities": "漳州市↔漳州市",
+        "flowType": "市内流动",
+        "populationFlow": 50174,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "潜在成长型",
+        "populationZ": 2.21,
+        "enterpriseZ": 1.53,
+        "distanceKm": 53.6
+      },
+      {
+        "pair": "东山县—芗城区",
+        "cities": "漳州市↔漳州市",
+        "flowType": "市内流动",
+        "populationFlow": 5779,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "潜在成长型",
+        "populationZ": 0.51,
+        "enterpriseZ": 3.19,
+        "distanceKm": 147
+      },
+      {
+        "pair": "东山县—龙文区",
+        "cities": "漳州市↔漳州市",
+        "flowType": "市内流动",
+        "populationFlow": 5020,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "潜在成长型",
+        "populationZ": 1.19,
+        "enterpriseZ": 2.31,
+        "distanceKm": 141.3
+      },
+      {
+        "pair": "海沧区—龙海区",
+        "cities": "厦门市↔漳州市",
+        "flowType": "跨市区县流动",
+        "populationFlow": 752259,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "成熟协调型",
+        "populationZ": 2.55,
+        "enterpriseZ": 0.87,
+        "distanceKm": 29.9
+      }
+    ],
+    "crossCityTopPairs": [
+      {
+        "pair": "安溪县—华安县",
+        "cities": "泉州市↔漳州市",
+        "populationFlow": 30194,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "潜在成长型",
+        "distanceKm": 142.9
+      },
+      {
+        "pair": "泉港区—诏安县",
+        "cities": "泉州市↔漳州市",
+        "populationFlow": 13895,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "潜在成长型",
+        "distanceKm": 285
+      },
+      {
+        "pair": "泉港区—东山县",
+        "cities": "泉州市↔漳州市",
+        "populationFlow": 3018,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "潜在成长型",
+        "distanceKm": 273.4
+      },
+      {
+        "pair": "海沧区—龙海区",
+        "cities": "厦门市↔漳州市",
+        "populationFlow": 752259,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "成熟协调型",
+        "distanceKm": 29.9
+      },
+      {
+        "pair": "湖里区—龙海区",
+        "cities": "厦门市↔漳州市",
+        "populationFlow": 294123,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "成熟协调型",
+        "distanceKm": 44.5
+      },
+      {
+        "pair": "湖里区—东山县",
+        "cities": "厦门市↔漳州市",
+        "populationFlow": 16998,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "潜在成长型",
+        "distanceKm": 162.4
+      },
+      {
+        "pair": "湖里区—芗城区",
+        "cities": "厦门市↔漳州市",
+        "populationFlow": 63816,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "成熟协调型",
+        "distanceKm": 60.5
+      },
+      {
+        "pair": "泉港区—漳浦县",
+        "cities": "泉州市↔漳州市",
+        "populationFlow": 10871,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "潜在成长型",
+        "distanceKm": 207
+      },
+      {
+        "pair": "湖里区—丰泽区",
+        "cities": "厦门市↔泉州市",
+        "populationFlow": 63639,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "成熟协调型",
+        "distanceKm": 77.9
+      },
+      {
+        "pair": "湖里区—南靖县",
+        "cities": "厦门市↔漳州市",
+        "populationFlow": 25718,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "潜在成长型",
+        "distanceKm": 105.3
+      },
+      {
+        "pair": "湖里区—惠安县",
+        "cities": "厦门市↔泉州市",
+        "populationFlow": 45464,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "潜在成长型",
+        "distanceKm": 102.7
+      },
+      {
+        "pair": "湖里区—晋江市",
+        "cities": "厦门市↔泉州市",
+        "populationFlow": 163086,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "成熟协调型",
+        "distanceKm": 70
+      },
+      {
+        "pair": "翔安区—南安市",
+        "cities": "厦门市↔泉州市",
+        "populationFlow": 274806,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "潜在成长型",
+        "distanceKm": 58.8
+      },
+      {
+        "pair": "石狮市—诏安县",
+        "cities": "泉州市↔漳州市",
+        "populationFlow": 16925,
+        "quadrant": "Ⅰ 人口、企业均超预期",
+        "functionType": "潜在成长型",
+        "distanceKm": 243.4
+      }
+    ],
+    "samples": {
+      "1": [
+        {
+          "pair": "安溪县—华安县",
+          "cities": "泉州市↔漳州市",
+          "flowType": "跨市区县流动",
+          "populationFlow": 30194,
+          "functionType": "潜在成长型"
+        },
+        {
+          "pair": "南靖县—芗城区",
+          "cities": "漳州市↔漳州市",
+          "flowType": "市内流动",
+          "populationFlow": 174197,
+          "functionType": "成熟协调型"
+        },
+        {
+          "pair": "华安县—芗城区",
+          "cities": "漳州市↔漳州市",
+          "flowType": "市内流动",
+          "populationFlow": 62526,
+          "functionType": "潜在成长型"
+        },
+        {
+          "pair": "华安县—长泰区",
+          "cities": "漳州市↔漳州市",
+          "flowType": "市内流动",
+          "populationFlow": 26910,
+          "functionType": "潜在成长型"
+        },
+        {
+          "pair": "泉港区—诏安县",
+          "cities": "泉州市↔漳州市",
+          "flowType": "跨市区县流动",
+          "populationFlow": 13895,
+          "functionType": "潜在成长型"
+        },
+        {
+          "pair": "华安县—龙文区",
+          "cities": "漳州市↔漳州市",
+          "flowType": "市内流动",
+          "populationFlow": 21539,
+          "functionType": "潜在成长型"
+        }
+      ],
+      "2": [
+        {
+          "pair": "集美区—诏安县",
+          "cities": "厦门市↔漳州市",
+          "flowType": "跨市区县流动",
+          "populationFlow": 53453,
+          "functionType": "生活联系先导型"
+        },
+        {
+          "pair": "晋江市—诏安县",
+          "cities": "泉州市↔漳州市",
+          "flowType": "跨市区县流动",
+          "populationFlow": 62795,
+          "functionType": "生活联系先导型"
+        },
+        {
+          "pair": "丰泽区—诏安县",
+          "cities": "泉州市↔漳州市",
+          "flowType": "跨市区县流动",
+          "populationFlow": 21607,
+          "functionType": "生活联系先导型"
+        },
+        {
+          "pair": "思明区—诏安县",
+          "cities": "厦门市↔漳州市",
+          "flowType": "跨市区县流动",
+          "populationFlow": 43164,
+          "functionType": "生活联系先导型"
+        },
+        {
+          "pair": "思明区—龙海区",
+          "cities": "厦门市↔漳州市",
+          "flowType": "跨市区县流动",
+          "populationFlow": 388141,
+          "functionType": "成熟核心·产业协同提升型"
+        },
+        {
+          "pair": "南安市—诏安县",
+          "cities": "泉州市↔漳州市",
+          "flowType": "跨市区县流动",
+          "populationFlow": 40865,
+          "functionType": "生活联系先导型"
+        }
+      ],
+      "3": [
+        {
+          "pair": "集美区—漳浦县",
+          "cities": "厦门市↔漳州市",
+          "flowType": "跨市区县流动",
+          "populationFlow": 40836,
+          "functionType": "核心网络边缘型"
+        },
+        {
+          "pair": "南靖县—平和县",
+          "cities": "漳州市↔漳州市",
+          "flowType": "市内流动",
+          "populationFlow": 47485,
+          "functionType": "核心网络边缘型"
+        },
+        {
+          "pair": "海沧区—芗城区",
+          "cities": "厦门市↔漳州市",
+          "flowType": "跨市区县流动",
+          "populationFlow": 48042,
+          "functionType": "核心网络边缘型"
+        },
+        {
+          "pair": "南安市—华安县",
+          "cities": "泉州市↔漳州市",
+          "flowType": "跨市区县流动",
+          "populationFlow": 5089,
+          "functionType": "核心网络边缘型"
+        },
+        {
+          "pair": "漳浦县—诏安县",
+          "cities": "漳州市↔漳州市",
+          "flowType": "市内流动",
+          "populationFlow": 29799,
+          "functionType": "核心网络边缘型"
+        },
+        {
+          "pair": "翔安区—龙文区",
+          "cities": "厦门市↔漳州市",
+          "flowType": "跨市区县流动",
+          "populationFlow": 13362,
+          "functionType": "核心网络边缘型"
+        }
+      ],
+      "4": [
+        {
+          "pair": "丰泽区—德化县",
+          "cities": "泉州市↔泉州市",
+          "flowType": "市内流动",
+          "populationFlow": 9004,
+          "functionType": "产业联系先导型"
+        },
+        {
+          "pair": "云霄县—芗城区",
+          "cities": "漳州市↔漳州市",
+          "flowType": "市内流动",
+          "populationFlow": 12816,
+          "functionType": "产业联系先导型"
+        },
+        {
+          "pair": "漳浦县—芗城区",
+          "cities": "漳州市↔漳州市",
+          "flowType": "市内流动",
+          "populationFlow": 48449,
+          "functionType": "产业联系先导型"
+        },
+        {
+          "pair": "惠安县—晋江市",
+          "cities": "泉州市↔泉州市",
+          "flowType": "市内流动",
+          "populationFlow": 184518,
+          "functionType": "成熟核心·人口联系提升型"
+        },
+        {
+          "pair": "丰泽区—永春县",
+          "cities": "泉州市↔泉州市",
+          "flowType": "市内流动",
+          "populationFlow": 16637,
+          "functionType": "产业联系先导型"
+        },
+        {
+          "pair": "翔安区—漳浦县",
+          "cities": "厦门市↔漳州市",
+          "flowType": "跨市区县流动",
+          "populationFlow": 17405,
+          "functionType": "产业联系先导型"
+        }
+      ]
+    }
+  },
+  "transport": {
+    "crossCityTop": [
+      {
+        "pair": "泉州市↔厦门市",
+        "avgTime": 75.7,
+        "avgDistance": 90.8,
+        "avgToll": 35.7,
+        "odCount": 66
+      },
+      {
+        "pair": "厦门市↔泉州市",
+        "avgTime": 76.5,
+        "avgDistance": 90.3,
+        "avgToll": 35.5,
+        "odCount": 66
+      },
+      {
+        "pair": "漳州市↔厦门市",
+        "avgTime": 81.2,
+        "avgDistance": 103.7,
+        "avgToll": 43.3,
+        "odCount": 66
+      },
+      {
+        "pair": "厦门市↔漳州市",
+        "avgTime": 81.8,
+        "avgDistance": 104.8,
+        "avgToll": 44,
+        "odCount": 66
+      },
+      {
+        "pair": "泉州市↔漳州市",
+        "avgTime": 122.7,
+        "avgDistance": 174.2,
+        "avgToll": 86.7,
+        "odCount": 121
+      },
+      {
+        "pair": "漳州市↔泉州市",
+        "avgTime": 123.9,
+        "avgDistance": 174.7,
+        "avgToll": 87.4,
+        "odCount": 121
+      }
+    ],
+    "bestCounties": [
+      {
+        "county": "集美区",
+        "avgTime": 63.6
+      },
+      {
+        "county": "翔安区",
+        "avgTime": 67.2
+      },
+      {
+        "county": "同安区",
+        "avgTime": 67.8
+      },
+      {
+        "county": "湖里区",
+        "avgTime": 70.8
+      },
+      {
+        "county": "海沧区",
+        "avgTime": 71.6
+      }
+    ],
+    "slowestCounties": [
+      {
+        "county": "泉港区",
+        "avgTime": 104.5
+      },
+      {
+        "county": "云霄县",
+        "avgTime": 111.8
+      },
+      {
+        "county": "德化县",
+        "avgTime": 114.1
+      },
+      {
+        "county": "东山县",
+        "avgTime": 123.2
+      },
+      {
+        "county": "诏安县",
+        "avgTime": 133.2
+      }
+    ],
+    "cityPairStats": [
+      {
+        "pair": "泉州市↔厦门市",
+        "avgTime": 75.7,
+        "avgDistance": 90.8,
+        "avgToll": 35.7,
+        "odCount": 66
+      },
+      {
+        "pair": "厦门市↔泉州市",
+        "avgTime": 76.5,
+        "avgDistance": 90.3,
+        "avgToll": 35.5,
+        "odCount": 66
+      },
+      {
+        "pair": "漳州市↔厦门市",
+        "avgTime": 81.2,
+        "avgDistance": 103.7,
+        "avgToll": 43.3,
+        "odCount": 66
+      },
+      {
+        "pair": "厦门市↔漳州市",
+        "avgTime": 81.8,
+        "avgDistance": 104.8,
+        "avgToll": 44,
+        "odCount": 66
+      },
+      {
+        "pair": "泉州市↔漳州市",
+        "avgTime": 122.7,
+        "avgDistance": 174.2,
+        "avgToll": 86.7,
+        "odCount": 121
+      },
+      {
+        "pair": "漳州市↔泉州市",
+        "avgTime": 123.9,
+        "avgDistance": 174.7,
+        "avgToll": 87.4,
+        "odCount": 121
+      }
+    ]
+  },
+  "land": {
+    "intensityTop": [
+      {
+        "county": "湖里区",
+        "value": 0.81
+      },
+      {
+        "county": "鲤城区",
+        "value": 0.64
+      },
+      {
+        "county": "思明区",
+        "value": 0.57
+      },
+      {
+        "county": "石狮市",
+        "value": 0.5
+      },
+      {
+        "county": "丰泽区",
+        "value": 0.49
+      },
+      {
+        "county": "晋江市",
+        "value": 0.48
+      },
+      {
+        "county": "海沧区",
+        "value": 0.43
+      },
+      {
+        "county": "龙文区",
+        "value": 0.41
+      }
+    ],
+    "intensityBottom": [
+      {
+        "county": "德化县",
+        "value": 0.03
+      },
+      {
+        "county": "平和县",
+        "value": 0.04
+      },
+      {
+        "county": "华安县",
+        "value": 0.04
+      },
+      {
+        "county": "南靖县",
+        "value": 0.05
+      },
+      {
+        "county": "诏安县",
+        "value": 0.06
+      }
+    ],
+    "industrialTop": [
+      {
+        "county": "长泰区",
+        "share": 0.31
+      },
+      {
+        "county": "海沧区",
+        "share": 0.3
+      },
+      {
+        "county": "晋江市",
+        "share": 0.27
+      },
+      {
+        "county": "芗城区",
+        "share": 0.25
+      },
+      {
+        "county": "同安区",
+        "share": 0.24
+      },
+      {
+        "county": "集美区",
+        "share": 0.21
+      },
+      {
+        "county": "石狮市",
+        "share": 0.21
+      },
+      {
+        "county": "龙文区",
+        "share": 0.21
+      }
+    ],
+    "citySummary": {
+      "厦门市": {
+        "countyCount": 6,
+        "totalAreaHa": 169878.3,
+        "constructionAreaHa": 54546.8,
+        "developmentIntensity": 0.45,
+        "commercialShare": 0.07,
+        "publicServiceShare": 0.07,
+        "landUseMix": 0.83
+      },
+      "泉州市": {
+        "countyCount": 11,
+        "totalAreaHa": 1129519.8,
+        "constructionAreaHa": 168499.7,
+        "developmentIntensity": 0.29,
+        "commercialShare": 0.03,
+        "publicServiceShare": 0.05,
+        "landUseMix": 0.72
+      },
+      "漳州市": {
+        "countyCount": 11,
+        "totalAreaHa": 1289153.2,
+        "constructionAreaHa": 112169.9,
+        "developmentIntensity": 0.14,
+        "commercialShare": 0.03,
+        "publicServiceShare": 0.04,
+        "landUseMix": 0.72
+      }
+    }
+  },
+  "services": {
+    "poiTop": [
+      {
+        "county": "晋江市",
+        "total": 155519,
+        "perWan": 743.8
+      },
+      {
+        "county": "南安市",
+        "total": 96093,
+        "perWan": 628.9
+      },
+      {
+        "county": "思明区",
+        "total": 89906,
+        "perWan": 841
+      },
+      {
+        "county": "湖里区",
+        "total": 74173,
+        "perWan": 738
+      },
+      {
+        "county": "集美区",
+        "total": 74163,
+        "perWan": 673.6
+      },
+      {
+        "county": "同安区",
+        "total": 59842,
+        "perWan": 666.4
+      },
+      {
+        "county": "惠安县",
+        "total": 58216,
+        "perWan": 554.4
+      },
+      {
+        "county": "石狮市",
+        "total": 56683,
+        "perWan": 802.9
+      },
+      {
+        "county": "丰泽区",
+        "total": 56623,
+        "perWan": 762.1
+      },
+      {
+        "county": "龙海区",
+        "total": 54434,
+        "perWan": 567.6
+      }
+    ],
+    "poiDetail": {
+      "晋江市": [
+        {
+          "category": "公司",
+          "count": 16133,
+          "multiple": 4.78
+        },
+        {
+          "category": "中餐厅",
+          "count": 11671,
+          "multiple": 3.64
+        },
+        {
+          "category": "家居建材市场",
+          "count": 11025,
+          "multiple": 4.2
+        },
+        {
+          "category": "专卖店",
+          "count": 9610,
+          "multiple": 3.76
+        },
+        {
+          "category": "便民商店/便利店",
+          "count": 6382,
+          "multiple": 4.12
+        }
+      ],
+      "南安市": [
+        {
+          "category": "家居建材市场",
+          "count": 12819,
+          "multiple": 4.88
+        },
+        {
+          "category": "公司",
+          "count": 7814,
+          "multiple": 2.31
+        },
+        {
+          "category": "专卖店",
+          "count": 7013,
+          "multiple": 2.74
+        },
+        {
+          "category": "中餐厅",
+          "count": 6377,
+          "multiple": 1.99
+        },
+        {
+          "category": "便民商店/便利店",
+          "count": 3731,
+          "multiple": 2.41
+        }
+      ],
+      "同安区": [
+        {
+          "category": "公司",
+          "count": 7912,
+          "multiple": 2.34
+        },
+        {
+          "category": "中餐厅",
+          "count": 4377,
+          "multiple": 1.37
+        },
+        {
+          "category": "便民商店/便利店",
+          "count": 2062,
+          "multiple": 1.33
+        },
+        {
+          "category": "交通地名",
+          "count": 1958,
+          "multiple": 1.72
+        },
+        {
+          "category": "美容美发店",
+          "count": 1593,
+          "multiple": 1.32
+        }
+      ],
+      "集美区": [
+        {
+          "category": "公司",
+          "count": 7641,
+          "multiple": 2.26
+        },
+        {
+          "category": "中餐厅",
+          "count": 6165,
+          "multiple": 1.92
+        },
+        {
+          "category": "餐饮相关场所",
+          "count": 2151,
+          "multiple": 1.92
+        },
+        {
+          "category": "美容美发店",
+          "count": 2034,
+          "multiple": 1.68
+        },
+        {
+          "category": "交通地名",
+          "count": 1952,
+          "multiple": 1.71
+        }
+      ],
+      "思明区": [
+        {
+          "category": "中餐厅",
+          "count": 6868,
+          "multiple": 2.14
+        },
+        {
+          "category": "专卖店",
+          "count": 4032,
+          "multiple": 1.58
+        },
+        {
+          "category": "虚拟民宿",
+          "count": 4025,
+          "multiple": 7.16
+        },
+        {
+          "category": "餐饮相关场所",
+          "count": 2731,
+          "multiple": 2.44
+        },
+        {
+          "category": "美容美发店",
+          "count": 2483,
+          "multiple": 2.06
+        }
+      ],
+      "湖里区": [
+        {
+          "category": "公司",
+          "count": 5989,
+          "multiple": 1.77
+        },
+        {
+          "category": "中餐厅",
+          "count": 5477,
+          "multiple": 1.71
+        },
+        {
+          "category": "美容美发店",
+          "count": 2038,
+          "multiple": 1.69
+        },
+        {
+          "category": "购物相关场所",
+          "count": 1952,
+          "multiple": 1.47
+        },
+        {
+          "category": "餐饮相关场所",
+          "count": 1867,
+          "multiple": 1.67
+        }
+      ],
+      "惠安县": [
+        {
+          "category": "家居建材市场",
+          "count": 5257,
+          "multiple": 2
+        },
+        {
+          "category": "专卖店",
+          "count": 4892,
+          "multiple": 1.91
+        },
+        {
+          "category": "便民商店/便利店",
+          "count": 2644,
+          "multiple": 1.71
+        },
+        {
+          "category": "购物相关场所",
+          "count": 1892,
+          "multiple": 1.42
+        },
+        {
+          "category": "综合市场",
+          "count": 1727,
+          "multiple": 2.07
+        }
+      ],
+      "龙海区": [
+        {
+          "category": "公司",
+          "count": 4609,
+          "multiple": 1.37
+        },
+        {
+          "category": "家居建材市场",
+          "count": 3890,
+          "multiple": 1.48
+        },
+        {
+          "category": "便民商店/便利店",
+          "count": 2258,
+          "multiple": 1.46
+        },
+        {
+          "category": "购物相关场所",
+          "count": 1979,
+          "multiple": 1.49
+        },
+        {
+          "category": "餐饮相关场所",
+          "count": 1478,
+          "multiple": 1.32
+        }
+      ],
+      "丰泽区": [
+        {
+          "category": "中餐厅",
+          "count": 4544,
+          "multiple": 1.42
+        },
+        {
+          "category": "美容美发店",
+          "count": 1668,
+          "multiple": 1.38
+        },
+        {
+          "category": "交通地名",
+          "count": 1619,
+          "multiple": 1.42
+        },
+        {
+          "category": "生活服务场所",
+          "count": 1586,
+          "multiple": 1.46
+        },
+        {
+          "category": "餐饮相关场所",
+          "count": 1462,
+          "multiple": 1.31
+        }
+      ],
+      "石狮市": [
+        {
+          "category": "中餐厅",
+          "count": 4348,
+          "multiple": 1.36
+        },
+        {
+          "category": "专卖店",
+          "count": 3974,
+          "multiple": 1.55
+        },
+        {
+          "category": "家居建材市场",
+          "count": 3737,
+          "multiple": 1.42
+        },
+        {
+          "category": "服装鞋帽皮具店",
+          "count": 2342,
+          "multiple": 2.75
+        },
+        {
+          "category": "便民商店/便利店",
+          "count": 2268,
+          "multiple": 1.46
+        }
+      ],
+      "安溪县": [
+        {
+          "category": "专卖店",
+          "count": 4195,
+          "multiple": 1.64
+        },
+        {
+          "category": "家居建材市场",
+          "count": 3954,
+          "multiple": 1.51
+        },
+        {
+          "category": "政府机关",
+          "count": 1278,
+          "multiple": 1.52
+        },
+        {
+          "category": "家电电子卖场",
+          "count": 875,
+          "multiple": 1.41
+        },
+        {
+          "category": "风景名胜",
+          "count": 675,
+          "multiple": 1.96
+        }
+      ],
+      "东山县": [
+        {
+          "category": "虚拟民宿",
+          "count": 2337,
+          "multiple": 4.15
+        },
+        {
+          "category": "住宿服务相关",
+          "count": 1160,
+          "multiple": 3.22
+        },
+        {
+          "category": "旅馆招待所",
+          "count": 710,
+          "multiple": 2.14
+        },
+        {
+          "category": "宾馆酒店",
+          "count": 341,
+          "multiple": 1.76
+        }
+      ],
+      "翔安区": [
+        {
+          "category": "交通地名",
+          "count": 1902,
+          "multiple": 1.67
+        },
+        {
+          "category": "培训机构",
+          "count": 527,
+          "multiple": 1.35
+        },
+        {
+          "category": "超级市场",
+          "count": 287,
+          "multiple": 1.34
+        },
+        {
+          "category": "公共厕所",
+          "count": 271,
+          "multiple": 1.31
+        },
+        {
+          "category": "科教文化场所",
+          "count": 217,
+          "multiple": 1.45
+        }
+      ],
+      "芗城区": [
+        {
+          "category": "餐饮相关场所",
+          "count": 1548,
+          "multiple": 1.38
+        },
+        {
+          "category": "家电电子卖场",
+          "count": 826,
+          "multiple": 1.33
+        },
+        {
+          "category": "医药保健销售店",
+          "count": 599,
+          "multiple": 1.39
+        },
+        {
+          "category": "中介机构",
+          "count": 394,
+          "multiple": 1.91
+        },
+        {
+          "category": "洗浴推拿场所",
+          "count": 312,
+          "multiple": 1.42
+        }
+      ],
+      "鲤城区": [
+        {
+          "category": "服装鞋帽皮具店",
+          "count": 1186,
+          "multiple": 1.39
+        },
+        {
+          "category": "虚拟民宿",
+          "count": 905,
+          "multiple": 1.61
+        },
+        {
+          "category": "虚拟数据",
+          "count": 514,
+          "multiple": 1.4
+        },
+        {
+          "category": "汽车配件销售",
+          "count": 320,
+          "multiple": 2.35
+        },
+        {
+          "category": "汽车服务相关",
+          "count": 309,
+          "multiple": 1.35
+        }
+      ],
+      "漳浦县": [
+        {
+          "category": "家电电子卖场",
+          "count": 835,
+          "multiple": 1.35
+        },
+        {
+          "category": "农林牧渔基地",
+          "count": 799,
+          "multiple": 5.22
+        },
+        {
+          "category": "学校",
+          "count": 483,
+          "multiple": 1.54
+        },
+        {
+          "category": "风景名胜",
+          "count": 468,
+          "multiple": 1.36
+        },
+        {
+          "category": "汽车维修",
+          "count": 343,
+          "multiple": 1.63
+        }
+      ],
+      "德化县": [
+        {
+          "category": "自然地名",
+          "count": 291,
+          "multiple": 1.8
+        },
+        {
+          "category": "政府及社会团体相关",
+          "count": 140,
+          "multiple": 1.36
+        }
+      ],
+      "平和县": [
+        {
+          "category": "自然地名",
+          "count": 288,
+          "multiple": 1.78
+        }
+      ],
+      "南靖县": [
+        {
+          "category": "农林牧渔基地",
+          "count": 244,
+          "multiple": 1.6
+        }
+      ],
+      "龙文区": [
+        {
+          "category": "汽车销售",
+          "count": 236,
+          "multiple": 2.14
+        },
+        {
+          "category": "二手车交易",
+          "count": 112,
+          "multiple": 2.06
+        }
+      ],
+      "永春县": [
+        {
+          "category": "自然地名",
+          "count": 231,
+          "multiple": 1.43
+        }
+      ],
+      "长泰区": [
+        {
+          "category": "自然地名",
+          "count": 227,
+          "multiple": 1.4
+        }
+      ],
+      "华安县": [
+        {
+          "category": "自然地名",
+          "count": 222,
+          "multiple": 1.37
+        }
+      ],
+      "海沧区": [
+        {
+          "category": "产业园区",
+          "count": 98,
+          "multiple": 1.37
+        }
+      ]
+    },
+    "functional": {
+      "交通门户": {
+        "count": 44086
+      },
+      "产业就业": {
+        "count": 140155
+      },
+      "公共管理": {
+        "count": 43857
+      },
+      "医疗健康": {
+        "count": 31215
+      },
+      "商业消费": {
+        "count": 317983
+      },
+      "教育文化": {
+        "count": 27129
+      },
+      "文旅生活": {
+        "count": 167808
+      },
+      "物流服务": {
+        "count": 17722
+      },
+      "餐饮休闲": {
+        "count": 173098
+      }
+    }
+  },
+  "keyPairs": [
+    {
+      "pair": "思明区—湖里区",
+      "cities": "厦门市↔厦门市",
+      "flowType": "市内流动",
+      "populationFlow": 3156994,
+      "enterprise": {
+        "投资": 9706,
+        "分支": 1666,
+        "专利": 240
+      },
+      "distanceKm": 13.2,
+      "avgTimeMin": 19.9,
+      "avgTollYuan": 0,
+      "quadrant": "Ⅰ 人口、企业均超预期",
+      "functionType": "成熟协调型",
+      "sideA": {
+        "county": "思明区",
+        "popNet": -24701,
+        "intensity": 0.57,
+        "industrialShare": 0.03,
+        "ruralHousingShare": 0.04,
+        "poiPerWan": 841
+      },
+      "sideB": {
+        "county": "湖里区",
+        "popNet": 49187,
+        "intensity": 0.81,
+        "industrialShare": 0.15,
+        "ruralHousingShare": 0.1,
+        "poiPerWan": 738
+      }
+    },
+    {
+      "pair": "芗城区—龙文区",
+      "cities": "漳州市↔漳州市",
+      "flowType": "市内流动",
+      "populationFlow": 999765,
+      "enterprise": {
+        "投资": 686,
+        "分支": 304,
+        "专利": 9
+      },
+      "distanceKm": 6.9,
+      "avgTimeMin": 17.8,
+      "avgTollYuan": 0,
+      "quadrant": "Ⅱ 人口超预期、企业低预期",
+      "functionType": "成熟核心·产业协同提升型",
+      "sideA": {
+        "county": "芗城区",
+        "popNet": 4878,
+        "intensity": 0.29,
+        "industrialShare": 0.25,
+        "ruralHousingShare": 0.24,
+        "poiPerWan": 673.1
+      },
+      "sideB": {
+        "county": "龙文区",
+        "popNet": 8581,
+        "intensity": 0.41,
+        "industrialShare": 0.21,
+        "ruralHousingShare": 0.21,
+        "poiPerWan": 736.4
+      }
+    },
+    {
+      "pair": "湖里区—集美区",
+      "cities": "厦门市↔厦门市",
+      "flowType": "市内流动",
+      "populationFlow": 825123,
+      "enterprise": {
+        "投资": 3958,
+        "分支": 657,
+        "专利": 255
+      },
+      "distanceKm": 11.2,
+      "avgTimeMin": 20,
+      "avgTollYuan": 0,
+      "quadrant": "Ⅳ 人口低预期、企业超预期",
+      "functionType": "成熟核心·人口联系提升型",
+      "sideA": {
+        "county": "湖里区",
+        "popNet": 49187,
+        "intensity": 0.81,
+        "industrialShare": 0.15,
+        "ruralHousingShare": 0.1,
+        "poiPerWan": 738
+      },
+      "sideB": {
+        "county": "集美区",
+        "popNet": -41580,
+        "intensity": 0.37,
+        "industrialShare": 0.21,
+        "ruralHousingShare": 0.17,
+        "poiPerWan": 673.6
+      }
+    },
+    {
+      "pair": "丰泽区—鲤城区",
+      "cities": "泉州市↔泉州市",
+      "flowType": "市内流动",
+      "populationFlow": 786888,
+      "enterprise": {
+        "投资": 1275,
+        "分支": 438,
+        "专利": 192
+      },
+      "distanceKm": 3.8,
+      "avgTimeMin": 15.5,
+      "avgTollYuan": 0,
+      "quadrant": "Ⅲ 人口、企业均低预期",
+      "functionType": "规模强但协同不足型",
+      "sideA": {
+        "county": "丰泽区",
+        "popNet": -3416,
+        "intensity": 0.49,
+        "industrialShare": 0.11,
+        "ruralHousingShare": 0,
+        "poiPerWan": 762.1
+      },
+      "sideB": {
+        "county": "鲤城区",
+        "popNet": 502,
+        "intensity": 0.64,
+        "industrialShare": 0.16,
+        "ruralHousingShare": 0,
+        "poiPerWan": 837.7
+      }
+    },
+    {
+      "pair": "海沧区—龙海区",
+      "cities": "厦门市↔漳州市",
+      "flowType": "跨市区县流动",
+      "populationFlow": 752259,
+      "enterprise": {
+        "投资": 269,
+        "分支": 107,
+        "专利": 16
+      },
+      "distanceKm": 29.9,
+      "avgTimeMin": 43.8,
+      "avgTollYuan": 0,
+      "quadrant": "Ⅰ 人口、企业均超预期",
+      "functionType": "成熟协调型",
+      "sideA": {
+        "county": "海沧区",
+        "popNet": 3859,
+        "intensity": 0.43,
+        "industrialShare": 0.3,
+        "ruralHousingShare": 0.14,
+        "poiPerWan": 587.4
+      },
+      "sideB": {
+        "county": "龙海区",
+        "popNet": -6362,
+        "intensity": 0.19,
+        "industrialShare": 0.2,
+        "ruralHousingShare": 0.33,
+        "poiPerWan": 567.6
+      }
+    },
+    {
+      "pair": "晋江市—石狮市",
+      "cities": "泉州市↔泉州市",
+      "flowType": "市内流动",
+      "populationFlow": 749485,
+      "enterprise": {
+        "投资": 760,
+        "分支": 305,
+        "专利": 18
+      },
+      "distanceKm": 13.8,
+      "avgTimeMin": 28.8,
+      "avgTollYuan": 0,
+      "quadrant": "Ⅲ 人口、企业均低预期",
+      "functionType": "规模强但协同不足型",
+      "sideA": {
+        "county": "晋江市",
+        "popNet": -8263,
+        "intensity": 0.48,
+        "industrialShare": 0.27,
+        "ruralHousingShare": 0.26,
+        "poiPerWan": 743.8
+      },
+      "sideB": {
+        "county": "石狮市",
+        "popNet": -7209,
+        "intensity": 0.5,
+        "industrialShare": 0.21,
+        "ruralHousingShare": 0.15,
+        "poiPerWan": 802.9
+      }
+    },
+    {
+      "pair": "丰泽区—晋江市",
+      "cities": "泉州市↔泉州市",
+      "flowType": "市内流动",
+      "populationFlow": 736335,
+      "enterprise": {
+        "投资": 1227,
+        "分支": 516,
+        "专利": 27
+      },
+      "distanceKm": 17,
+      "avgTimeMin": 28.9,
+      "avgTollYuan": 0,
+      "quadrant": "Ⅰ 人口、企业均超预期",
+      "functionType": "成熟协调型",
+      "sideA": {
+        "county": "丰泽区",
+        "popNet": -3416,
+        "intensity": 0.49,
+        "industrialShare": 0.11,
+        "ruralHousingShare": 0,
+        "poiPerWan": 762.1
+      },
+      "sideB": {
+        "county": "晋江市",
+        "popNet": -8263,
+        "intensity": 0.48,
+        "industrialShare": 0.27,
+        "ruralHousingShare": 0.26,
+        "poiPerWan": 743.8
+      }
+    },
+    {
+      "pair": "南安市—晋江市",
+      "cities": "泉州市↔泉州市",
+      "flowType": "市内流动",
+      "populationFlow": 640503,
+      "enterprise": {
+        "投资": 669,
+        "分支": 202,
+        "专利": 4
+      },
+      "distanceKm": 35.1,
+      "avgTimeMin": 45.6,
+      "avgTollYuan": 7,
+      "quadrant": "Ⅰ 人口、企业均超预期",
+      "functionType": "成熟协调型",
+      "sideA": {
+        "county": "南安市",
+        "popNet": 3408,
+        "intensity": 0.19,
+        "industrialShare": 0.19,
+        "ruralHousingShare": 0.42,
+        "poiPerWan": 628.9
+      },
+      "sideB": {
+        "county": "晋江市",
+        "popNet": -8263,
+        "intensity": 0.48,
+        "industrialShare": 0.27,
+        "ruralHousingShare": 0.26,
+        "poiPerWan": 743.8
+      }
+    },
+    {
+      "pair": "思明区—集美区",
+      "cities": "厦门市↔厦门市",
+      "flowType": "市内流动",
+      "populationFlow": 562993,
+      "enterprise": {
+        "投资": 2392,
+        "分支": 520,
+        "专利": 173
+      },
+      "distanceKm": 19.8,
+      "avgTimeMin": 27.6,
+      "avgTollYuan": 0,
+      "quadrant": "Ⅱ 人口超预期、企业低预期",
+      "functionType": "成熟核心·产业协同提升型",
+      "sideA": {
+        "county": "思明区",
+        "popNet": -24701,
+        "intensity": 0.57,
+        "industrialShare": 0.03,
+        "ruralHousingShare": 0.04,
+        "poiPerWan": 841
+      },
+      "sideB": {
+        "county": "集美区",
+        "popNet": -41580,
+        "intensity": 0.37,
+        "industrialShare": 0.21,
+        "ruralHousingShare": 0.17,
+        "poiPerWan": 673.6
+      }
+    },
+    {
+      "pair": "思明区—龙海区",
+      "cities": "厦门市↔漳州市",
+      "flowType": "跨市区县流动",
+      "populationFlow": 388141,
+      "enterprise": {
+        "投资": 387,
+        "分支": 200,
+        "专利": 16
+      },
+      "distanceKm": 42,
+      "avgTimeMin": 59.3,
+      "avgTollYuan": 0,
+      "quadrant": "Ⅱ 人口超预期、企业低预期",
+      "functionType": "成熟核心·产业协同提升型",
+      "sideA": {
+        "county": "思明区",
+        "popNet": -24701,
+        "intensity": 0.57,
+        "industrialShare": 0.03,
+        "ruralHousingShare": 0.04,
+        "poiPerWan": 841
+      },
+      "sideB": {
+        "county": "龙海区",
+        "popNet": -6362,
+        "intensity": 0.19,
+        "industrialShare": 0.2,
+        "ruralHousingShare": 0.33,
+        "poiPerWan": 567.6
+      }
+    },
+    {
+      "pair": "湖里区—龙海区",
+      "cities": "厦门市↔漳州市",
+      "flowType": "跨市区县流动",
+      "populationFlow": 294123,
+      "enterprise": {
+        "投资": 459,
+        "分支": 206,
+        "专利": 118
+      },
+      "distanceKm": 44.5,
+      "avgTimeMin": 54.6,
+      "avgTollYuan": 0,
+      "quadrant": "Ⅰ 人口、企业均超预期",
+      "functionType": "成熟协调型",
+      "sideA": {
+        "county": "湖里区",
+        "popNet": 49187,
+        "intensity": 0.81,
+        "industrialShare": 0.15,
+        "ruralHousingShare": 0.1,
+        "poiPerWan": 738
+      },
+      "sideB": {
+        "county": "龙海区",
+        "popNet": -6362,
+        "intensity": 0.19,
+        "industrialShare": 0.2,
+        "ruralHousingShare": 0.33,
+        "poiPerWan": 567.6
+      }
+    },
+    {
+      "pair": "集美区—龙海区",
+      "cities": "厦门市↔漳州市",
+      "flowType": "跨市区县流动",
+      "populationFlow": 279702,
+      "enterprise": {
+        "投资": 232,
+        "分支": 74,
+        "专利": 31
+      },
+      "distanceKm": 41.5,
+      "avgTimeMin": 50.1,
+      "avgTollYuan": 0,
+      "quadrant": "Ⅰ 人口、企业均超预期",
+      "functionType": "成熟协调型",
+      "sideA": {
+        "county": "集美区",
+        "popNet": -41580,
+        "intensity": 0.37,
+        "industrialShare": 0.21,
+        "ruralHousingShare": 0.17,
+        "poiPerWan": 673.6
+      },
+      "sideB": {
+        "county": "龙海区",
+        "popNet": -6362,
+        "intensity": 0.19,
+        "industrialShare": 0.2,
+        "ruralHousingShare": 0.33,
+        "poiPerWan": 567.6
+      }
+    },
+    {
+      "pair": "翔安区—南安市",
+      "cities": "厦门市↔泉州市",
+      "flowType": "跨市区县流动",
+      "populationFlow": 274806,
+      "enterprise": {
+        "投资": 149,
+        "分支": 22,
+        "专利": 4
+      },
+      "distanceKm": 58.8,
+      "avgTimeMin": 54.1,
+      "avgTollYuan": 23,
+      "quadrant": "Ⅰ 人口、企业均超预期",
+      "functionType": "潜在成长型",
+      "sideA": {
+        "county": "翔安区",
+        "popNet": 20253,
+        "intensity": 0.31,
+        "industrialShare": 0.14,
+        "ruralHousingShare": 0.26,
+        "poiPerWan": 709.9
+      },
+      "sideB": {
+        "county": "南安市",
+        "popNet": 3408,
+        "intensity": 0.19,
+        "industrialShare": 0.19,
+        "ruralHousingShare": 0.42,
+        "poiPerWan": 628.9
+      }
+    },
+    {
+      "pair": "湖里区—晋江市",
+      "cities": "厦门市↔泉州市",
+      "flowType": "跨市区县流动",
+      "populationFlow": 163086,
+      "enterprise": {
+        "投资": 838,
+        "分支": 242,
+        "专利": 28
+      },
+      "distanceKm": 70,
+      "avgTimeMin": 62.9,
+      "avgTollYuan": 19,
+      "quadrant": "Ⅰ 人口、企业均超预期",
+      "functionType": "成熟协调型",
+      "sideA": {
+        "county": "湖里区",
+        "popNet": 49187,
+        "intensity": 0.81,
+        "industrialShare": 0.15,
+        "ruralHousingShare": 0.1,
+        "poiPerWan": 738
+      },
+      "sideB": {
+        "county": "晋江市",
+        "popNet": -8263,
+        "intensity": 0.48,
+        "industrialShare": 0.27,
+        "ruralHousingShare": 0.26,
+        "poiPerWan": 743.8
+      }
+    },
+    {
+      "pair": "湖里区—南安市",
+      "cities": "厦门市↔泉州市",
+      "flowType": "跨市区县流动",
+      "populationFlow": 145207,
+      "enterprise": {
+        "投资": 372,
+        "分支": 82,
+        "专利": 17
+      },
+      "distanceKm": 77.9,
+      "avgTimeMin": 71.2,
+      "avgTollYuan": 23,
+      "quadrant": "Ⅰ 人口、企业均超预期",
+      "functionType": "成熟协调型",
+      "sideA": {
+        "county": "湖里区",
+        "popNet": 49187,
+        "intensity": 0.81,
+        "industrialShare": 0.15,
+        "ruralHousingShare": 0.1,
+        "poiPerWan": 738
+      },
+      "sideB": {
+        "county": "南安市",
+        "popNet": 3408,
+        "intensity": 0.19,
+        "industrialShare": 0.19,
+        "ruralHousingShare": 0.42,
+        "poiPerWan": 628.9
+      }
+    },
+    {
+      "pair": "思明区—晋江市",
+      "cities": "厦门市↔泉州市",
+      "flowType": "跨市区县流动",
+      "populationFlow": 144513,
+      "enterprise": {
+        "投资": 519,
+        "分支": 223,
+        "专利": 2
+      },
+      "distanceKm": 79.6,
+      "avgTimeMin": 71.1,
+      "avgTollYuan": 19,
+      "quadrant": "Ⅱ 人口超预期、企业低预期",
+      "functionType": "成熟核心·产业协同提升型",
+      "sideA": {
+        "county": "思明区",
+        "popNet": -24701,
+        "intensity": 0.57,
+        "industrialShare": 0.03,
+        "ruralHousingShare": 0.04,
+        "poiPerWan": 841
+      },
+      "sideB": {
+        "county": "晋江市",
+        "popNet": -8263,
+        "intensity": 0.48,
+        "industrialShare": 0.27,
+        "ruralHousingShare": 0.26,
+        "poiPerWan": 743.8
+      }
+    },
+    {
+      "pair": "集美区—晋江市",
+      "cities": "厦门市↔泉州市",
+      "flowType": "跨市区县流动",
+      "populationFlow": 134171,
+      "enterprise": {
+        "投资": 171,
+        "分支": 58,
+        "专利": 34
+      },
+      "distanceKm": 64.4,
+      "avgTimeMin": 55.2,
+      "avgTollYuan": 24,
+      "quadrant": "Ⅳ 人口低预期、企业超预期",
+      "functionType": "成熟核心·人口联系提升型",
+      "sideA": {
+        "county": "集美区",
+        "popNet": -41580,
+        "intensity": 0.37,
+        "industrialShare": 0.21,
+        "ruralHousingShare": 0.17,
+        "poiPerWan": 673.6
+      },
+      "sideB": {
+        "county": "晋江市",
+        "popNet": -8263,
+        "intensity": 0.48,
+        "industrialShare": 0.27,
+        "ruralHousingShare": 0.26,
+        "poiPerWan": 743.8
+      }
+    },
+    {
+      "pair": "思明区—南安市",
+      "cities": "厦门市↔泉州市",
+      "flowType": "跨市区县流动",
+      "populationFlow": 119541,
+      "enterprise": {
+        "投资": 244,
+        "分支": 73,
+        "专利": 22
+      },
+      "distanceKm": 87.5,
+      "avgTimeMin": 79.3,
+      "avgTollYuan": 23,
+      "quadrant": "Ⅰ 人口、企业均超预期",
+      "functionType": "成熟协调型",
+      "sideA": {
+        "county": "思明区",
+        "popNet": -24701,
+        "intensity": 0.57,
+        "industrialShare": 0.03,
+        "ruralHousingShare": 0.04,
+        "poiPerWan": 841
+      },
+      "sideB": {
+        "county": "南安市",
+        "popNet": 3408,
+        "intensity": 0.19,
+        "industrialShare": 0.19,
+        "ruralHousingShare": 0.42,
+        "poiPerWan": 628.9
+      }
+    },
+    {
+      "pair": "翔安区—晋江市",
+      "cities": "厦门市↔泉州市",
+      "flowType": "跨市区县流动",
+      "populationFlow": 113171,
+      "enterprise": {
+        "投资": 133,
+        "分支": 50,
+        "专利": 23
+      },
+      "distanceKm": 51.1,
+      "avgTimeMin": 45.5,
+      "avgTollYuan": 19,
+      "quadrant": "Ⅳ 人口低预期、企业超预期",
+      "functionType": "成熟核心·人口联系提升型",
+      "sideA": {
+        "county": "翔安区",
+        "popNet": 20253,
+        "intensity": 0.31,
+        "industrialShare": 0.14,
+        "ruralHousingShare": 0.26,
+        "poiPerWan": 709.9
+      },
+      "sideB": {
+        "county": "晋江市",
+        "popNet": -8263,
+        "intensity": 0.48,
+        "industrialShare": 0.27,
+        "ruralHousingShare": 0.26,
+        "poiPerWan": 743.8
+      }
+    },
+    {
+      "pair": "同安区—晋江市",
+      "cities": "厦门市↔泉州市",
+      "flowType": "跨市区县流动",
+      "populationFlow": 111412,
+      "enterprise": {
+        "投资": 82,
+        "分支": 23,
+        "专利": 2
+      },
+      "distanceKm": 59.3,
+      "avgTimeMin": 52.6,
+      "avgTollYuan": 24,
+      "quadrant": "Ⅲ 人口、企业均低预期",
+      "functionType": "核心网络边缘型",
+      "sideA": {
+        "county": "同安区",
+        "popNet": -7352,
+        "intensity": 0.19,
+        "industrialShare": 0.24,
+        "ruralHousingShare": 0.3,
+        "poiPerWan": 666.4
+      },
+      "sideB": {
+        "county": "晋江市",
+        "popNet": -8263,
+        "intensity": 0.48,
+        "industrialShare": 0.27,
+        "ruralHousingShare": 0.26,
+        "poiPerWan": 743.8
+      }
+    },
+    {
+      "pair": "湖里区—安溪县",
+      "cities": "厦门市↔泉州市",
+      "flowType": "跨市区县流动",
+      "populationFlow": 107545,
+      "enterprise": {
+        "投资": 242,
+        "分支": 57,
+        "专利": 4
+      },
+      "distanceKm": 79.9,
+      "avgTimeMin": 67,
+      "avgTollYuan": 36,
+      "quadrant": "Ⅰ 人口、企业均超预期",
+      "functionType": "成熟协调型",
+      "sideA": {
+        "county": "湖里区",
+        "popNet": 49187,
+        "intensity": 0.81,
+        "industrialShare": 0.15,
+        "ruralHousingShare": 0.1,
+        "poiPerWan": 738
+      },
+      "sideB": {
+        "county": "安溪县",
+        "popNet": -9962,
+        "intensity": 0.07,
+        "industrialShare": 0.06,
+        "ruralHousingShare": 0.56,
+        "poiPerWan": 465.3
+      }
+    },
+    {
+      "pair": "同安区—南安市",
+      "cities": "厦门市↔泉州市",
+      "flowType": "跨市区县流动",
+      "populationFlow": 106151,
+      "enterprise": {
+        "投资": 55,
+        "分支": 22,
+        "专利": 5
+      },
+      "distanceKm": 46,
+      "avgTimeMin": 61.9,
+      "avgTollYuan": 0,
+      "quadrant": "Ⅲ 人口、企业均低预期",
+      "functionType": "核心网络边缘型",
+      "sideA": {
+        "county": "同安区",
+        "popNet": -7352,
+        "intensity": 0.19,
+        "industrialShare": 0.24,
+        "ruralHousingShare": 0.3,
+        "poiPerWan": 666.4
+      },
+      "sideB": {
+        "county": "南安市",
+        "popNet": 3408,
+        "intensity": 0.19,
+        "industrialShare": 0.19,
+        "ruralHousingShare": 0.42,
+        "poiPerWan": 628.9
+      }
+    },
+    {
+      "pair": "湖里区—龙文区",
+      "cities": "厦门市↔漳州市",
+      "flowType": "跨市区县流动",
+      "populationFlow": 73795,
+      "enterprise": {
+        "投资": 261,
+        "分支": 120,
+        "专利": 5
+      },
+      "distanceKm": 53.1,
+      "avgTimeMin": 53.8,
+      "avgTollYuan": 13.5,
+      "quadrant": "Ⅰ 人口、企业均超预期",
+      "functionType": "成熟协调型",
+      "sideA": {
+        "county": "湖里区",
+        "popNet": 49187,
+        "intensity": 0.81,
+        "industrialShare": 0.15,
+        "ruralHousingShare": 0.1,
+        "poiPerWan": 738
+      },
+      "sideB": {
+        "county": "龙文区",
+        "popNet": 8581,
+        "intensity": 0.41,
+        "industrialShare": 0.21,
+        "ruralHousingShare": 0.21,
+        "poiPerWan": 736.4
+      }
+    },
+    {
+      "pair": "思明区—丰泽区",
+      "cities": "厦门市↔泉州市",
+      "flowType": "跨市区县流动",
+      "populationFlow": 63872,
+      "enterprise": {
+        "投资": 352,
+        "分支": 198,
+        "专利": 67
+      },
+      "distanceKm": 87.5,
+      "avgTimeMin": 74.7,
+      "avgTollYuan": 24,
+      "quadrant": "Ⅰ 人口、企业均超预期",
+      "functionType": "成熟协调型",
+      "sideA": {
+        "county": "思明区",
+        "popNet": -24701,
+        "intensity": 0.57,
+        "industrialShare": 0.03,
+        "ruralHousingShare": 0.04,
+        "poiPerWan": 841
+      },
+      "sideB": {
+        "county": "丰泽区",
+        "popNet": -3416,
+        "intensity": 0.49,
+        "industrialShare": 0.11,
+        "ruralHousingShare": 0,
+        "poiPerWan": 762.1
+      }
+    },
+    {
+      "pair": "湖里区—芗城区",
+      "cities": "厦门市↔漳州市",
+      "flowType": "跨市区县流动",
+      "populationFlow": 63816,
+      "enterprise": {
+        "投资": 324,
+        "分支": 169,
+        "专利": 469
+      },
+      "distanceKm": 60.5,
+      "avgTimeMin": 65.9,
+      "avgTollYuan": 6,
+      "quadrant": "Ⅰ 人口、企业均超预期",
+      "functionType": "成熟协调型",
+      "sideA": {
+        "county": "湖里区",
+        "popNet": 49187,
+        "intensity": 0.81,
+        "industrialShare": 0.15,
+        "ruralHousingShare": 0.1,
+        "poiPerWan": 738
+      },
+      "sideB": {
+        "county": "芗城区",
+        "popNet": 4878,
+        "intensity": 0.29,
+        "industrialShare": 0.25,
+        "ruralHousingShare": 0.24,
+        "poiPerWan": 673.1
+      }
+    },
+    {
+      "pair": "湖里区—丰泽区",
+      "cities": "厦门市↔泉州市",
+      "flowType": "跨市区县流动",
+      "populationFlow": 63639,
+      "enterprise": {
+        "投资": 526,
+        "分支": 240,
+        "专利": 68
+      },
+      "distanceKm": 77.9,
+      "avgTimeMin": 67.1,
+      "avgTollYuan": 24,
+      "quadrant": "Ⅰ 人口、企业均超预期",
+      "functionType": "成熟协调型",
+      "sideA": {
+        "county": "湖里区",
+        "popNet": 49187,
+        "intensity": 0.81,
+        "industrialShare": 0.15,
+        "ruralHousingShare": 0.1,
+        "poiPerWan": 738
+      },
+      "sideB": {
+        "county": "丰泽区",
+        "popNet": -3416,
+        "intensity": 0.49,
+        "industrialShare": 0.11,
+        "ruralHousingShare": 0,
+        "poiPerWan": 762.1
+      }
+    },
+    {
+      "pair": "思明区—芗城区",
+      "cities": "厦门市↔漳州市",
+      "flowType": "跨市区县流动",
+      "populationFlow": 54919,
+      "enterprise": {
+        "投资": 309,
+        "分支": 177,
+        "专利": 20
+      },
+      "distanceKm": 58.1,
+      "avgTimeMin": 72.1,
+      "avgTollYuan": 0,
+      "quadrant": "Ⅰ 人口、企业均超预期",
+      "functionType": "成熟协调型",
+      "sideA": {
+        "county": "思明区",
+        "popNet": -24701,
+        "intensity": 0.57,
+        "industrialShare": 0.03,
+        "ruralHousingShare": 0.04,
+        "poiPerWan": 841
+      },
+      "sideB": {
+        "county": "芗城区",
+        "popNet": 4878,
+        "intensity": 0.29,
+        "industrialShare": 0.25,
+        "ruralHousingShare": 0.24,
+        "poiPerWan": 673.1
+      }
+    },
+    {
+      "pair": "湖里区—鲤城区",
+      "cities": "厦门市↔泉州市",
+      "flowType": "跨市区县流动",
+      "populationFlow": 27082,
+      "enterprise": {
+        "投资": 315,
+        "分支": 76,
+        "专利": 6
+      },
+      "distanceKm": 79.8,
+      "avgTimeMin": 71.3,
+      "avgTollYuan": 24,
+      "quadrant": "Ⅰ 人口、企业均超预期",
+      "functionType": "潜在成长型",
+      "sideA": {
+        "county": "湖里区",
+        "popNet": 49187,
+        "intensity": 0.81,
+        "industrialShare": 0.15,
+        "ruralHousingShare": 0.1,
+        "poiPerWan": 738
+      },
+      "sideB": {
+        "county": "鲤城区",
+        "popNet": 502,
+        "intensity": 0.64,
+        "industrialShare": 0.16,
+        "ruralHousingShare": 0,
+        "poiPerWan": 837.7
+      }
+    }
+  ],
+  "counties": {
+    "思明区": {
+      "city": "厦门市",
+      "population": {
+        "total": 5836909,
+        "crossIn": 644468,
+        "crossOut": 669169,
+        "net": -24701
+      },
+      "enterprise": {
+        "count": 73882,
+        "amount": 175583925.58
+      },
+      "land": {
+        "intensity": 0.57,
+        "constructionHa": 4754.1,
+        "commercialShare": 0.15,
+        "industrialShare": 0.03,
+        "publicServiceShare": 0.12,
+        "urbanHousingShare": 0.34,
+        "ruralHousingShare": 0.04,
+        "mix": 0.84
+      },
+      "services": {
+        "poiTotal": 89906,
+        "poiPerWan": 841
+      },
+      "transport": {
+        "avgTime": 78.5,
+        "avgDistance": 87.2,
+        "rank": 13
+      }
+    },
+    "海沧区": {
+      "city": "厦门市",
+      "population": {
+        "total": 2567012,
+        "crossIn": 627515,
+        "crossOut": 623656,
+        "net": 3859
+      },
+      "enterprise": {
+        "count": 24631,
+        "amount": 42446476.12
+      },
+      "land": {
+        "intensity": 0.43,
+        "constructionHa": 7933.3,
+        "commercialShare": 0.05,
+        "industrialShare": 0.3,
+        "publicServiceShare": 0.05,
+        "urbanHousingShare": 0.09,
+        "ruralHousingShare": 0.14,
+        "mix": 0.8
+      },
+      "services": {
+        "poiTotal": 36772,
+        "poiPerWan": 587.4
+      },
+      "transport": {
+        "avgTime": 71.6,
+        "avgDistance": 82.3,
+        "rank": 5
+      }
+    },
+    "湖里区": {
+      "city": "厦门市",
+      "population": {
+        "total": 6304175,
+        "crossIn": 703887,
+        "crossOut": 654700,
+        "net": 49187
+      },
+      "enterprise": {
+        "count": 97626,
+        "amount": 206477074.98
+      },
+      "land": {
+        "intensity": 0.81,
+        "constructionHa": 5866.3,
+        "commercialShare": 0.12,
+        "industrialShare": 0.15,
+        "publicServiceShare": 0.06,
+        "urbanHousingShare": 0.17,
+        "ruralHousingShare": 0.1,
+        "mix": 0.86
+      },
+      "services": {
+        "poiTotal": 74173,
+        "poiPerWan": 738
+      },
+      "transport": {
+        "avgTime": 70.8,
+        "avgDistance": 82.6,
+        "rank": 4
+      }
+    },
+    "集美区": {
+      "city": "厦门市",
+      "population": {
+        "total": 3478479,
+        "crossIn": 537197,
+        "crossOut": 578777,
+        "net": -41580
+      },
+      "enterprise": {
+        "count": 41146,
+        "amount": 48820160.9
+      },
+      "land": {
+        "intensity": 0.37,
+        "constructionHa": 10004.7,
+        "commercialShare": 0.06,
+        "industrialShare": 0.21,
+        "publicServiceShare": 0.1,
+        "urbanHousingShare": 0.1,
+        "ruralHousingShare": 0.17,
+        "mix": 0.9
+      },
+      "services": {
+        "poiTotal": 74163,
+        "poiPerWan": 673.6
+      },
+      "transport": {
+        "avgTime": 63.6,
+        "avgDistance": 80.9,
+        "rank": 1
+      }
+    },
+    "同安区": {
+      "city": "厦门市",
+      "population": {
+        "total": 2009854,
+        "crossIn": 353570,
+        "crossOut": 360922,
+        "net": -7352
+      },
+      "enterprise": {
+        "count": 19962,
+        "amount": 30360608.68
+      },
+      "land": {
+        "intensity": 0.19,
+        "constructionHa": 12971.4,
+        "commercialShare": 0.04,
+        "industrialShare": 0.24,
+        "publicServiceShare": 0.04,
+        "urbanHousingShare": 0.08,
+        "ruralHousingShare": 0.3,
+        "mix": 0.78
+      },
+      "services": {
+        "poiTotal": 59842,
+        "poiPerWan": 666.4
+      },
+      "transport": {
+        "avgTime": 67.8,
+        "avgDistance": 82.7,
+        "rank": 3
+      }
+    },
+    "翔安区": {
+      "city": "厦门市",
+      "population": {
+        "total": 1614199,
+        "crossIn": 347094,
+        "crossOut": 326841,
+        "net": 20253
+      },
+      "enterprise": {
+        "count": 23631,
+        "amount": 50802058.09
+      },
+      "land": {
+        "intensity": 0.31,
+        "constructionHa": 13017,
+        "commercialShare": 0.02,
+        "industrialShare": 0.14,
+        "publicServiceShare": 0.06,
+        "urbanHousingShare": 0.07,
+        "ruralHousingShare": 0.26,
+        "mix": 0.8
+      },
+      "services": {
+        "poiTotal": 46212,
+        "poiPerWan": 709.9
+      },
+      "transport": {
+        "avgTime": 67.2,
+        "avgDistance": 86.5,
+        "rank": 2
+      }
+    },
+    "鲤城区": {
+      "city": "泉州市",
+      "population": {
+        "total": 1867756,
+        "crossIn": 77780,
+        "crossOut": 77278,
+        "net": 502
+      },
+      "enterprise": {
+        "count": 18475,
+        "amount": 29369372.03
+      },
+      "land": {
+        "intensity": 0.64,
+        "constructionHa": 3300.2,
+        "commercialShare": 0.09,
+        "industrialShare": 0.16,
+        "publicServiceShare": 0.06,
+        "urbanHousingShare": 0.44,
+        "ruralHousingShare": 0,
+        "mix": 0.82
+      },
+      "services": {
+        "poiTotal": 36441,
+        "poiPerWan": 837.7
+      },
+      "transport": {
+        "avgTime": 79.3,
+        "avgDistance": 99.3,
+        "rank": 14
+      }
+    },
+    "丰泽区": {
+      "city": "泉州市",
+      "population": {
+        "total": 2959158,
+        "crossIn": 191259,
+        "crossOut": 194675,
+        "net": -3416
+      },
+      "enterprise": {
+        "count": 28820,
+        "amount": 37994527.22
+      },
+      "land": {
+        "intensity": 0.49,
+        "constructionHa": 6302.3,
+        "commercialShare": 0.07,
+        "industrialShare": 0.11,
+        "publicServiceShare": 0.11,
+        "urbanHousingShare": 0.38,
+        "ruralHousingShare": 0,
+        "mix": 0.87
+      },
+      "services": {
+        "poiTotal": 56623,
+        "poiPerWan": 762.1
+      },
+      "transport": {
+        "avgTime": 76,
+        "avgDistance": 98.5,
+        "rank": 10
+      }
+    },
+    "洛江区": {
+      "city": "泉州市",
+      "population": {
+        "total": 632793,
+        "crossIn": 36550,
+        "crossOut": 35870,
+        "net": 680
+      },
+      "enterprise": {
+        "count": 3367,
+        "amount": 12213904.06
+      },
+      "land": {
+        "intensity": 0.14,
+        "constructionHa": 5194.4,
+        "commercialShare": 0.02,
+        "industrialShare": 0.18,
+        "publicServiceShare": 0.07,
+        "urbanHousingShare": 0.13,
+        "ruralHousingShare": 0.35,
+        "mix": 0.73
+      },
+      "services": {
+        "poiTotal": 14336,
+        "poiPerWan": 555.7
+      },
+      "transport": {
+        "avgTime": 78.1,
+        "avgDistance": 104.5,
+        "rank": 12
+      }
+    },
+    "泉港区": {
+      "city": "泉州市",
+      "population": {
+        "total": 507240,
+        "crossIn": 107157,
+        "crossOut": 82325,
+        "net": 24832
+      },
+      "enterprise": {
+        "count": 2983,
+        "amount": 5958822.57
+      },
+      "land": {
+        "intensity": 0.28,
+        "constructionHa": 9513.6,
+        "commercialShare": 0.02,
+        "industrialShare": 0.18,
+        "publicServiceShare": 0.03,
+        "urbanHousingShare": 0.12,
+        "ruralHousingShare": 0.36,
+        "mix": 0.7
+      },
+      "services": {
+        "poiTotal": 17144,
+        "poiPerWan": 474.9
+      },
+      "transport": {
+        "avgTime": 104.5,
+        "avgDistance": 138.4,
+        "rank": 24
+      }
+    },
+    "惠安县": {
+      "city": "泉州市",
+      "population": {
+        "total": 1279163,
+        "crossIn": 149705,
+        "crossOut": 144369,
+        "net": 5336
+      },
+      "enterprise": {
+        "count": 12437,
+        "amount": 29654790.81
+      },
+      "land": {
+        "intensity": 0.3,
+        "constructionHa": 23691.9,
+        "commercialShare": 0.02,
+        "industrialShare": 0.19,
+        "publicServiceShare": 0.04,
+        "urbanHousingShare": 0.1,
+        "ruralHousingShare": 0.42,
+        "mix": 0.69
+      },
+      "services": {
+        "poiTotal": 58216,
+        "poiPerWan": 554.4
+      },
+      "transport": {
+        "avgTime": 89.1,
+        "avgDistance": 118.8,
+        "rank": 18
+      }
+    },
+    "安溪县": {
+      "city": "泉州市",
+      "population": {
+        "total": 914993,
+        "crossIn": 272744,
+        "crossOut": 282706,
+        "net": -9962
+      },
+      "enterprise": {
+        "count": 6384,
+        "amount": 6054675.76
+      },
+      "land": {
+        "intensity": 0.07,
+        "constructionHa": 19498.9,
+        "commercialShare": 0.02,
+        "industrialShare": 0.06,
+        "publicServiceShare": 0.03,
+        "urbanHousingShare": 0.08,
+        "ruralHousingShare": 0.56,
+        "mix": 0.56
+      },
+      "services": {
+        "poiTotal": 46112,
+        "poiPerWan": 465.3
+      },
+      "transport": {
+        "avgTime": 77.6,
+        "avgDistance": 104.3,
+        "rank": 11
+      }
+    },
+    "永春县": {
+      "city": "泉州市",
+      "population": {
+        "total": 327524,
+        "crossIn": 46792,
+        "crossOut": 45818,
+        "net": 974
+      },
+      "enterprise": {
+        "count": 3444,
+        "amount": 2306011.41
+      },
+      "land": {
+        "intensity": 0.07,
+        "constructionHa": 9990.4,
+        "commercialShare": 0.01,
+        "industrialShare": 0.08,
+        "publicServiceShare": 0.03,
+        "urbanHousingShare": 0.15,
+        "ruralHousingShare": 0.42,
+        "mix": 0.64
+      },
+      "services": {
+        "poiTotal": 17206,
+        "poiPerWan": 417.6
+      },
+      "transport": {
+        "avgTime": 99.6,
+        "avgDistance": 128.6,
+        "rank": 22
+      }
+    },
+    "德化县": {
+      "city": "泉州市",
+      "population": {
+        "total": 250298,
+        "crossIn": 43341,
+        "crossOut": 46673,
+        "net": -3332
+      },
+      "enterprise": {
+        "count": 3198,
+        "amount": 2034606.88
+      },
+      "land": {
+        "intensity": 0.03,
+        "constructionHa": 6976.9,
+        "commercialShare": 0.01,
+        "industrialShare": 0.12,
+        "publicServiceShare": 0.03,
+        "urbanHousingShare": 0.14,
+        "ruralHousingShare": 0.32,
+        "mix": 0.69
+      },
+      "services": {
+        "poiTotal": 21900,
+        "poiPerWan": 646
+      },
+      "transport": {
+        "avgTime": 114.1,
+        "avgDistance": 148.5,
+        "rank": 26
+      }
+    },
+    "石狮市": {
+      "city": "泉州市",
+      "population": {
+        "total": 1248794,
+        "crossIn": 139506,
+        "crossOut": 146715,
+        "net": -7209
+      },
+      "enterprise": {
+        "count": 8730,
+        "amount": 10010833.8
+      },
+      "land": {
+        "intensity": 0.5,
+        "constructionHa": 9460.5,
+        "commercialShare": 0.04,
+        "industrialShare": 0.21,
+        "publicServiceShare": 0.06,
+        "urbanHousingShare": 0.24,
+        "ruralHousingShare": 0.15,
+        "mix": 0.81
+      },
+      "services": {
+        "poiTotal": 56683,
+        "poiPerWan": 802.9
+      },
+      "transport": {
+        "avgTime": 86.5,
+        "avgDistance": 106,
+        "rank": 17
+      }
+    },
+    "晋江市": {
+      "city": "泉州市",
+      "population": {
+        "total": 4056099,
+        "crossIn": 538203,
+        "crossOut": 546466,
+        "net": -8263
+      },
+      "enterprise": {
+        "count": 27325,
+        "amount": 35651488.29
+      },
+      "land": {
+        "intensity": 0.48,
+        "constructionHa": 35019.2,
+        "commercialShare": 0.03,
+        "industrialShare": 0.27,
+        "publicServiceShare": 0.04,
+        "urbanHousingShare": 0.15,
+        "ruralHousingShare": 0.26,
+        "mix": 0.76
+      },
+      "services": {
+        "poiTotal": 155519,
+        "poiPerWan": 743.8
+      },
+      "transport": {
+        "avgTime": 75.6,
+        "avgDistance": 96.3,
+        "rank": 9
+      }
+    },
+    "南安市": {
+      "city": "泉州市",
+      "population": {
+        "total": 2628746,
+        "crossIn": 507761,
+        "crossOut": 504353,
+        "net": 3408
+      },
+      "enterprise": {
+        "count": 12912,
+        "amount": 15433693.97
+      },
+      "land": {
+        "intensity": 0.19,
+        "constructionHa": 39551.4,
+        "commercialShare": 0.02,
+        "industrialShare": 0.19,
+        "publicServiceShare": 0.03,
+        "urbanHousingShare": 0.1,
+        "ruralHousingShare": 0.42,
+        "mix": 0.66
+      },
+      "services": {
+        "poiTotal": 96093,
+        "poiPerWan": 628.9
+      },
+      "transport": {
+        "avgTime": 83,
+        "avgDistance": 97.7,
+        "rank": 16
+      }
+    },
+    "芗城区": {
+      "city": "漳州市",
+      "population": {
+        "total": 2154210,
+        "crossIn": 193397,
+        "crossOut": 188519,
+        "net": 4878
+      },
+      "enterprise": {
+        "count": 17826,
+        "amount": 24052276.58
+      },
+      "land": {
+        "intensity": 0.29,
+        "constructionHa": 7397.8,
+        "commercialShare": 0.04,
+        "industrialShare": 0.25,
+        "publicServiceShare": 0.06,
+        "urbanHousingShare": 0.11,
+        "ruralHousingShare": 0.24,
+        "mix": 0.83
+      },
+      "services": {
+        "poiTotal": 43535,
+        "poiPerWan": 673.1
+      },
+      "transport": {
+        "avgTime": 80.7,
+        "avgDistance": 91.9,
+        "rank": 15
+      }
+    },
+    "龙文区": {
+      "city": "漳州市",
+      "population": {
+        "total": 1962884,
+        "crossIn": 211842,
+        "crossOut": 203261,
+        "net": 8581
+      },
+      "enterprise": {
+        "count": 9609,
+        "amount": 14289306.38
+      },
+      "land": {
+        "intensity": 0.41,
+        "constructionHa": 5196.5,
+        "commercialShare": 0.06,
+        "industrialShare": 0.21,
+        "publicServiceShare": 0.04,
+        "urbanHousingShare": 0.19,
+        "ruralHousingShare": 0.21,
+        "mix": 0.82
+      },
+      "services": {
+        "poiTotal": 22807,
+        "poiPerWan": 736.4
+      },
+      "transport": {
+        "avgTime": 74.6,
+        "avgDistance": 88.5,
+        "rank": 8
+      }
+    },
+    "云霄县": {
+      "city": "漳州市",
+      "population": {
+        "total": 383921,
+        "crossIn": 73094,
+        "crossOut": 75548,
+        "net": -2454
+      },
+      "enterprise": {
+        "count": 2152,
+        "amount": 1160456.75
+      },
+      "land": {
+        "intensity": 0.07,
+        "constructionHa": 6881.2,
+        "commercialShare": 0.02,
+        "industrialShare": 0.19,
+        "publicServiceShare": 0.05,
+        "urbanHousingShare": 0.15,
+        "ruralHousingShare": 0.3,
+        "mix": 0.72
+      },
+      "services": {
+        "poiTotal": 16893,
+        "poiPerWan": 407.5
+      },
+      "transport": {
+        "avgTime": 111.8,
+        "avgDistance": 156.7,
+        "rank": 25
+      }
+    },
+    "漳浦县": {
+      "city": "漳州市",
+      "population": {
+        "total": 819112,
+        "crossIn": 206641,
+        "crossOut": 216281,
+        "net": -9640
+      },
+      "enterprise": {
+        "count": 4901,
+        "amount": 13579742.9
+      },
+      "land": {
+        "intensity": 0.1,
+        "constructionHa": 22460,
+        "commercialShare": 0.02,
+        "industrialShare": 0.17,
+        "publicServiceShare": 0.03,
+        "urbanHousingShare": 0.11,
+        "ruralHousingShare": 0.39,
+        "mix": 0.68
+      },
+      "services": {
+        "poiTotal": 36851,
+        "poiPerWan": 430.9
+      },
+      "transport": {
+        "avgTime": 98.8,
+        "avgDistance": 120.2,
+        "rank": 21
+      }
+    },
+    "诏安县": {
+      "city": "漳州市",
+      "population": {
+        "total": 667288,
+        "crossIn": 200069,
+        "crossOut": 200337,
+        "net": -268
+      },
+      "enterprise": {
+        "count": 1427,
+        "amount": 1280580.59
+      },
+      "land": {
+        "intensity": 0.06,
+        "constructionHa": 8355.5,
+        "commercialShare": 0.01,
+        "industrialShare": 0.11,
+        "publicServiceShare": 0.04,
+        "urbanHousingShare": 0.08,
+        "ruralHousingShare": 0.46,
+        "mix": 0.67
+      },
+      "services": {
+        "poiTotal": 14666,
+        "poiPerWan": 266.2
+      },
+      "transport": {
+        "avgTime": 133.2,
+        "avgDistance": 188.7,
+        "rank": 28
+      }
+    },
+    "长泰区": {
+      "city": "漳州市",
+      "population": {
+        "total": 474965,
+        "crossIn": 128699,
+        "crossOut": 131510,
+        "net": -2811
+      },
+      "enterprise": {
+        "count": 3966,
+        "amount": 5057301.89
+      },
+      "land": {
+        "intensity": 0.09,
+        "constructionHa": 8236.6,
+        "commercialShare": 0.03,
+        "industrialShare": 0.31,
+        "publicServiceShare": 0.02,
+        "urbanHousingShare": 0.08,
+        "ruralHousingShare": 0.3,
+        "mix": 0.75
+      },
+      "services": {
+        "poiTotal": 15090,
+        "poiPerWan": 648.5
+      },
+      "transport": {
+        "avgTime": 73.6,
+        "avgDistance": 91.3,
+        "rank": 6
+      }
+    },
+    "东山县": {
+      "city": "漳州市",
+      "population": {
+        "total": 290932,
+        "crossIn": 39498,
+        "crossOut": 40590,
+        "net": -1092
+      },
+      "enterprise": {
+        "count": 1685,
+        "amount": 3785034.26
+      },
+      "land": {
+        "intensity": 0.22,
+        "constructionHa": 5317.8,
+        "commercialShare": 0.03,
+        "industrialShare": 0.11,
+        "publicServiceShare": 0.04,
+        "urbanHousingShare": 0.2,
+        "ruralHousingShare": 0.18,
+        "mix": 0.73
+      },
+      "services": {
+        "poiTotal": 18314,
+        "poiPerWan": 827.2
+      },
+      "transport": {
+        "avgTime": 123.2,
+        "avgDistance": 179.4,
+        "rank": 27
+      }
+    },
+    "南靖县": {
+      "city": "漳州市",
+      "population": {
+        "total": 532725,
+        "crossIn": 92709,
+        "crossOut": 87719,
+        "net": 4990
+      },
+      "enterprise": {
+        "count": 3409,
+        "amount": 6629908.25
+      },
+      "land": {
+        "intensity": 0.05,
+        "constructionHa": 10156,
+        "commercialShare": 0.02,
+        "industrialShare": 0.14,
+        "publicServiceShare": 0.04,
+        "urbanHousingShare": 0.08,
+        "ruralHousingShare": 0.38,
+        "mix": 0.72
+      },
+      "services": {
+        "poiTotal": 16232,
+        "poiPerWan": 539.3
+      },
+      "transport": {
+        "avgTime": 94.6,
+        "avgDistance": 124.1,
+        "rank": 19
+      }
+    },
+    "平和县": {
+      "city": "漳州市",
+      "population": {
+        "total": 484795,
+        "crossIn": 110063,
+        "crossOut": 114144,
+        "net": -4081
+      },
+      "enterprise": {
+        "count": 2219,
+        "amount": 1106556.42
+      },
+      "land": {
+        "intensity": 0.04,
+        "constructionHa": 8758.3,
+        "commercialShare": 0.04,
+        "industrialShare": 0.08,
+        "publicServiceShare": 0.03,
+        "urbanHousingShare": 0.1,
+        "ruralHousingShare": 0.49,
+        "mix": 0.64
+      },
+      "services": {
+        "poiTotal": 16935,
+        "poiPerWan": 373.8
+      },
+      "transport": {
+        "avgTime": 98,
+        "avgDistance": 127.8,
+        "rank": 20
+      }
+    },
+    "华安县": {
+      "city": "漳州市",
+      "population": {
+        "total": 257313,
+        "crossIn": 62008,
+        "crossOut": 56965,
+        "net": 5043
+      },
+      "enterprise": {
+        "count": 1026,
+        "amount": 913185.16
+      },
+      "land": {
+        "intensity": 0.04,
+        "constructionHa": 4976.5,
+        "commercialShare": 0.01,
+        "industrialShare": 0.15,
+        "publicServiceShare": 0.03,
+        "urbanHousingShare": 0.08,
+        "ruralHousingShare": 0.37,
+        "mix": 0.68
+      },
+      "services": {
+        "poiTotal": 5125,
+        "poiPerWan": 389.4
+      },
+      "transport": {
+        "avgTime": 101.4,
+        "avgDistance": 139,
+        "rank": 23
+      }
+    },
+    "龙海区": {
+      "city": "漳州市",
+      "population": {
+        "total": 3160583,
+        "crossIn": 1075796,
+        "crossOut": 1082158,
+        "net": -6362
+      },
+      "enterprise": {
+        "count": 13061,
+        "amount": 34012068.02
+      },
+      "land": {
+        "intensity": 0.19,
+        "constructionHa": 24433.7,
+        "commercialShare": 0.02,
+        "industrialShare": 0.2,
+        "publicServiceShare": 0.03,
+        "urbanHousingShare": 0.11,
+        "ruralHousingShare": 0.33,
+        "mix": 0.73
+      },
+      "services": {
+        "poiTotal": 54434,
+        "poiPerWan": 567.6
+      },
+      "transport": {
+        "avgTime": 74.6,
+        "avgDistance": 88.3,
+        "rank": 7
+      }
+    }
+  }
+}

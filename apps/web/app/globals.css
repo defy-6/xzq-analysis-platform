@@ -80,7 +80,7 @@
 
 /* Top-level analysis modules */
 .moduleSwitch{display:flex;gap:8px;padding:14px 0 0}.moduleSwitch button{display:grid;gap:2px;min-width:170px;padding:10px 14px;border:1px solid #d8e1dc;border-radius:10px;background:#fff;color:#60716b;text-align:left;cursor:pointer}.moduleSwitch button span{font-size:13px;font-weight:750}.moduleSwitch button small{font-size:9px;color:#85918d}.moduleSwitch button.active{border-color:#285c4e;background:#173f38;color:#fff;box-shadow:0 7px 20px #173f3820}.moduleSwitch button.active small{color:#b8ccc6}
-.platformSwitch{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:16px 0 0}.platformSwitch button{display:grid;gap:4px;padding:13px 16px;border:1px solid var(--line);border-radius:11px;background:#fff;color:#51665f;text-align:left}.platformSwitch button span{font-size:13px;font-weight:750}.platformSwitch button small{font-size:9px;color:#87938e}.platformSwitch button.active{border-color:#173f38;background:#173f38;color:#fff;box-shadow:0 8px 24px #173f3820}.platformSwitch button.active small{color:#b8cbc5}.platformSwitch button:disabled{opacity:.56}
+.platformSwitch{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;padding:16px 0 0}.platformSwitch button{display:grid;gap:4px;padding:13px 16px;border:1px solid var(--line);border-radius:11px;background:#fff;color:#51665f;text-align:left}.platformSwitch button span{font-size:13px;font-weight:750}.platformSwitch button small{font-size:9px;color:#87938e}.platformSwitch button.active{border-color:#173f38;background:#173f38;color:#fff;box-shadow:0 8px 24px #173f3820}.platformSwitch button.active small{color:#b8cbc5}.platformSwitch button:disabled{opacity:.56}
 
 /* Population flow analysis */
 .populationModule{padding-top:16px}.populationLoading{min-height:580px;display:grid;place-items:center;color:#687872}
@@ -736,3 +736,192 @@ main>.moduleTopRow{padding-top:6px}
   .enterpriseAnalysisStage .map,.mapFirstStage .populationMap,.mapFirstStage .thematicMap,.quadrantChart,.quadrantTypeMap{height:clamp(440px,calc(100vh - 390px),860px)}
   .enterpriseAnalysisStage .ranking,.mapFirstStage .populationRanking .ranking,.quadrantRanking .ranking{max-height:clamp(440px,calc(100vh - 390px),860px)}
 }
+
+
+/* ---------- 智能分析模块 ---------- */
+.aiModule{padding-top:14px}
+.aiToolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#fff;margin-bottom:12px}
+.aiProviderToggle{display:flex;background:#e7ece8;padding:3px;border-radius:9px}
+.aiProviderToggle button{border:0;background:transparent;border-radius:7px;padding:7px 14px;color:#6b7a75;font-size:11px;font-weight:700;cursor:pointer}
+.aiProviderToggle button.active{background:#173f38;color:#fff;box-shadow:0 1px 5px #173f3818}
+.aiModelSelect{display:flex;align-items:center;gap:7px;padding:7px 11px;border:1px solid var(--line);border-radius:9px;background:#f8faf7;color:var(--muted);font-size:10px}
+.aiModelSelect select{border:0;background:transparent;color:var(--ink);font-weight:700;outline:0;font-size:11px}
+.aiToolbarHint{flex:1;min-width:240px;margin:0;color:#84918c;font-size:9px;line-height:1.6}
+.aiTopics{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:12px}
+.aiTopicCard{position:relative;display:grid;align-content:start;gap:5px;min-height:118px;padding:14px 13px;border:1px solid var(--line);border-radius:12px;background:#fff;color:#2d4a42;text-align:left;cursor:pointer}
+.aiTopicCard>b{color:#9aa9a3;font:500 10px Georgia}
+.aiTopicCard>span{font-size:13px;font-weight:750;line-height:1.35}
+.aiTopicCard>small{color:#87948f;font-size:9px;line-height:1.5}
+.aiTopicCard>em{position:absolute;right:12px;bottom:12px;font-style:normal;font-size:9px;color:#6fae9d;font-weight:700}
+.aiTopicCard:hover{border-color:#b9cdc6}
+.aiTopicCard.active{border-color:#173f38;background:#173f38;color:#fff;box-shadow:0 7px 18px #173f3820}
+.aiTopicCard.active>b,.aiTopicCard.active>small{color:#b5cbc4}
+.aiTopicCard.active>em{color:#f3c76d}
+.aiTopicCard.busy{cursor:progress;opacity:.85}
+.aiPanel,.aiChat{overflow:hidden;border:1px solid var(--line);border-radius:14px;background:#fff;margin-bottom:12px}
+.aiPanelHead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border-bottom:1px solid #edf0ed}
+.aiPanelHead h3{margin:0;font-size:15px}
+.aiPanelHead small{color:var(--muted);font-size:10px}
+.aiPanelHead>div{display:flex;gap:8px}
+.aiPanelHead button{border:1px solid var(--line);border-radius:8px;background:#f7faf8;color:#2d4a42;padding:6px 11px;font-size:10px;cursor:pointer}
+.aiPanelHead button:hover{background:#eef5f1}
+.aiPanelHead .aiStop{border-color:#e0b3a8;background:#fff5f2;color:#a54b42}
+.aiEmpty{padding:52px 20px;text-align:center;color:#6c7c76;font-size:12px}
+.aiEmpty p{margin:6px 0}
+.aiStreamingHint{padding:30px 20px;text-align:center;color:#6c7c76;font-size:12px}
+.aiCursor{display:inline-block;width:9px;height:15px;margin-left:3px;vertical-align:-2px;background:#42a874;animation:aiBlink .9s steps(1) infinite}
+@keyframes aiBlink{50%{opacity:.15}}
+.aiError{margin:10px 14px 14px;padding:10px 13px;border:1px solid #eecfc6;border-radius:10px;background:#fff5f2;color:#a54b42;font-size:11px;line-height:1.6}
+.aiMarkdown{padding:18px 22px;font-size:13px;line-height:1.75;color:#243b33;overflow-wrap:break-word}
+.aiMarkdown h2{margin:22px 0 10px;padding-bottom:7px;border-bottom:1px solid #e6ece8;font-size:17px;color:#173f38}
+.aiMarkdown h2:first-child{margin-top:0}
+.aiMarkdown h3{margin:18px 0 8px;font-size:14.5px;color:#1d564a}
+.aiMarkdown h4{margin:14px 0 6px;font-size:13px;color:#2a4c42}
+.aiMarkdown p{margin:8px 0}
+.aiMarkdown ul,.aiMarkdown ol{margin:8px 0;padding-left:22px}
+.aiMarkdown li{margin:4px 0}
+.aiMarkdown strong{color:#173f38}
+.aiMarkdown code{background:#eef3ef;border-radius:5px;padding:1px 5px;font-size:11.5px;color:#1d564a}
+.aiMarkdown pre{background:#122f2a;color:#dce8e2;border-radius:10px;padding:13px 15px;overflow:auto;font-size:11.5px}
+.aiMarkdown pre code{background:transparent;color:inherit;padding:0}
+.aiMarkdown blockquote{margin:10px 0;padding:8px 13px;border-left:3px solid #6fae9d;background:#f4f8f5;border-radius:0 8px 8px 0;color:#52665f}
+.aiMarkdown hr{border:0;border-top:1px solid #e3e9e5;margin:16px 0}
+.aiMarkdown table{border-collapse:collapse;margin:12px 0;width:100%;font-size:11.5px}
+.aiMarkdown th,.aiMarkdown td{border:1px solid #dfe7e2;padding:7px 10px;text-align:left}
+.aiMarkdown th{background:#eef3ef;color:#3d5a50;font-weight:700}
+.aiMarkdown tr:nth-child(even) td{background:#fafcfa}
+.aiChatHistory{max-height:460px;overflow:auto;padding:14px 18px;display:grid;gap:12px}
+.aiChatEmpty{margin:0;padding:26px 10px;text-align:center;color:#8b9893;font-size:11px;line-height:1.8}
+.aiChatMessage{display:grid;grid-template-columns:26px 1fr;gap:10px}
+.aiChatMessage>b{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;font-size:11px;color:#fff}
+.aiChatMessage.user>b{background:#173f38}
+.aiChatMessage.assistant>b{background:#6fae9d}
+.aiChatMessage>div{min-width:0}
+.aiChatMessage .aiMarkdown{padding:0;font-size:12.5px}
+.aiChatMessage.user .aiMarkdown{background:#f2f7f4;border-radius:10px;padding:10px 13px}
+.aiChatInputRow{display:flex;gap:9px;padding:13px 18px;border-top:1px solid #edf0ed}
+.aiChatInputRow input{flex:1;border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:12px;outline:0;background:#fbfcfa;color:var(--ink)}
+.aiChatInputRow input:focus{border-color:#6fae9d;background:#fff}
+.aiChatInputRow button{border:0;border-radius:10px;background:#173f38;color:#fff;padding:0 20px;font-size:12px;font-weight:700;cursor:pointer}
+.aiChatInputRow button:disabled{opacity:.4;cursor:default}
+@media(max-width:1100px){.aiTopics{grid-template-columns:repeat(2,1fr)}.aiTopicCard{min-height:104px}}
+@media(max-width:700px){.aiTopics{grid-template-columns:1fr}.aiToolbar{flex-direction:column;align-items:stretch}.aiToolbarHint{min-width:0}}
+
+/* ---------- 智能分析模块补充（模型注册表 / 审核闭环 / 自动修订） ---------- */
+.aiKeyDot{display:inline-block;width:7px;height:7px;margin-left:5px;border-radius:50%;background:#e0a24a;vertical-align:2px}
+.aiKeyWarn{color:#a54b42;font-size:10px;background:#fff5f2;border:1px solid #eecfc6;border-radius:8px;padding:5px 9px}
+.aiTopicCard.reviewed>em{color:#19705c}
+.aiPanelHead .aiSave{border-color:#9cc8b4;background:#eef7f2;color:#19705c}
+.aiRepairNotice{margin:10px 14px 0;padding:9px 13px;border:1px solid #e6d3a8;border-radius:10px;background:#fffaf0;color:#8a6a2c;font-size:11px;line-height:1.6}
+.aiEditArea{display:block;width:100%;min-height:480px;border:0;outline:0;resize:vertical;padding:18px 22px;font:13px/1.75 ui-monospace,Consolas,monospace;color:#243b33;background:#fbfcfa}
+.aiHistory{padding:12px 16px;border-top:1px solid #edf0ed;display:grid;gap:7px}
+.aiHistoryItem{display:flex;align-items:center;gap:9px;padding:8px 11px;border:1px solid #e5ebe7;border-radius:9px;background:#f8faf7;font-size:10px;color:#6c7c76}
+.aiHistoryItem span{flex:1}
+.aiHistoryItem button{border:1px solid var(--line);border-radius:7px;background:#fff;color:#2d4a42;padding:4px 10px;font-size:10px;cursor:pointer}
+.aiHistoryItem button:hover{background:#eef5f1}
+
+/* ---------- 智能分析补充：审核徽章 / 认可结论 ---------- */
+.aiPanelTitle{display:flex;align-items:center;gap:9px;min-width:0}
+.aiPanelTitle h3{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.aiSourceBadge{flex:none;font-size:9px;color:#2f6fa8;background:#eef5fb;border:1px solid #c4d9ec;border-radius:999px;padding:2px 8px;font-weight:600;white-space:nowrap}
+.aiSourceBadge.reviewed{color:#19705c;background:#eef7f2;border-color:#9cc8b4}
+.aiTopicState{display:inline-block;flex:none;font-size:8px;color:#2f6fa8;background:#eef5fb;border:1px solid #c4d9ec;border-radius:999px;padding:1px 6px;margin-top:5px}
+.aiTopicState.reviewed{color:#19705c;background:#eef7f2;border-color:#9cc8b4}
+.aiAccepted{padding:12px 16px;border-top:1px solid #edf0ed;display:grid;gap:7px}
+.aiAcceptedHead b{font-size:11px;color:#4d6259}
+.aiAcceptedItem{display:flex;align-items:flex-start;gap:9px;padding:9px 11px;border:1px solid #d9e8df;border-radius:9px;background:#f4faf6;font-size:11px;line-height:1.6;color:#2d4a42}
+.aiAcceptedItem span{flex:1}
+.aiAcceptedItem button{border:1px solid #dcc5bd;border-radius:7px;background:#fff;color:#a54b42;padding:3px 10px;font-size:10px;cursor:pointer}
+.aiAcceptedItem button:hover{background:#fff5f2}
+.aiHistoryItem .aiHistoryDel{color:#a54b42}
+
+.aiConflictNotice{margin:12px 16px 0;padding:10px 13px;border:1px solid #e6c9a0;border-radius:10px;background:#fff8ec;color:#8a5a1e;font-size:11px;line-height:1.7}
+
+/* ---------- 智能分析图表（chartjson → SVG） ---------- */
+.aiChart{margin:14px 0;border:1px solid #e6ece8;border-radius:12px;background:#fcfdfb;padding:12px 14px}
+.aiChartTitle{font-size:12.5px;font-weight:750;color:#173f38;margin-bottom:8px}
+.aiChart svg{width:100%;height:auto;display:block}
+.aiChartBody{display:grid;grid-template-columns:220px 1fr;gap:14px;align-items:center}
+@media(max-width:700px){.aiChartBody{grid-template-columns:1fr}}
+.aiChartLegend{display:grid;gap:6px;font-size:11px;color:#3d5a50}
+.aiChartLegendItem{display:flex;align-items:center;gap:7px}
+.aiChartLegendItem i{width:11px;height:11px;border-radius:3px;flex:none}
+.aiChartLegendItem span{flex:1;min-width:0}
+.aiChartLegendItem b{font-weight:700;color:#173f38;white-space:nowrap}
+
+.aiChartHead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+.aiChartHead .aiChartTitle{margin-bottom:0}
+.aiChartExport{border:1px solid #d3e0da;border-radius:8px;background:#f4f8f5;color:#2d4a42;padding:4px 10px;font-size:10px;cursor:pointer;white-space:nowrap}
+.aiChartExport:hover{background:#e8f1ec}
+
+/* ---------- 智能分析图表选择器（批量导出 PNG） ---------- */
+.aiChartPicker{margin:12px 16px 14px;border-top:1px solid #edf0ed;padding-top:12px}
+.aiChartPickerHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.aiChartPickerHead b{font-size:11.5px;color:#4d6259}
+.aiChartPickerHead>div{display:flex;gap:7px}
+.aiChartPickerHead button{border:1px solid var(--line);border-radius:8px;background:#f7faf8;color:#2d4a42;padding:5px 10px;font-size:10px;cursor:pointer}
+.aiChartPickerHead button:hover{background:#eef5f1}
+.aiChartPickerHead .aiExportSelected{background:#173f38;color:#fff;border-color:#173f38}
+.aiChartPickerHead button:disabled{opacity:.4;cursor:default}
+.aiChartPickerGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.aiChartPick{position:relative;border:2px solid transparent;border-radius:12px;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.aiChartPick:hover{border-color:#c4d8d0}
+.aiChartPick.on{border-color:#173f38;background:#f2f8f4}
+.aiChartPick input{position:absolute;top:12px;left:12px;z-index:2;accent-color:#173f38;width:15px;height:15px;cursor:pointer}
+.aiChartPick .aiChart{margin:0;border:0;pointer-events:none}
+
+/* ---------- 智能分析 OD 地图（odmap） ---------- */
+.aiOdMapCard{overflow:hidden;border:1px solid var(--line);border-radius:14px;background:#fff;margin:12px 0}
+.aiOdMapHead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px solid #edf2ef}
+.aiOdMapTitle{font-weight:750;font-size:14px;color:#173f38}
+.aiOdMapState{padding:30px;text-align:center;color:#687872;font-size:12px}
+.aiOdMapState.error{color:#b93b35}
+.aiOdMapBody{position:relative;overflow:hidden;background:radial-gradient(circle at 45% 48%,#fbfcfa,#edf3ef)}
+.aiOdMap{display:block;width:100%;height:460px;touch-action:none;cursor:grab;user-select:none}
+.aiOdMap:active{cursor:grabbing}
+.aiOdLegend{display:flex;flex-wrap:wrap;align-items:center;gap:10px;position:absolute;bottom:12px;left:14px;margin:0;padding:8px 12px;border:1px solid #e3e9e5;border-radius:12px;background:#ffffffed;color:#66736f;font-size:10px;max-width:calc(100% - 70px)}
+.aiOdLegend strong{margin-right:2px;color:#273e37;font-size:11px}
+.aiOdLegend i{display:block;width:18px;height:7px;border-radius:2px}
+.aiChartPick .aiOdMapCard{margin:0;border:0;pointer-events:none}
+.aiChartPick .aiOdMap{height:300px}
+.aiOdMapActions{display:flex;align-items:center;gap:10px}
+.aiOdMapActions .labelToggle{font-size:12px;color:#37554d;display:inline-flex;align-items:center;gap:4px;cursor:pointer}
+.aiOdMapActions .labelToggle input{accent-color:#173f38}
+/* ---------- 标记认可/错误：高亮 + 浮动条 ---------- */
+.aiMarkdown mark{padding:1px 3px;border-radius:4px;font-weight:600}
+.aiMarkAccept{background:#ddf2e4;color:#0e6b3c;box-shadow:0 0 0 1px #a9d8b9 inset}
+.aiMarkError{background:#fde8e8;color:#b3261e;box-shadow:0 0 0 1px #f0b6b1 inset;text-decoration:underline wavy #d9776f 1px}
+.aiSelBar{position:fixed;z-index:9999;display:flex;align-items:center;gap:6px;padding:6px 8px;border:1px solid #d9e3dd;border-radius:10px;background:#ffffff;box-shadow:0 8px 28px #0b1f1a33;font-size:12px;max-width:min(420px,92vw)}
+.aiSelBarText{color:#5f726b;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+.aiSelBar button{border-radius:7px;padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid transparent}
+.aiSelAccept{background:#e7f6ec;color:#0e6b3c;border-color:#a9d8b9}
+.aiSelAccept:hover{background:#d3efdc}
+.aiSelError{background:#fdecec;color:#b3261e;border-color:#f0b6b1}
+.aiSelError:hover{background:#fbdbdb}
+.aiSelClose{border:1px solid #e3e9e5;background:#fff;color:#7d8a85;font-size:14px;line-height:1;padding:4px 8px}
+.aiAcceptedKind{flex:none;font-style:normal;font-size:9px;font-weight:700;border-radius:999px;padding:1px 7px;margin-top:1px}
+.aiAcceptedKind.accept{color:#0e6b3c;background:#e7f6ec;border:1px solid #a9d8b9}
+.aiAcceptedKind.error{color:#b3261e;background:#fdecec;border:1px solid #f0b6b1}
+
+.aiSelMarked{font-size:11px;font-weight:700;border-radius:999px;padding:4px 10px;white-space:nowrap}
+.aiSelMarked.accept{color:#0e6b3c;background:#e7f6ec;border:1px solid #a9d8b9}
+.aiSelMarked.error{color:#b3261e;background:#fdecec;border:1px solid #f0b6b1}
+.aiSelClear{border:1px solid #f0b6b1;background:#fff;color:#b3261e;padding:5px 10px;font-size:12px;font-weight:700;border-radius:7px;cursor:pointer}
+.aiSelClear:hover{background:#fbdbdb}
+
+.aiWordOverlay{position:fixed;inset:0;z-index:9998;display:grid;place-items:center;background:#0b1f1a80;padding:20px}
+.aiWordPicker{width:min(460px,94vw);background:#fff;border-radius:16px;padding:20px 22px;box-shadow:0 24px 80px #071b1755;display:grid;gap:14px}
+.aiWordHead{display:flex;align-items:center;justify-content:space-between}
+.aiWordHead b{font-size:15px;color:#173f38}
+.aiWordHead button{border:0;background:none;font-size:22px;color:#7d8a85;cursor:pointer;line-height:1}
+.aiWordHint{font-size:11px;color:#66736f;margin:-6px 0 0}
+.aiWordPresets{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.aiWordPresets button{border:1px solid #d9e3dd;border-radius:10px;background:#f7faf8;color:#2d4a42;padding:10px;font-size:13px;font-weight:600;cursor:pointer}
+.aiWordPresets button:hover{background:#eef5f1}
+.aiWordPresets button.on{border-color:#173f38;background:#173f38;color:#fff}
+.aiWordCustom{display:flex;align-items:center;gap:8px;font-size:12px;color:#37554d}
+.aiWordCustom label{white-space:nowrap}
+.aiWordCustom input{width:90px;border:1px solid #d9e3dd;border-radius:8px;padding:7px 9px;font-size:13px;text-align:center}
+.aiWordActions{display:flex;justify-content:flex-end;gap:9px;border-top:1px solid #edf0ed;padding-top:14px}
+.aiWordActions button{border:1px solid #d9e3dd;border-radius:9px;background:#fff;color:#2d4a42;padding:8px 16px;font-size:12px;cursor:pointer}
+.aiWordActions .aiWordGo{background:#173f38;border-color:#173f38;color:#fff;font-weight:700}

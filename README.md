@@ -1,6 +1,6 @@
 # 厦漳泉都市圈综合分析平台
 
-本目录集中管理网站、原始数据、处理成果和专题模块。现已包含"区域联系网络""联系象限""用地分析"和"公共服务设施"四个一级板块；区域联系网络下包含企业关系、人口流动和交通可达性。
+本目录集中管理网站、原始数据、处理成果和专题模块。现已包含"区域联系网络""联系象限""用地分析""公共服务设施"和"智能分析"五个一级板块；区域联系网络下包含企业关系、人口流动和交通可达性。
 
 ## 目录结构
 
@@ -14,6 +14,7 @@
 │           ├── transport-accessibility/ # 区县政府驾车可达性
 │           ├── land-use/            # 区县用地结构与指标
 │           ├── public-services/     # 区县POI中类设施
+│           ├── ai-analysis/         # 智能分析（DeepSeek/通义千问 报告生成与数据问答）
 │           └── mapkit/              # 共享地图基础设施（投影/标签/导出/底图）
 ├── data/
 │   ├── raw/                         # 原始数据，只作为输入（不入库，需手动拷贝）
@@ -26,6 +27,7 @@
 │   ├── reference/                   # 行业、汇率、行政区名称等口径表
 │   └── processed/                   # 模型结果和可复用处理成果
 ├── modules/                         # 后续专题的数据、方法与说明
+│   ├── ai-analysis/                 # 智能分析模块说明（数据摘要、API、Key 配置）
 │   ├── land-use/
 │   ├── transport-accessibility/
 │   └── public-services/
@@ -98,3 +100,9 @@ git push
 - 模型结果及导出成果存放在 `data/processed/`。
 - 每个新专题先在 `modules/` 建立自己的数据和方法说明，再在 `apps/web/app/features/` 建立对应网页功能。
 - 网站可直接发布的数据继续生成到 `apps/web/public/data/`。
+
+## 智能分析模块
+
+- 平台第二大模块：基于五类数据与引力模型四象限，调用 DeepSeek / 通义千问 生成分析报告并支持追问；详见 [modules/ai-analysis/README.md](modules/ai-analysis/README.md)。
+- AI 数据上下文由 `apps/web/scripts/build/build_ai_summary.mjs` 从各模块汇总 JSON 聚合生成（`apps/web/public/data/ai/summary.json`），数据更新后运行 `pnpm --dir apps/web build:ai-summary` 重新生成。
+- API Key 仅存服务端：本地开发由系统环境变量（`DASHSCOPE_API_KEY` / `DEEPSEEK_API_KEY`）透传，生产部署在平台上配置同名 Secret。
