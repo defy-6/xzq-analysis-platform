@@ -112,6 +112,12 @@ if (-not $nodeOk) {
     $env:Path = "$nodeDir;$env:Path"
     $node = Get-Command node -ErrorAction SilentlyContinue
     $nodeOk = $true
+    # 永久加入用户 PATH：新开的终端也能直接用 node/npm/pnpm（pnpm 依赖 node，故连 node 目录一起加）
+    $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+    if ($userPath -notlike "*$nodeDir*") {
+      [Environment]::SetEnvironmentVariable('Path', "$nodeDir;$userPath", 'User')
+      Write-Host "o  已把便携运行时目录加入系统 PATH（$nodeDir，新开终端生效）"
+    }
   }
 }
 if (-not $nodeOk) {

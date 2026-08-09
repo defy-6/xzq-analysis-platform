@@ -70,6 +70,12 @@ if [[ $node_ok -eq 0 ]]; then
     NODE_BIN="$PORTABLE_NODE"
     export PATH="$(dirname "$NODE_BIN"):$PATH"
     node_ok=1
+    # 永久加入 shell 配置：新终端也能直接用 node/npm/pnpm（pnpm 依赖 node，故连 node 目录一起加）
+    bin_dir="$(dirname "$NODE_BIN")"
+    if ! grep -qF "$bin_dir" "$HOME/.zshrc" 2>/dev/null; then
+      echo "export PATH=\"$bin_dir:\$PATH\"" >>"$HOME/.zshrc"
+      print "• 已把便携运行时目录加入 ~/.zshrc（$bin_dir，新终端生效）"
+    fi
   fi
 fi
 if [[ $node_ok -eq 0 ]]; then
