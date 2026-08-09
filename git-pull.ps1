@@ -14,7 +14,39 @@ Write-Host "  一键拉取：从 GitHub 同步最新代码到本地"
 Write-Host "========================================"
 Write-Host ""
 
+# git 检查：缺失时自动下载便携版 MinGit 到项目内 .runtime\git（免安装、免管理员、不污染系统）
+# 下载源：GitHub releases 官方优先，ghproxy 国内代理兜底（GitHub 直连慢时用）
 $git = Get-Command git -ErrorAction SilentlyContinue
+if (-not $git) {
+  $rt = Join-Path $ProjectDir '.runtime'
+  $gitDir = Join-Path $rt 'git'
+  $gitExe = Join-Path $gitDir 'cmd\git.exe'
+  if (-not (Test-Path $gitExe)) {
+    Write-Host "o  未找到 git，正在自动下载便携版（MinGit，约 45MB）……"
+    $ver = '2.47.1'
+    $zip = Join-Path $env:TEMP "MinGit-$ver.zip"
+    $ok = $false
+    foreach ($prefix in @('https://github.com/git-for-windows/git/releases/download', 'https://mirror.ghproxy.com/https://github.com/git-for-windows/git/releases/download')) {
+      $url = "$prefix/v$ver/MinGit-$ver-64-bit.zip"
+      Write-Host "o  下载 $url"
+      & curl.exe -L --fail --silent --show-error -o $zip $url
+      if ($LASTEXITCODE -eq 0 -and (Test-Path $zip) -and (Get-Item $zip).Length -gt 1MB) { $ok = $true; break }
+    }
+    if (-not $ok) {
+      Write-Host "X  自动下载 git 失败（网络不通？）。请手动安装 Git for Windows：https://git-scm.com/ 后重试。"
+      Read-Host "按回车退出"
+      exit 1
+    }
+    New-Item -ItemType Directory -Force -Path $rt | Out-Null
+    Expand-Archive -Path $zip -DestinationPath $gitDir -Force
+    Remove-Item -Force $zip
+  }
+  if (Test-Path $gitExe) {
+    Write-Host "o  已就绪 git（便携版，位于 $gitDir）"
+    $env:Path = "$gitDir\cmd;$env:Path"
+    $git = Get-Command git -ErrorAction SilentlyContinue
+  }
+}
 if (-not $git) {
   Write-Host "X  未找到 git，请先安装 Git for Windows：https://git-scm.com/"
   Read-Host "按回车退出"

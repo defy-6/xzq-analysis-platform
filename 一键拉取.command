@@ -15,7 +15,8 @@ print "========================================"
 print ""
 
 command -v git >/dev/null 2>&1 || {
-  print "✗ 未找到 git，请先安装 Xcode Command Line Tools（xcode-select --install）。"
+  print "✗ 未找到 git，请先安装：Xcode Command Line Tools（xcode-select --install）"
+  print "  或 Homebrew（brew install git）。"
   read -k 1 "?按回车退出……"
   exit 1
 }
