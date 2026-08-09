@@ -203,6 +203,44 @@ function aggregateServices(poi) {
     func[category] ??= { count: 0 };
     func[category].count += count;
   }
+  // 区县 × 功能分类 POI（服务类定位用）。除绝对数量外还给出：
+  // perWan（每万人）、rank（该功能分类内 28 区县排名）、multiple（相对区县均值倍数），
+  // 用于论证"该定位为何在此区县成立"（如"教育文化 POI 居 28 区县第 3、为均值 2.1 倍"）。
+  const functionalCountyCount = new Map(); // `${county}::${category}` -> count
+  for (const [, county, category, count] of poi.functionalRecords) {
+    functionalCountyCount.set(`${county}::${category}`, (functionalCountyCount.get(`${county}::${category}`) ?? 0) + count);
+  }
+  const fcCatStats = new Map(); // category -> {sum, countyCount}
+  for (const [key, count] of functionalCountyCount) {
+    const category = key.split("::")[1];
+    const s = fcCatStats.get(category) ?? { sum: 0, countyCount: 0 };
+    s.sum += count; s.countyCount++;
+    fcCatStats.set(category, s);
+  }
+  const functionalCountyRows = [];
+  for (const [key, count] of functionalCountyCount) {
+    const [county, category] = key.split("::");
+    const st = fcCatStats.get(category);
+    const mean = st.countyCount ? st.sum / st.countyCount : 0;
+    const ctx = poi.countyContext?.[county];
+    functionalCountyRows.push({
+      county, category, count,
+      perWan: ctx?.residentPopulationWan ? r1(count / ctx.residentPopulationWan) : null,
+      rank: 0,
+      totalCounties: st.countyCount,
+      multiple: mean ? r2(count / mean) : null,
+    });
+  }
+  const fcByCat = new Map();
+  for (const row of functionalCountyRows) {
+    const arr = fcByCat.get(row.category) ?? [];
+    arr.push(row); fcByCat.set(row.category, arr);
+  }
+  for (const rows of fcByCat.values()) {
+    rows.sort((a, b) => b.count - a.count);
+    rows.forEach((r, i) => { r.rank = i + 1; });
+  }
+  functionalCountyRows.sort((a, b) => (a.category === b.category ? a.rank - b.rank : a.category.localeCompare(b.category, "zh")));
   // 区县 × POI 中类 → count；再算相对 28 区县均值倍数
   const countyCategory = new Map(); // `${county}::${category}` -> count
   const categoryTotals = new Map(); // category -> {count, countyCount}
@@ -244,7 +282,7 @@ function aggregateServices(poi) {
       residentPopulationWan: r1(s.populationWan),
     };
   }
-  return { city: out, functional: func, poiDetailByCounty };
+  return { city: out, functional: func, poiDetailByCounty, functionalCounty: functionalCountyRows };
 }
 
 /** 交通：cityRecords + nodeStats + cityPairStats */
@@ -571,6 +609,7 @@ async function main() {
       poiTop,
       poiDetail: poiDetailByCounty,
       functional: Object.fromEntries(Object.entries(svc.functional).map(([k, v]) => [k, { count: v.count }])),
+      byFunctionalCounty: svc.functionalCounty,
     },
     keyPairs,
     counties,

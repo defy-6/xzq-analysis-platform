@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-09T06:34:36.267Z",
+  "generatedAt": "2026-08-09T06:39:51.253Z",
   "source": "由 build_ai_summary.mjs 从 public/data 各模块汇总 JSON 自动生成",
   "note": "金额单位：万元（企业投资金额与分支注册资金，双向合计）；人口单位：人；用地单位：公顷；驾车时间单位：分钟；POI 相对倍数=该区县某中类数量/28 区县该中类平均数量。跨市指厦门/漳州/泉州三市之间。",
   "overview": {
@@ -3742,7 +3742,2277 @@
       "餐饮休闲": {
         "count": 173098
       }
-    }
+    },
+    "byFunctionalCounty": [
+      {
+        "county": "晋江市",
+        "category": "餐饮休闲",
+        "count": 21047,
+        "perWan": 100.7,
+        "rank": 1,
+        "totalCounties": 28,
+        "multiple": 3.4
+      },
+      {
+        "county": "思明区",
+        "category": "餐饮休闲",
+        "count": 15059,
+        "perWan": 140.9,
+        "rank": 2,
+        "totalCounties": 28,
+        "multiple": 2.44
+      },
+      {
+        "county": "集美区",
+        "category": "餐饮休闲",
+        "count": 12029,
+        "perWan": 109.3,
+        "rank": 3,
+        "totalCounties": 28,
+        "multiple": 1.95
+      },
+      {
+        "county": "南安市",
+        "category": "餐饮休闲",
+        "count": 11990,
+        "perWan": 78.5,
+        "rank": 4,
+        "totalCounties": 28,
+        "multiple": 1.94
+      },
+      {
+        "county": "湖里区",
+        "category": "餐饮休闲",
+        "count": 10634,
+        "perWan": 105.8,
+        "rank": 5,
+        "totalCounties": 28,
+        "multiple": 1.72
+      },
+      {
+        "county": "丰泽区",
+        "category": "餐饮休闲",
+        "count": 8821,
+        "perWan": 118.7,
+        "rank": 6,
+        "totalCounties": 28,
+        "multiple": 1.43
+      },
+      {
+        "county": "同安区",
+        "category": "餐饮休闲",
+        "count": 8144,
+        "perWan": 90.7,
+        "rank": 7,
+        "totalCounties": 28,
+        "multiple": 1.32
+      },
+      {
+        "county": "石狮市",
+        "category": "餐饮休闲",
+        "count": 7950,
+        "perWan": 112.6,
+        "rank": 8,
+        "totalCounties": 28,
+        "multiple": 1.29
+      },
+      {
+        "county": "龙海区",
+        "category": "餐饮休闲",
+        "count": 7809,
+        "perWan": 81.4,
+        "rank": 9,
+        "totalCounties": 28,
+        "multiple": 1.26
+      },
+      {
+        "county": "芗城区",
+        "category": "餐饮休闲",
+        "count": 7510,
+        "perWan": 116.1,
+        "rank": 10,
+        "totalCounties": 28,
+        "multiple": 1.21
+      },
+      {
+        "county": "惠安县",
+        "category": "餐饮休闲",
+        "count": 6993,
+        "perWan": 66.6,
+        "rank": 11,
+        "totalCounties": 28,
+        "multiple": 1.13
+      },
+      {
+        "county": "翔安区",
+        "category": "餐饮休闲",
+        "count": 6449,
+        "perWan": 99.1,
+        "rank": 12,
+        "totalCounties": 28,
+        "multiple": 1.04
+      },
+      {
+        "county": "安溪县",
+        "category": "餐饮休闲",
+        "count": 6418,
+        "perWan": 64.8,
+        "rank": 13,
+        "totalCounties": 28,
+        "multiple": 1.04
+      },
+      {
+        "county": "海沧区",
+        "category": "餐饮休闲",
+        "count": 5499,
+        "perWan": 87.8,
+        "rank": 14,
+        "totalCounties": 28,
+        "multiple": 0.89
+      },
+      {
+        "county": "漳浦县",
+        "category": "餐饮休闲",
+        "count": 5328,
+        "perWan": 62.3,
+        "rank": 15,
+        "totalCounties": 28,
+        "multiple": 0.86
+      },
+      {
+        "county": "鲤城区",
+        "category": "餐饮休闲",
+        "count": 5283,
+        "perWan": 121.4,
+        "rank": 16,
+        "totalCounties": 28,
+        "multiple": 0.85
+      },
+      {
+        "county": "龙文区",
+        "category": "餐饮休闲",
+        "count": 3468,
+        "perWan": 112,
+        "rank": 17,
+        "totalCounties": 28,
+        "multiple": 0.56
+      },
+      {
+        "county": "德化县",
+        "category": "餐饮休闲",
+        "count": 2882,
+        "perWan": 85,
+        "rank": 18,
+        "totalCounties": 28,
+        "multiple": 0.47
+      },
+      {
+        "county": "平和县",
+        "category": "餐饮休闲",
+        "count": 2440,
+        "perWan": 53.9,
+        "rank": 19,
+        "totalCounties": 28,
+        "multiple": 0.39
+      },
+      {
+        "county": "云霄县",
+        "category": "餐饮休闲",
+        "count": 2430,
+        "perWan": 58.6,
+        "rank": 20,
+        "totalCounties": 28,
+        "multiple": 0.39
+      },
+      {
+        "county": "东山县",
+        "category": "餐饮休闲",
+        "count": 2381,
+        "perWan": 107.5,
+        "rank": 21,
+        "totalCounties": 28,
+        "multiple": 0.39
+      },
+      {
+        "county": "诏安县",
+        "category": "餐饮休闲",
+        "count": 2142,
+        "perWan": 38.9,
+        "rank": 22,
+        "totalCounties": 28,
+        "multiple": 0.35
+      },
+      {
+        "county": "南靖县",
+        "category": "餐饮休闲",
+        "count": 2079,
+        "perWan": 69.1,
+        "rank": 23,
+        "totalCounties": 28,
+        "multiple": 0.34
+      },
+      {
+        "county": "泉港区",
+        "category": "餐饮休闲",
+        "count": 2042,
+        "perWan": 56.6,
+        "rank": 24,
+        "totalCounties": 28,
+        "multiple": 0.33
+      },
+      {
+        "county": "长泰区",
+        "category": "餐饮休闲",
+        "count": 1945,
+        "perWan": 83.6,
+        "rank": 25,
+        "totalCounties": 28,
+        "multiple": 0.31
+      },
+      {
+        "county": "洛江区",
+        "category": "餐饮休闲",
+        "count": 1893,
+        "perWan": 73.4,
+        "rank": 26,
+        "totalCounties": 28,
+        "multiple": 0.31
+      },
+      {
+        "county": "永春县",
+        "category": "餐饮休闲",
+        "count": 1789,
+        "perWan": 43.4,
+        "rank": 27,
+        "totalCounties": 28,
+        "multiple": 0.29
+      },
+      {
+        "county": "华安县",
+        "category": "餐饮休闲",
+        "count": 644,
+        "perWan": 48.9,
+        "rank": 28,
+        "totalCounties": 28,
+        "multiple": 0.1
+      },
+      {
+        "county": "晋江市",
+        "category": "产业就业",
+        "count": 23614,
+        "perWan": 112.9,
+        "rank": 1,
+        "totalCounties": 28,
+        "multiple": 4.72
+      },
+      {
+        "county": "南安市",
+        "category": "产业就业",
+        "count": 12066,
+        "perWan": 79,
+        "rank": 2,
+        "totalCounties": 28,
+        "multiple": 2.41
+      },
+      {
+        "county": "同安区",
+        "category": "产业就业",
+        "count": 9983,
+        "perWan": 111.2,
+        "rank": 3,
+        "totalCounties": 28,
+        "multiple": 1.99
+      },
+      {
+        "county": "集美区",
+        "category": "产业就业",
+        "count": 9780,
+        "perWan": 88.8,
+        "rank": 4,
+        "totalCounties": 28,
+        "multiple": 1.95
+      },
+      {
+        "county": "湖里区",
+        "category": "产业就业",
+        "count": 8422,
+        "perWan": 83.8,
+        "rank": 5,
+        "totalCounties": 28,
+        "multiple": 1.68
+      },
+      {
+        "county": "龙海区",
+        "category": "产业就业",
+        "count": 7029,
+        "perWan": 73.3,
+        "rank": 6,
+        "totalCounties": 28,
+        "multiple": 1.4
+      },
+      {
+        "county": "思明区",
+        "category": "产业就业",
+        "count": 6846,
+        "perWan": 64,
+        "rank": 7,
+        "totalCounties": 28,
+        "multiple": 1.37
+      },
+      {
+        "county": "石狮市",
+        "category": "产业就业",
+        "count": 6564,
+        "perWan": 93,
+        "rank": 8,
+        "totalCounties": 28,
+        "multiple": 1.31
+      },
+      {
+        "county": "惠安县",
+        "category": "产业就业",
+        "count": 6217,
+        "perWan": 59.2,
+        "rank": 9,
+        "totalCounties": 28,
+        "multiple": 1.24
+      },
+      {
+        "county": "丰泽区",
+        "category": "产业就业",
+        "count": 5532,
+        "perWan": 74.5,
+        "rank": 10,
+        "totalCounties": 28,
+        "multiple": 1.11
+      },
+      {
+        "county": "翔安区",
+        "category": "产业就业",
+        "count": 5121,
+        "perWan": 78.7,
+        "rank": 11,
+        "totalCounties": 28,
+        "multiple": 1.02
+      },
+      {
+        "county": "海沧区",
+        "category": "产业就业",
+        "count": 4299,
+        "perWan": 68.7,
+        "rank": 12,
+        "totalCounties": 28,
+        "multiple": 0.86
+      },
+      {
+        "county": "漳浦县",
+        "category": "产业就业",
+        "count": 4261,
+        "perWan": 49.8,
+        "rank": 13,
+        "totalCounties": 28,
+        "multiple": 0.85
+      },
+      {
+        "county": "芗城区",
+        "category": "产业就业",
+        "count": 3959,
+        "perWan": 61.2,
+        "rank": 14,
+        "totalCounties": 28,
+        "multiple": 0.79
+      },
+      {
+        "county": "安溪县",
+        "category": "产业就业",
+        "count": 3870,
+        "perWan": 39.1,
+        "rank": 15,
+        "totalCounties": 28,
+        "multiple": 0.77
+      },
+      {
+        "county": "鲤城区",
+        "category": "产业就业",
+        "count": 3239,
+        "perWan": 74.5,
+        "rank": 16,
+        "totalCounties": 28,
+        "multiple": 0.65
+      },
+      {
+        "county": "德化县",
+        "category": "产业就业",
+        "count": 2684,
+        "perWan": 79.2,
+        "rank": 17,
+        "totalCounties": 28,
+        "multiple": 0.54
+      },
+      {
+        "county": "龙文区",
+        "category": "产业就业",
+        "count": 2540,
+        "perWan": 82,
+        "rank": 18,
+        "totalCounties": 28,
+        "multiple": 0.51
+      },
+      {
+        "county": "长泰区",
+        "category": "产业就业",
+        "count": 1846,
+        "perWan": 79.3,
+        "rank": 19,
+        "totalCounties": 28,
+        "multiple": 0.37
+      },
+      {
+        "county": "南靖县",
+        "category": "产业就业",
+        "count": 1785,
+        "perWan": 59.3,
+        "rank": 20,
+        "totalCounties": 28,
+        "multiple": 0.36
+      },
+      {
+        "county": "洛江区",
+        "category": "产业就业",
+        "count": 1759,
+        "perWan": 68.2,
+        "rank": 21,
+        "totalCounties": 28,
+        "multiple": 0.35
+      },
+      {
+        "county": "平和县",
+        "category": "产业就业",
+        "count": 1575,
+        "perWan": 34.8,
+        "rank": 22,
+        "totalCounties": 28,
+        "multiple": 0.31
+      },
+      {
+        "county": "永春县",
+        "category": "产业就业",
+        "count": 1485,
+        "perWan": 36,
+        "rank": 23,
+        "totalCounties": 28,
+        "multiple": 0.3
+      },
+      {
+        "county": "泉港区",
+        "category": "产业就业",
+        "count": 1370,
+        "perWan": 38,
+        "rank": 24,
+        "totalCounties": 28,
+        "multiple": 0.27
+      },
+      {
+        "county": "诏安县",
+        "category": "产业就业",
+        "count": 1357,
+        "perWan": 24.6,
+        "rank": 25,
+        "totalCounties": 28,
+        "multiple": 0.27
+      },
+      {
+        "county": "云霄县",
+        "category": "产业就业",
+        "count": 1288,
+        "perWan": 31.1,
+        "rank": 26,
+        "totalCounties": 28,
+        "multiple": 0.26
+      },
+      {
+        "county": "东山县",
+        "category": "产业就业",
+        "count": 1120,
+        "perWan": 50.6,
+        "rank": 27,
+        "totalCounties": 28,
+        "multiple": 0.22
+      },
+      {
+        "county": "华安县",
+        "category": "产业就业",
+        "count": 544,
+        "perWan": 41.3,
+        "rank": 28,
+        "totalCounties": 28,
+        "multiple": 0.11
+      },
+      {
+        "county": "晋江市",
+        "category": "公共管理",
+        "count": 5389,
+        "perWan": 25.8,
+        "rank": 1,
+        "totalCounties": 28,
+        "multiple": 3.44
+      },
+      {
+        "county": "南安市",
+        "category": "公共管理",
+        "count": 3091,
+        "perWan": 20.2,
+        "rank": 2,
+        "totalCounties": 28,
+        "multiple": 1.97
+      },
+      {
+        "county": "思明区",
+        "category": "公共管理",
+        "count": 2912,
+        "perWan": 27.2,
+        "rank": 3,
+        "totalCounties": 28,
+        "multiple": 1.86
+      },
+      {
+        "county": "惠安县",
+        "category": "公共管理",
+        "count": 2324,
+        "perWan": 22.1,
+        "rank": 4,
+        "totalCounties": 28,
+        "multiple": 1.48
+      },
+      {
+        "county": "安溪县",
+        "category": "公共管理",
+        "count": 2006,
+        "perWan": 20.2,
+        "rank": 5,
+        "totalCounties": 28,
+        "multiple": 1.28
+      },
+      {
+        "county": "同安区",
+        "category": "公共管理",
+        "count": 1818,
+        "perWan": 20.2,
+        "rank": 6,
+        "totalCounties": 28,
+        "multiple": 1.16
+      },
+      {
+        "county": "龙海区",
+        "category": "公共管理",
+        "count": 1798,
+        "perWan": 18.7,
+        "rank": 7,
+        "totalCounties": 28,
+        "multiple": 1.15
+      },
+      {
+        "county": "丰泽区",
+        "category": "公共管理",
+        "count": 1785,
+        "perWan": 24,
+        "rank": 8,
+        "totalCounties": 28,
+        "multiple": 1.14
+      },
+      {
+        "county": "石狮市",
+        "category": "公共管理",
+        "count": 1762,
+        "perWan": 25,
+        "rank": 9,
+        "totalCounties": 28,
+        "multiple": 1.12
+      },
+      {
+        "county": "湖里区",
+        "category": "公共管理",
+        "count": 1761,
+        "perWan": 17.5,
+        "rank": 10,
+        "totalCounties": 28,
+        "multiple": 1.12
+      },
+      {
+        "county": "集美区",
+        "category": "公共管理",
+        "count": 1648,
+        "perWan": 15,
+        "rank": 11,
+        "totalCounties": 28,
+        "multiple": 1.05
+      },
+      {
+        "county": "漳浦县",
+        "category": "公共管理",
+        "count": 1637,
+        "perWan": 19.1,
+        "rank": 12,
+        "totalCounties": 28,
+        "multiple": 1.05
+      },
+      {
+        "county": "翔安区",
+        "category": "公共管理",
+        "count": 1498,
+        "perWan": 23,
+        "rank": 13,
+        "totalCounties": 28,
+        "multiple": 0.96
+      },
+      {
+        "county": "芗城区",
+        "category": "公共管理",
+        "count": 1462,
+        "perWan": 22.6,
+        "rank": 14,
+        "totalCounties": 28,
+        "multiple": 0.93
+      },
+      {
+        "county": "鲤城区",
+        "category": "公共管理",
+        "count": 1388,
+        "perWan": 31.9,
+        "rank": 15,
+        "totalCounties": 28,
+        "multiple": 0.89
+      },
+      {
+        "county": "永春县",
+        "category": "公共管理",
+        "count": 1387,
+        "perWan": 33.7,
+        "rank": 16,
+        "totalCounties": 28,
+        "multiple": 0.89
+      },
+      {
+        "county": "德化县",
+        "category": "公共管理",
+        "count": 1290,
+        "perWan": 38.1,
+        "rank": 17,
+        "totalCounties": 28,
+        "multiple": 0.82
+      },
+      {
+        "county": "平和县",
+        "category": "公共管理",
+        "count": 1179,
+        "perWan": 26,
+        "rank": 18,
+        "totalCounties": 28,
+        "multiple": 0.75
+      },
+      {
+        "county": "海沧区",
+        "category": "公共管理",
+        "count": 1055,
+        "perWan": 16.9,
+        "rank": 19,
+        "totalCounties": 28,
+        "multiple": 0.67
+      },
+      {
+        "county": "南靖县",
+        "category": "公共管理",
+        "count": 1025,
+        "perWan": 34.1,
+        "rank": 20,
+        "totalCounties": 28,
+        "multiple": 0.65
+      },
+      {
+        "county": "诏安县",
+        "category": "公共管理",
+        "count": 931,
+        "perWan": 16.9,
+        "rank": 21,
+        "totalCounties": 28,
+        "multiple": 0.59
+      },
+      {
+        "county": "云霄县",
+        "category": "公共管理",
+        "count": 881,
+        "perWan": 21.2,
+        "rank": 22,
+        "totalCounties": 28,
+        "multiple": 0.56
+      },
+      {
+        "county": "泉港区",
+        "category": "公共管理",
+        "count": 797,
+        "perWan": 22.1,
+        "rank": 23,
+        "totalCounties": 28,
+        "multiple": 0.51
+      },
+      {
+        "county": "龙文区",
+        "category": "公共管理",
+        "count": 678,
+        "perWan": 21.9,
+        "rank": 24,
+        "totalCounties": 28,
+        "multiple": 0.43
+      },
+      {
+        "county": "洛江区",
+        "category": "公共管理",
+        "count": 649,
+        "perWan": 25.2,
+        "rank": 25,
+        "totalCounties": 28,
+        "multiple": 0.41
+      },
+      {
+        "county": "东山县",
+        "category": "公共管理",
+        "count": 611,
+        "perWan": 27.6,
+        "rank": 26,
+        "totalCounties": 28,
+        "multiple": 0.39
+      },
+      {
+        "county": "长泰区",
+        "category": "公共管理",
+        "count": 578,
+        "perWan": 24.8,
+        "rank": 27,
+        "totalCounties": 28,
+        "multiple": 0.37
+      },
+      {
+        "county": "华安县",
+        "category": "公共管理",
+        "count": 517,
+        "perWan": 39.3,
+        "rank": 28,
+        "totalCounties": 28,
+        "multiple": 0.33
+      },
+      {
+        "county": "思明区",
+        "category": "交通门户",
+        "count": 5257,
+        "perWan": 49.2,
+        "rank": 1,
+        "totalCounties": 28,
+        "multiple": 3.34
+      },
+      {
+        "county": "晋江市",
+        "category": "交通门户",
+        "count": 5025,
+        "perWan": 24,
+        "rank": 2,
+        "totalCounties": 28,
+        "multiple": 3.19
+      },
+      {
+        "county": "湖里区",
+        "category": "交通门户",
+        "count": 4108,
+        "perWan": 40.9,
+        "rank": 3,
+        "totalCounties": 28,
+        "multiple": 2.61
+      },
+      {
+        "county": "集美区",
+        "category": "交通门户",
+        "count": 2746,
+        "perWan": 24.9,
+        "rank": 4,
+        "totalCounties": 28,
+        "multiple": 1.74
+      },
+      {
+        "county": "丰泽区",
+        "category": "交通门户",
+        "count": 2699,
+        "perWan": 36.3,
+        "rank": 5,
+        "totalCounties": 28,
+        "multiple": 1.71
+      },
+      {
+        "county": "石狮市",
+        "category": "交通门户",
+        "count": 2089,
+        "perWan": 29.6,
+        "rank": 6,
+        "totalCounties": 28,
+        "multiple": 1.33
+      },
+      {
+        "county": "南安市",
+        "category": "交通门户",
+        "count": 2033,
+        "perWan": 13.3,
+        "rank": 7,
+        "totalCounties": 28,
+        "multiple": 1.29
+      },
+      {
+        "county": "同安区",
+        "category": "交通门户",
+        "count": 2009,
+        "perWan": 22.4,
+        "rank": 8,
+        "totalCounties": 28,
+        "multiple": 1.28
+      },
+      {
+        "county": "惠安县",
+        "category": "交通门户",
+        "count": 1906,
+        "perWan": 18.2,
+        "rank": 9,
+        "totalCounties": 28,
+        "multiple": 1.21
+      },
+      {
+        "county": "龙海区",
+        "category": "交通门户",
+        "count": 1880,
+        "perWan": 19.6,
+        "rank": 10,
+        "totalCounties": 28,
+        "multiple": 1.19
+      },
+      {
+        "county": "海沧区",
+        "category": "交通门户",
+        "count": 1709,
+        "perWan": 27.3,
+        "rank": 11,
+        "totalCounties": 28,
+        "multiple": 1.09
+      },
+      {
+        "county": "芗城区",
+        "category": "交通门户",
+        "count": 1650,
+        "perWan": 25.5,
+        "rank": 12,
+        "totalCounties": 28,
+        "multiple": 1.05
+      },
+      {
+        "county": "翔安区",
+        "category": "交通门户",
+        "count": 1491,
+        "perWan": 22.9,
+        "rank": 13,
+        "totalCounties": 28,
+        "multiple": 0.95
+      },
+      {
+        "county": "鲤城区",
+        "category": "交通门户",
+        "count": 1255,
+        "perWan": 28.9,
+        "rank": 14,
+        "totalCounties": 28,
+        "multiple": 0.8
+      },
+      {
+        "county": "龙文区",
+        "category": "交通门户",
+        "count": 1063,
+        "perWan": 34.3,
+        "rank": 15,
+        "totalCounties": 28,
+        "multiple": 0.68
+      },
+      {
+        "county": "漳浦县",
+        "category": "交通门户",
+        "count": 1026,
+        "perWan": 12,
+        "rank": 16,
+        "totalCounties": 28,
+        "multiple": 0.65
+      },
+      {
+        "county": "安溪县",
+        "category": "交通门户",
+        "count": 919,
+        "perWan": 9.3,
+        "rank": 17,
+        "totalCounties": 28,
+        "multiple": 0.58
+      },
+      {
+        "county": "永春县",
+        "category": "交通门户",
+        "count": 656,
+        "perWan": 15.9,
+        "rank": 18,
+        "totalCounties": 28,
+        "multiple": 0.42
+      },
+      {
+        "county": "德化县",
+        "category": "交通门户",
+        "count": 618,
+        "perWan": 18.2,
+        "rank": 19,
+        "totalCounties": 28,
+        "multiple": 0.39
+      },
+      {
+        "county": "长泰区",
+        "category": "交通门户",
+        "count": 586,
+        "perWan": 25.2,
+        "rank": 20,
+        "totalCounties": 28,
+        "multiple": 0.37
+      },
+      {
+        "county": "泉港区",
+        "category": "交通门户",
+        "count": 573,
+        "perWan": 15.9,
+        "rank": 21,
+        "totalCounties": 28,
+        "multiple": 0.36
+      },
+      {
+        "county": "东山县",
+        "category": "交通门户",
+        "count": 561,
+        "perWan": 25.3,
+        "rank": 22,
+        "totalCounties": 28,
+        "multiple": 0.36
+      },
+      {
+        "county": "洛江区",
+        "category": "交通门户",
+        "count": 522,
+        "perWan": 20.2,
+        "rank": 23,
+        "totalCounties": 28,
+        "multiple": 0.33
+      },
+      {
+        "county": "平和县",
+        "category": "交通门户",
+        "count": 485,
+        "perWan": 10.7,
+        "rank": 24,
+        "totalCounties": 28,
+        "multiple": 0.31
+      },
+      {
+        "county": "南靖县",
+        "category": "交通门户",
+        "count": 423,
+        "perWan": 14.1,
+        "rank": 25,
+        "totalCounties": 28,
+        "multiple": 0.27
+      },
+      {
+        "county": "云霄县",
+        "category": "交通门户",
+        "count": 374,
+        "perWan": 9,
+        "rank": 26,
+        "totalCounties": 28,
+        "multiple": 0.24
+      },
+      {
+        "county": "诏安县",
+        "category": "交通门户",
+        "count": 264,
+        "perWan": 4.8,
+        "rank": 27,
+        "totalCounties": 28,
+        "multiple": 0.17
+      },
+      {
+        "county": "华安县",
+        "category": "交通门户",
+        "count": 159,
+        "perWan": 12.1,
+        "rank": 28,
+        "totalCounties": 28,
+        "multiple": 0.1
+      },
+      {
+        "county": "思明区",
+        "category": "教育文化",
+        "count": 2643,
+        "perWan": 24.7,
+        "rank": 1,
+        "totalCounties": 28,
+        "multiple": 2.73
+      },
+      {
+        "county": "晋江市",
+        "category": "教育文化",
+        "count": 2550,
+        "perWan": 12.2,
+        "rank": 2,
+        "totalCounties": 28,
+        "multiple": 2.63
+      },
+      {
+        "county": "集美区",
+        "category": "教育文化",
+        "count": 2057,
+        "perWan": 18.7,
+        "rank": 3,
+        "totalCounties": 28,
+        "multiple": 2.12
+      },
+      {
+        "county": "南安市",
+        "category": "教育文化",
+        "count": 1711,
+        "perWan": 11.2,
+        "rank": 4,
+        "totalCounties": 28,
+        "multiple": 1.77
+      },
+      {
+        "county": "湖里区",
+        "category": "教育文化",
+        "count": 1501,
+        "perWan": 14.9,
+        "rank": 5,
+        "totalCounties": 28,
+        "multiple": 1.55
+      },
+      {
+        "county": "惠安县",
+        "category": "教育文化",
+        "count": 1408,
+        "perWan": 13.4,
+        "rank": 6,
+        "totalCounties": 28,
+        "multiple": 1.45
+      },
+      {
+        "county": "同安区",
+        "category": "教育文化",
+        "count": 1384,
+        "perWan": 15.4,
+        "rank": 7,
+        "totalCounties": 28,
+        "multiple": 1.43
+      },
+      {
+        "county": "丰泽区",
+        "category": "教育文化",
+        "count": 1339,
+        "perWan": 18,
+        "rank": 8,
+        "totalCounties": 28,
+        "multiple": 1.38
+      },
+      {
+        "county": "龙海区",
+        "category": "教育文化",
+        "count": 1321,
+        "perWan": 13.8,
+        "rank": 9,
+        "totalCounties": 28,
+        "multiple": 1.36
+      },
+      {
+        "county": "翔安区",
+        "category": "教育文化",
+        "count": 1227,
+        "perWan": 18.8,
+        "rank": 10,
+        "totalCounties": 28,
+        "multiple": 1.27
+      },
+      {
+        "county": "芗城区",
+        "category": "教育文化",
+        "count": 1070,
+        "perWan": 16.5,
+        "rank": 11,
+        "totalCounties": 28,
+        "multiple": 1.1
+      },
+      {
+        "county": "石狮市",
+        "category": "教育文化",
+        "count": 1009,
+        "perWan": 14.3,
+        "rank": 12,
+        "totalCounties": 28,
+        "multiple": 1.04
+      },
+      {
+        "county": "漳浦县",
+        "category": "教育文化",
+        "count": 953,
+        "perWan": 11.1,
+        "rank": 13,
+        "totalCounties": 28,
+        "multiple": 0.98
+      },
+      {
+        "county": "海沧区",
+        "category": "教育文化",
+        "count": 947,
+        "perWan": 15.1,
+        "rank": 14,
+        "totalCounties": 28,
+        "multiple": 0.98
+      },
+      {
+        "county": "安溪县",
+        "category": "教育文化",
+        "count": 903,
+        "perWan": 9.1,
+        "rank": 15,
+        "totalCounties": 28,
+        "multiple": 0.93
+      },
+      {
+        "county": "鲤城区",
+        "category": "教育文化",
+        "count": 806,
+        "perWan": 18.5,
+        "rank": 16,
+        "totalCounties": 28,
+        "multiple": 0.83
+      },
+      {
+        "county": "龙文区",
+        "category": "教育文化",
+        "count": 581,
+        "perWan": 18.8,
+        "rank": 17,
+        "totalCounties": 28,
+        "multiple": 0.6
+      },
+      {
+        "county": "诏安县",
+        "category": "教育文化",
+        "count": 469,
+        "perWan": 8.5,
+        "rank": 18,
+        "totalCounties": 28,
+        "multiple": 0.48
+      },
+      {
+        "county": "泉港区",
+        "category": "教育文化",
+        "count": 428,
+        "perWan": 11.9,
+        "rank": 19,
+        "totalCounties": 28,
+        "multiple": 0.44
+      },
+      {
+        "county": "云霄县",
+        "category": "教育文化",
+        "count": 416,
+        "perWan": 10,
+        "rank": 20,
+        "totalCounties": 28,
+        "multiple": 0.43
+      },
+      {
+        "county": "德化县",
+        "category": "教育文化",
+        "count": 383,
+        "perWan": 11.3,
+        "rank": 21,
+        "totalCounties": 28,
+        "multiple": 0.4
+      },
+      {
+        "county": "平和县",
+        "category": "教育文化",
+        "count": 335,
+        "perWan": 7.4,
+        "rank": 22,
+        "totalCounties": 28,
+        "multiple": 0.35
+      },
+      {
+        "county": "永春县",
+        "category": "教育文化",
+        "count": 334,
+        "perWan": 8.1,
+        "rank": 23,
+        "totalCounties": 28,
+        "multiple": 0.34
+      },
+      {
+        "county": "洛江区",
+        "category": "教育文化",
+        "count": 331,
+        "perWan": 12.8,
+        "rank": 24,
+        "totalCounties": 28,
+        "multiple": 0.34
+      },
+      {
+        "county": "南靖县",
+        "category": "教育文化",
+        "count": 323,
+        "perWan": 10.7,
+        "rank": 25,
+        "totalCounties": 28,
+        "multiple": 0.33
+      },
+      {
+        "county": "长泰区",
+        "category": "教育文化",
+        "count": 307,
+        "perWan": 13.2,
+        "rank": 26,
+        "totalCounties": 28,
+        "multiple": 0.32
+      },
+      {
+        "county": "东山县",
+        "category": "教育文化",
+        "count": 295,
+        "perWan": 13.3,
+        "rank": 27,
+        "totalCounties": 28,
+        "multiple": 0.3
+      },
+      {
+        "county": "华安县",
+        "category": "教育文化",
+        "count": 98,
+        "perWan": 7.4,
+        "rank": 28,
+        "totalCounties": 28,
+        "multiple": 0.1
+      },
+      {
+        "county": "晋江市",
+        "category": "商业消费",
+        "count": 44363,
+        "perWan": 212.2,
+        "rank": 1,
+        "totalCounties": 28,
+        "multiple": 3.91
+      },
+      {
+        "county": "南安市",
+        "category": "商业消费",
+        "count": 34293,
+        "perWan": 224.4,
+        "rank": 2,
+        "totalCounties": 28,
+        "multiple": 3.02
+      },
+      {
+        "county": "惠安县",
+        "category": "商业消费",
+        "count": 20021,
+        "perWan": 190.7,
+        "rank": 3,
+        "totalCounties": 28,
+        "multiple": 1.76
+      },
+      {
+        "county": "石狮市",
+        "category": "商业消费",
+        "count": 17714,
+        "perWan": 250.9,
+        "rank": 4,
+        "totalCounties": 28,
+        "multiple": 1.56
+      },
+      {
+        "county": "龙海区",
+        "category": "商业消费",
+        "count": 15861,
+        "perWan": 165.4,
+        "rank": 5,
+        "totalCounties": 28,
+        "multiple": 1.4
+      },
+      {
+        "county": "安溪县",
+        "category": "商业消费",
+        "count": 15236,
+        "perWan": 153.7,
+        "rank": 6,
+        "totalCounties": 28,
+        "multiple": 1.34
+      },
+      {
+        "county": "湖里区",
+        "category": "商业消费",
+        "count": 14659,
+        "perWan": 145.9,
+        "rank": 7,
+        "totalCounties": 28,
+        "multiple": 1.29
+      },
+      {
+        "county": "思明区",
+        "category": "商业消费",
+        "count": 14570,
+        "perWan": 136.3,
+        "rank": 8,
+        "totalCounties": 28,
+        "multiple": 1.28
+      },
+      {
+        "county": "丰泽区",
+        "category": "商业消费",
+        "count": 12976,
+        "perWan": 174.6,
+        "rank": 9,
+        "totalCounties": 28,
+        "multiple": 1.14
+      },
+      {
+        "county": "集美区",
+        "category": "商业消费",
+        "count": 12912,
+        "perWan": 117.3,
+        "rank": 10,
+        "totalCounties": 28,
+        "multiple": 1.14
+      },
+      {
+        "county": "同安区",
+        "category": "商业消费",
+        "count": 12482,
+        "perWan": 139,
+        "rank": 11,
+        "totalCounties": 28,
+        "multiple": 1.1
+      },
+      {
+        "county": "芗城区",
+        "category": "商业消费",
+        "count": 11805,
+        "perWan": 182.5,
+        "rank": 12,
+        "totalCounties": 28,
+        "multiple": 1.04
+      },
+      {
+        "county": "漳浦县",
+        "category": "商业消费",
+        "count": 11744,
+        "perWan": 137.3,
+        "rank": 13,
+        "totalCounties": 28,
+        "multiple": 1.03
+      },
+      {
+        "county": "鲤城区",
+        "category": "商业消费",
+        "count": 10089,
+        "perWan": 231.9,
+        "rank": 14,
+        "totalCounties": 28,
+        "multiple": 0.89
+      },
+      {
+        "county": "翔安区",
+        "category": "商业消费",
+        "count": 9136,
+        "perWan": 140.3,
+        "rank": 15,
+        "totalCounties": 28,
+        "multiple": 0.8
+      },
+      {
+        "county": "海沧区",
+        "category": "商业消费",
+        "count": 6496,
+        "perWan": 103.8,
+        "rank": 16,
+        "totalCounties": 28,
+        "multiple": 0.57
+      },
+      {
+        "county": "泉港区",
+        "category": "商业消费",
+        "count": 5852,
+        "perWan": 162.1,
+        "rank": 17,
+        "totalCounties": 28,
+        "multiple": 0.52
+      },
+      {
+        "county": "龙文区",
+        "category": "商业消费",
+        "count": 5774,
+        "perWan": 186.4,
+        "rank": 18,
+        "totalCounties": 28,
+        "multiple": 0.51
+      },
+      {
+        "county": "德化县",
+        "category": "商业消费",
+        "count": 5711,
+        "perWan": 168.5,
+        "rank": 19,
+        "totalCounties": 28,
+        "multiple": 0.5
+      },
+      {
+        "county": "平和县",
+        "category": "商业消费",
+        "count": 5472,
+        "perWan": 120.8,
+        "rank": 20,
+        "totalCounties": 28,
+        "multiple": 0.48
+      },
+      {
+        "county": "诏安县",
+        "category": "商业消费",
+        "count": 5236,
+        "perWan": 95,
+        "rank": 21,
+        "totalCounties": 28,
+        "multiple": 0.46
+      },
+      {
+        "county": "云霄县",
+        "category": "商业消费",
+        "count": 5181,
+        "perWan": 125,
+        "rank": 22,
+        "totalCounties": 28,
+        "multiple": 0.46
+      },
+      {
+        "county": "南靖县",
+        "category": "商业消费",
+        "count": 4122,
+        "perWan": 136.9,
+        "rank": 23,
+        "totalCounties": 28,
+        "multiple": 0.36
+      },
+      {
+        "county": "永春县",
+        "category": "商业消费",
+        "count": 3982,
+        "perWan": 96.7,
+        "rank": 24,
+        "totalCounties": 28,
+        "multiple": 0.35
+      },
+      {
+        "county": "洛江区",
+        "category": "商业消费",
+        "count": 3806,
+        "perWan": 147.5,
+        "rank": 25,
+        "totalCounties": 28,
+        "multiple": 0.34
+      },
+      {
+        "county": "长泰区",
+        "category": "商业消费",
+        "count": 3562,
+        "perWan": 153.1,
+        "rank": 26,
+        "totalCounties": 28,
+        "multiple": 0.31
+      },
+      {
+        "county": "东山县",
+        "category": "商业消费",
+        "count": 3555,
+        "perWan": 160.6,
+        "rank": 27,
+        "totalCounties": 28,
+        "multiple": 0.31
+      },
+      {
+        "county": "华安县",
+        "category": "商业消费",
+        "count": 1373,
+        "perWan": 104.3,
+        "rank": 28,
+        "totalCounties": 28,
+        "multiple": 0.12
+      },
+      {
+        "county": "晋江市",
+        "category": "文旅生活",
+        "count": 20783,
+        "perWan": 99.4,
+        "rank": 1,
+        "totalCounties": 28,
+        "multiple": 3.47
+      },
+      {
+        "county": "思明区",
+        "category": "文旅生活",
+        "count": 13612,
+        "perWan": 127.3,
+        "rank": 2,
+        "totalCounties": 28,
+        "multiple": 2.27
+      },
+      {
+        "county": "南安市",
+        "category": "文旅生活",
+        "count": 11907,
+        "perWan": 77.9,
+        "rank": 3,
+        "totalCounties": 28,
+        "multiple": 1.99
+      },
+      {
+        "county": "湖里区",
+        "category": "文旅生活",
+        "count": 9866,
+        "perWan": 98.2,
+        "rank": 4,
+        "totalCounties": 28,
+        "multiple": 1.65
+      },
+      {
+        "county": "集美区",
+        "category": "文旅生活",
+        "count": 9698,
+        "perWan": 88.1,
+        "rank": 5,
+        "totalCounties": 28,
+        "multiple": 1.62
+      },
+      {
+        "county": "丰泽区",
+        "category": "文旅生活",
+        "count": 8166,
+        "perWan": 109.9,
+        "rank": 6,
+        "totalCounties": 28,
+        "multiple": 1.36
+      },
+      {
+        "county": "惠安县",
+        "category": "文旅生活",
+        "count": 7996,
+        "perWan": 76.2,
+        "rank": 7,
+        "totalCounties": 28,
+        "multiple": 1.33
+      },
+      {
+        "county": "石狮市",
+        "category": "文旅生活",
+        "count": 7830,
+        "perWan": 110.9,
+        "rank": 8,
+        "totalCounties": 28,
+        "multiple": 1.31
+      },
+      {
+        "county": "龙海区",
+        "category": "文旅生活",
+        "count": 7768,
+        "perWan": 81,
+        "rank": 9,
+        "totalCounties": 28,
+        "multiple": 1.3
+      },
+      {
+        "county": "同安区",
+        "category": "文旅生活",
+        "count": 7531,
+        "perWan": 83.9,
+        "rank": 10,
+        "totalCounties": 28,
+        "multiple": 1.26
+      },
+      {
+        "county": "安溪县",
+        "category": "文旅生活",
+        "count": 6087,
+        "perWan": 61.4,
+        "rank": 11,
+        "totalCounties": 28,
+        "multiple": 1.02
+      },
+      {
+        "county": "芗城区",
+        "category": "文旅生活",
+        "count": 6007,
+        "perWan": 92.9,
+        "rank": 12,
+        "totalCounties": 28,
+        "multiple": 1
+      },
+      {
+        "county": "鲤城区",
+        "category": "文旅生活",
+        "count": 5871,
+        "perWan": 135,
+        "rank": 13,
+        "totalCounties": 28,
+        "multiple": 0.98
+      },
+      {
+        "county": "漳浦县",
+        "category": "文旅生活",
+        "count": 5639,
+        "perWan": 65.9,
+        "rank": 14,
+        "totalCounties": 28,
+        "multiple": 0.94
+      },
+      {
+        "county": "翔安区",
+        "category": "文旅生活",
+        "count": 5258,
+        "perWan": 80.8,
+        "rank": 15,
+        "totalCounties": 28,
+        "multiple": 0.88
+      },
+      {
+        "county": "海沧区",
+        "category": "文旅生活",
+        "count": 4824,
+        "perWan": 77.1,
+        "rank": 16,
+        "totalCounties": 28,
+        "multiple": 0.8
+      },
+      {
+        "county": "东山县",
+        "category": "文旅生活",
+        "count": 3657,
+        "perWan": 165.2,
+        "rank": 17,
+        "totalCounties": 28,
+        "multiple": 0.61
+      },
+      {
+        "county": "龙文区",
+        "category": "文旅生活",
+        "count": 3493,
+        "perWan": 112.8,
+        "rank": 18,
+        "totalCounties": 28,
+        "multiple": 0.58
+      },
+      {
+        "county": "南靖县",
+        "category": "文旅生活",
+        "count": 2880,
+        "perWan": 95.7,
+        "rank": 19,
+        "totalCounties": 28,
+        "multiple": 0.48
+      },
+      {
+        "county": "德化县",
+        "category": "文旅生活",
+        "count": 2721,
+        "perWan": 80.3,
+        "rank": 20,
+        "totalCounties": 28,
+        "multiple": 0.45
+      },
+      {
+        "county": "平和县",
+        "category": "文旅生活",
+        "count": 2630,
+        "perWan": 58.1,
+        "rank": 21,
+        "totalCounties": 28,
+        "multiple": 0.44
+      },
+      {
+        "county": "云霄县",
+        "category": "文旅生活",
+        "count": 2452,
+        "perWan": 59.1,
+        "rank": 22,
+        "totalCounties": 28,
+        "multiple": 0.41
+      },
+      {
+        "county": "永春县",
+        "category": "文旅生活",
+        "count": 2215,
+        "perWan": 53.8,
+        "rank": 23,
+        "totalCounties": 28,
+        "multiple": 0.37
+      },
+      {
+        "county": "泉港区",
+        "category": "文旅生活",
+        "count": 2198,
+        "perWan": 60.9,
+        "rank": 24,
+        "totalCounties": 28,
+        "multiple": 0.37
+      },
+      {
+        "county": "长泰区",
+        "category": "文旅生活",
+        "count": 2197,
+        "perWan": 94.4,
+        "rank": 25,
+        "totalCounties": 28,
+        "multiple": 0.37
+      },
+      {
+        "county": "诏安县",
+        "category": "文旅生活",
+        "count": 2087,
+        "perWan": 37.9,
+        "rank": 26,
+        "totalCounties": 28,
+        "multiple": 0.35
+      },
+      {
+        "county": "洛江区",
+        "category": "文旅生活",
+        "count": 1656,
+        "perWan": 64.2,
+        "rank": 27,
+        "totalCounties": 28,
+        "multiple": 0.28
+      },
+      {
+        "county": "华安县",
+        "category": "文旅生活",
+        "count": 779,
+        "perWan": 59.2,
+        "rank": 28,
+        "totalCounties": 28,
+        "multiple": 0.13
+      },
+      {
+        "county": "晋江市",
+        "category": "物流服务",
+        "count": 2882,
+        "perWan": 13.8,
+        "rank": 1,
+        "totalCounties": 28,
+        "multiple": 4.55
+      },
+      {
+        "county": "南安市",
+        "category": "物流服务",
+        "count": 1581,
+        "perWan": 10.3,
+        "rank": 2,
+        "totalCounties": 28,
+        "multiple": 2.5
+      },
+      {
+        "county": "集美区",
+        "category": "物流服务",
+        "count": 1274,
+        "perWan": 11.6,
+        "rank": 3,
+        "totalCounties": 28,
+        "multiple": 2.01
+      },
+      {
+        "county": "湖里区",
+        "category": "物流服务",
+        "count": 1176,
+        "perWan": 11.7,
+        "rank": 4,
+        "totalCounties": 28,
+        "multiple": 1.86
+      },
+      {
+        "county": "同安区",
+        "category": "物流服务",
+        "count": 1075,
+        "perWan": 12,
+        "rank": 5,
+        "totalCounties": 28,
+        "multiple": 1.7
+      },
+      {
+        "county": "石狮市",
+        "category": "物流服务",
+        "count": 1059,
+        "perWan": 15,
+        "rank": 6,
+        "totalCounties": 28,
+        "multiple": 1.67
+      },
+      {
+        "county": "龙海区",
+        "category": "物流服务",
+        "count": 966,
+        "perWan": 10.1,
+        "rank": 7,
+        "totalCounties": 28,
+        "multiple": 1.53
+      },
+      {
+        "county": "惠安县",
+        "category": "物流服务",
+        "count": 764,
+        "perWan": 7.3,
+        "rank": 8,
+        "totalCounties": 28,
+        "multiple": 1.21
+      },
+      {
+        "county": "翔安区",
+        "category": "物流服务",
+        "count": 662,
+        "perWan": 10.2,
+        "rank": 9,
+        "totalCounties": 28,
+        "multiple": 1.05
+      },
+      {
+        "county": "丰泽区",
+        "category": "物流服务",
+        "count": 661,
+        "perWan": 8.9,
+        "rank": 10,
+        "totalCounties": 28,
+        "multiple": 1.04
+      },
+      {
+        "county": "海沧区",
+        "category": "物流服务",
+        "count": 661,
+        "perWan": 10.6,
+        "rank": 11,
+        "totalCounties": 28,
+        "multiple": 1.04
+      },
+      {
+        "county": "安溪县",
+        "category": "物流服务",
+        "count": 657,
+        "perWan": 6.6,
+        "rank": 12,
+        "totalCounties": 28,
+        "multiple": 1.04
+      },
+      {
+        "county": "思明区",
+        "category": "物流服务",
+        "count": 605,
+        "perWan": 5.7,
+        "rank": 13,
+        "totalCounties": 28,
+        "multiple": 0.96
+      },
+      {
+        "county": "芗城区",
+        "category": "物流服务",
+        "count": 561,
+        "perWan": 8.7,
+        "rank": 14,
+        "totalCounties": 28,
+        "multiple": 0.89
+      },
+      {
+        "county": "漳浦县",
+        "category": "物流服务",
+        "count": 425,
+        "perWan": 5,
+        "rank": 15,
+        "totalCounties": 28,
+        "multiple": 0.67
+      },
+      {
+        "county": "龙文区",
+        "category": "物流服务",
+        "count": 408,
+        "perWan": 13.2,
+        "rank": 16,
+        "totalCounties": 28,
+        "multiple": 0.64
+      },
+      {
+        "county": "鲤城区",
+        "category": "物流服务",
+        "count": 387,
+        "perWan": 8.9,
+        "rank": 17,
+        "totalCounties": 28,
+        "multiple": 0.61
+      },
+      {
+        "county": "德化县",
+        "category": "物流服务",
+        "count": 257,
+        "perWan": 7.6,
+        "rank": 18,
+        "totalCounties": 28,
+        "multiple": 0.41
+      },
+      {
+        "county": "泉港区",
+        "category": "物流服务",
+        "count": 252,
+        "perWan": 7,
+        "rank": 19,
+        "totalCounties": 28,
+        "multiple": 0.4
+      },
+      {
+        "county": "平和县",
+        "category": "物流服务",
+        "count": 242,
+        "perWan": 5.3,
+        "rank": 20,
+        "totalCounties": 28,
+        "multiple": 0.38
+      },
+      {
+        "county": "洛江区",
+        "category": "物流服务",
+        "count": 216,
+        "perWan": 8.4,
+        "rank": 21,
+        "totalCounties": 28,
+        "multiple": 0.34
+      },
+      {
+        "county": "永春县",
+        "category": "物流服务",
+        "count": 204,
+        "perWan": 5,
+        "rank": 22,
+        "totalCounties": 28,
+        "multiple": 0.32
+      },
+      {
+        "county": "长泰区",
+        "category": "物流服务",
+        "count": 165,
+        "perWan": 7.1,
+        "rank": 23,
+        "totalCounties": 28,
+        "multiple": 0.26
+      },
+      {
+        "county": "诏安县",
+        "category": "物流服务",
+        "count": 154,
+        "perWan": 2.8,
+        "rank": 24,
+        "totalCounties": 28,
+        "multiple": 0.24
+      },
+      {
+        "county": "南靖县",
+        "category": "物流服务",
+        "count": 138,
+        "perWan": 4.6,
+        "rank": 25,
+        "totalCounties": 28,
+        "multiple": 0.22
+      },
+      {
+        "county": "云霄县",
+        "category": "物流服务",
+        "count": 126,
+        "perWan": 3,
+        "rank": 26,
+        "totalCounties": 28,
+        "multiple": 0.2
+      },
+      {
+        "county": "东山县",
+        "category": "物流服务",
+        "count": 124,
+        "perWan": 5.6,
+        "rank": 27,
+        "totalCounties": 28,
+        "multiple": 0.2
+      },
+      {
+        "county": "华安县",
+        "category": "物流服务",
+        "count": 40,
+        "perWan": 3,
+        "rank": 28,
+        "totalCounties": 28,
+        "multiple": 0.06
+      },
+      {
+        "county": "晋江市",
+        "category": "医疗健康",
+        "count": 4331,
+        "perWan": 20.7,
+        "rank": 1,
+        "totalCounties": 28,
+        "multiple": 3.88
+      },
+      {
+        "county": "南安市",
+        "category": "医疗健康",
+        "count": 2675,
+        "perWan": 17.5,
+        "rank": 2,
+        "totalCounties": 28,
+        "multiple": 2.4
+      },
+      {
+        "county": "思明区",
+        "category": "医疗健康",
+        "count": 2289,
+        "perWan": 21.4,
+        "rank": 3,
+        "totalCounties": 28,
+        "multiple": 2.05
+      },
+      {
+        "county": "湖里区",
+        "category": "医疗健康",
+        "count": 1672,
+        "perWan": 16.6,
+        "rank": 4,
+        "totalCounties": 28,
+        "multiple": 1.5
+      },
+      {
+        "county": "丰泽区",
+        "category": "医疗健康",
+        "count": 1600,
+        "perWan": 21.5,
+        "rank": 5,
+        "totalCounties": 28,
+        "multiple": 1.44
+      },
+      {
+        "county": "惠安县",
+        "category": "医疗健康",
+        "count": 1533,
+        "perWan": 14.6,
+        "rank": 6,
+        "totalCounties": 28,
+        "multiple": 1.38
+      },
+      {
+        "county": "龙海区",
+        "category": "医疗健康",
+        "count": 1522,
+        "perWan": 15.9,
+        "rank": 7,
+        "totalCounties": 28,
+        "multiple": 1.37
+      },
+      {
+        "county": "芗城区",
+        "category": "医疗健康",
+        "count": 1464,
+        "perWan": 22.6,
+        "rank": 8,
+        "totalCounties": 28,
+        "multiple": 1.31
+      },
+      {
+        "county": "石狮市",
+        "category": "医疗健康",
+        "count": 1425,
+        "perWan": 20.2,
+        "rank": 9,
+        "totalCounties": 28,
+        "multiple": 1.28
+      },
+      {
+        "county": "集美区",
+        "category": "医疗健康",
+        "count": 1420,
+        "perWan": 12.9,
+        "rank": 10,
+        "totalCounties": 28,
+        "multiple": 1.27
+      },
+      {
+        "county": "同安区",
+        "category": "医疗健康",
+        "count": 1358,
+        "perWan": 15.1,
+        "rank": 11,
+        "totalCounties": 28,
+        "multiple": 1.22
+      },
+      {
+        "county": "安溪县",
+        "category": "医疗健康",
+        "count": 1267,
+        "perWan": 12.8,
+        "rank": 12,
+        "totalCounties": 28,
+        "multiple": 1.14
+      },
+      {
+        "county": "漳浦县",
+        "category": "医疗健康",
+        "count": 1166,
+        "perWan": 13.6,
+        "rank": 13,
+        "totalCounties": 28,
+        "multiple": 1.05
+      },
+      {
+        "county": "翔安区",
+        "category": "医疗健康",
+        "count": 897,
+        "perWan": 13.8,
+        "rank": 14,
+        "totalCounties": 28,
+        "multiple": 0.8
+      },
+      {
+        "county": "海沧区",
+        "category": "医疗健康",
+        "count": 879,
+        "perWan": 14,
+        "rank": 15,
+        "totalCounties": 28,
+        "multiple": 0.79
+      },
+      {
+        "county": "鲤城区",
+        "category": "医疗健康",
+        "count": 865,
+        "perWan": 19.9,
+        "rank": 16,
+        "totalCounties": 28,
+        "multiple": 0.78
+      },
+      {
+        "county": "龙文区",
+        "category": "医疗健康",
+        "count": 605,
+        "perWan": 19.5,
+        "rank": 17,
+        "totalCounties": 28,
+        "multiple": 0.54
+      },
+      {
+        "county": "永春县",
+        "category": "医疗健康",
+        "count": 517,
+        "perWan": 12.5,
+        "rank": 18,
+        "totalCounties": 28,
+        "multiple": 0.46
+      },
+      {
+        "county": "南靖县",
+        "category": "医疗健康",
+        "count": 470,
+        "perWan": 15.6,
+        "rank": 19,
+        "totalCounties": 28,
+        "multiple": 0.42
+      },
+      {
+        "county": "泉港区",
+        "category": "医疗健康",
+        "count": 446,
+        "perWan": 12.4,
+        "rank": 20,
+        "totalCounties": 28,
+        "multiple": 0.4
+      },
+      {
+        "county": "诏安县",
+        "category": "医疗健康",
+        "count": 428,
+        "perWan": 7.8,
+        "rank": 21,
+        "totalCounties": 28,
+        "multiple": 0.38
+      },
+      {
+        "county": "德化县",
+        "category": "医疗健康",
+        "count": 420,
+        "perWan": 12.4,
+        "rank": 22,
+        "totalCounties": 28,
+        "multiple": 0.38
+      },
+      {
+        "county": "平和县",
+        "category": "医疗健康",
+        "count": 416,
+        "perWan": 9.2,
+        "rank": 23,
+        "totalCounties": 28,
+        "multiple": 0.37
+      },
+      {
+        "county": "云霄县",
+        "category": "医疗健康",
+        "count": 405,
+        "perWan": 9.8,
+        "rank": 24,
+        "totalCounties": 28,
+        "multiple": 0.36
+      },
+      {
+        "county": "长泰区",
+        "category": "医疗健康",
+        "count": 400,
+        "perWan": 17.2,
+        "rank": 25,
+        "totalCounties": 28,
+        "multiple": 0.36
+      },
+      {
+        "county": "洛江区",
+        "category": "医疗健康",
+        "count": 353,
+        "perWan": 13.7,
+        "rank": 26,
+        "totalCounties": 28,
+        "multiple": 0.32
+      },
+      {
+        "county": "东山县",
+        "category": "医疗健康",
+        "count": 248,
+        "perWan": 11.2,
+        "rank": 27,
+        "totalCounties": 28,
+        "multiple": 0.22
+      },
+      {
+        "county": "华安县",
+        "category": "医疗健康",
+        "count": 144,
+        "perWan": 10.9,
+        "rank": 28,
+        "totalCounties": 28,
+        "multiple": 0.13
+      }
+    ]
   },
   "keyPairs": [
     {
