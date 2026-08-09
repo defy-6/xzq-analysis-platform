@@ -312,6 +312,39 @@ async function main() {
     ...chainCountyRows.filter((x) => x.cross).slice(0, 15),
     ...chainCountyRows.filter((x) => !x.cross).slice(0, 8),
   ];
+  // 产业链 × 区县（单边聚合：该区县作为源或目标的产业链联系规模）。
+  // 供"产业节点"定位直接引用（如"晋江市·纺织鞋服与消费品 X 条/金额 Y 万元/跨市占比 Z%"），
+  // 避免定位写具体产业却无对应数字可引。
+  const chainCountyByCounty = new Map(); // `${chainName}::${city}·${county}` -> {count, invest, branch, patent, amount, crossCount, withinCount}
+  for (const [k, v] of entAgg.chainCounty) {
+    const [name, pair] = k.split("::");
+    const [aSide, bSide] = pair.split("↔");
+    const sides = aSide === bSide ? [aSide] : [aSide, bSide];
+    for (const side of sides) {
+      const key = `${name}::${side}`;
+      const s = chainCountyByCounty.get(key) ?? { count: 0, invest: 0, branch: 0, patent: 0, amount: 0, crossCount: 0, withinCount: 0 };
+      const cnt = v.invest + v.branch + v.patent;
+      s.count += cnt; s.invest += v.invest; s.branch += v.branch; s.patent += v.patent; s.amount += v.amount;
+      if (v.cross === 1) s.crossCount += cnt; else s.withinCount += cnt;
+      chainCountyByCounty.set(key, s);
+    }
+  }
+  // 每条产业链只保留头部区县（按金额降序取前 8），控制注入体积
+  const chainTopPerChain = 8;
+  const seenByChain = new Map();
+  const industryChainCountyByCounty = [...chainCountyByCounty.entries()]
+    .map(([k, v]) => {
+      const [name, county] = k.split("::");
+      return { name, county, count: v.count, invest: v.invest, branch: v.branch, patent: v.patent, amount: r2(v.amount), crossCount: v.crossCount, withinCount: v.withinCount, crossShare: v.count ? r2(v.crossCount / v.count) : 0 };
+    })
+    .filter((x) => x.count > 0)
+    .sort((a, b) => (a.name === b.name ? b.amount - a.amount : a.name.localeCompare(b.name, "zh")))
+    .filter((x) => {
+      const n = seenByChain.get(x.name) ?? 0;
+      if (n >= chainTopPerChain) return false;
+      seenByChain.set(x.name, n + 1);
+      return true;
+    });
   // 产业链总量按方向汇总（跨市 vs 市内）
   const chainByScope = {};
   for (const [name, v] of entAgg.chain) {
@@ -513,6 +546,7 @@ async function main() {
       byAmount: industryTop,
       byChain: industryChain,
       byChainCountyPair: industryChainCounty,
+      byChainCounty: industryChainCountyByCounty,
       chainByScope,
     },
     quadrant: {
