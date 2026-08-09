@@ -330,6 +330,7 @@ async function main() {
     .filter(([, v]) => v.count > 0)
     .map(([name, v]) => ({
       name, count: v.count, amount: r2(v.amount), invest: v.invest, branch: v.branch, patent: v.patent,
+      avgAmount: v.invest + v.branch ? r1(v.amount / (v.invest + v.branch)) : null,
       strongestDir: Object.entries(v.byDir).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "",
     }))
     .sort((a, b) => b.amount - a.amount);
@@ -338,6 +339,7 @@ async function main() {
     .filter(([, v]) => v.count > 0)
     .map(([name, v]) => ({
       name, count: v.count, amount: r2(v.amount), invest: v.invest, branch: v.branch, patent: v.patent,
+      avgAmount: v.invest + v.branch ? r1(v.amount / (v.invest + v.branch)) : null,
       strongestDir: Object.entries(v.byDir).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "",
     }))
     .sort((a, b) => b.amount - a.amount);
@@ -373,7 +375,7 @@ async function main() {
   const industryChainCountyByCounty = [...chainCountyByCounty.entries()]
     .map(([k, v]) => {
       const [name, county] = k.split("::");
-      return { name, county, count: v.count, invest: v.invest, branch: v.branch, patent: v.patent, amount: r2(v.amount), crossCount: v.crossCount, withinCount: v.withinCount, crossShare: v.count ? r2(v.crossCount / v.count) : 0 };
+      return { name, county, count: v.count, invest: v.invest, branch: v.branch, patent: v.patent, amount: r2(v.amount), avgAmount: v.invest + v.branch ? r1(v.amount / (v.invest + v.branch)) : null, crossCount: v.crossCount, withinCount: v.withinCount, crossShare: v.count ? r2(v.crossCount / v.count) : 0 };
     })
     .filter((x) => x.count > 0)
     .sort((a, b) => (a.name === b.name ? b.amount - a.amount : a.name.localeCompare(b.name, "zh")))
