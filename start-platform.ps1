@@ -29,18 +29,25 @@ Write-Host "========================================"
 Write-Host ""
 
 function Test-Url([string]$url) {
-  # Windows 10 1803+ 自带 curl.exe；老系统退回 Invoke-WebRequest
-  try {
-    if (Get-Command curl.exe -ErrorAction SilentlyContinue) {
-      & curl.exe -fsS --max-time 5 $url *> $null
-      return ($LASTEXITCODE -eq 0)
-    } else {
-      $r = Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 2
-      return ($r.StatusCode -eq 200)
-    }
-  } catch {
-    return $false
+  # Windows 上 curl.exe 解析 localhost 可能走 IPv6(::1)而 vite 只绑定 IPv4,
+  # 浏览器双栈能打开但 curl 会失败——因此依次探测 localhost/127.0.0.1/[::1]
+  $candidates = @($url)
+  if ($url -match 'localhost') {
+    $candidates += $url.Replace('localhost', '127.0.0.1')
+    $candidates += $url.Replace('localhost', '[::1]')
   }
+  foreach ($u in $candidates) {
+    try {
+      if (Get-Command curl.exe -ErrorAction SilentlyContinue) {
+        & curl.exe -fsS --max-time 3 $u *> $null
+        if ($LASTEXITCODE -eq 0) { return $true }
+      } else {
+        $r = Invoke-WebRequest -Uri $u -UseBasicParsing -TimeoutSec 3
+        if ($r.StatusCode -eq 200) { return $true }
+      }
+    } catch { }
+  }
+  return $false
 }
 
 # vinext 启动时会输出 Local 地址；端口 3000 被占用时它会自动改用下一端口，

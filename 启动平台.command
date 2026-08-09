@@ -96,7 +96,13 @@ print "========================================"
 print ""
 
 url_ready() {
-  /usr/bin/curl -fsS --max-time 5 "$1" >/dev/null 2>&1
+  # localhost 可能解析到 IPv6(::1)而 vite 只绑定 IPv4;依次探测原样/127.0.0.1
+  /usr/bin/curl -fsS --max-time 3 "$1" >/dev/null 2>&1 && return 0
+  if [[ "$1" == *localhost* ]]; then
+    /usr/bin/curl -fsS --max-time 3 "${1/localhost/127.0.0.1}" >/dev/null 2>&1
+  else
+    return 1
+  fi
 }
 
 # vinext 启动时会输出 Local 地址；端口 3000 被占用时它会自动改用下一端口，
