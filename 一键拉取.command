@@ -63,9 +63,9 @@ if needs_install; then
     fi
   fi
   if [[ $pnpm_ok -eq 0 ]]; then
-    [[ -z "$PNPM_BIN" ]] && print "• 未找到 pnpm，正在安装（corepack）……"
-    export COREPACK_NPM_REGISTRY="https://registry.npmmirror.com/"
-    corepack enable pnpm >/dev/null 2>&1 || true
+    [[ -z "$PNPM_BIN" ]] && print "• 未找到 pnpm，正在安装……"
+    print "• 尝试 npm install -g pnpm@latest（国内镜像）……"
+    npm install -g pnpm@latest --registry=https://registry.npmmirror.com/ >/dev/null 2>&1 || true
     PNPM_BIN="$(command -v pnpm 2>/dev/null || true)"
     if [[ -n "$PNPM_BIN" ]]; then
       pv="$("$PNPM_BIN" --version 2>/dev/null)"
@@ -73,8 +73,9 @@ if needs_install; then
     fi
   fi
   if [[ $pnpm_ok -eq 0 ]]; then
-    print "• corepack 不可用，尝试 npm install -g pnpm@latest……"
-    npm install -g pnpm@latest >/dev/null 2>&1 || true
+    print "• npm 安装未生效，尝试 corepack……"
+    export COREPACK_NPM_REGISTRY="https://registry.npmmirror.com/"
+    corepack enable pnpm >/dev/null 2>&1 || true
     PNPM_BIN="$(command -v pnpm 2>/dev/null || true)"
     if [[ -n "$PNPM_BIN" ]]; then
       pv="$("$PNPM_BIN" --version 2>/dev/null)"

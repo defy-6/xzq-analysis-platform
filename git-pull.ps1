@@ -102,16 +102,17 @@ if (Test-NeedsInstall) {
     } else {
       Write-Host "o  未找到 pnpm，正在安装……"
     }
-    $env:COREPACK_NPM_REGISTRY = 'https://registry.npmmirror.com/'
-  & corepack enable pnpm 2>$null
+    Write-Host "o  尝试 npm install -g pnpm@latest（国内镜像）……"
+    & npm install -g pnpm@latest --registry=https://registry.npmmirror.com/
     $pnpm = Get-UsablePnpm
     if (-not $pnpm) {
-      Write-Host "o  corepack 不可用，尝试 npm install -g pnpm@latest……"
-      & npm install -g pnpm@latest 2>$null
+      Write-Host "o  npm 安装未生效，尝试 corepack……"
+      $env:COREPACK_NPM_REGISTRY = 'https://registry.npmmirror.com/'
+      & corepack enable pnpm
       $pnpm = Get-UsablePnpm
     }
     if (-not $pnpm) {
-      Write-Host "X  自动安装 pnpm 失败。请手动执行：npm install -g pnpm 后重试。"
+      Write-Host "X  自动安装 pnpm 失败。可手动执行：npm install -g pnpm 后重试。"
       Read-Host "按回车退出"
       exit 1
     }
