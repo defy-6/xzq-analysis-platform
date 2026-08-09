@@ -58,7 +58,8 @@ $excludeDirs = @(
   "apps\web\.vinext",
   "apps\web\dist",
   "apps\web\.next",
-  "node_modules\.vite"
+  "node_modules\.vite",
+  ".runtime"
 )
 if (-not $IncludeRaw) { $excludeDirs += "data\raw" }
 if ($NoGit) { $excludeDirs += ".git" }

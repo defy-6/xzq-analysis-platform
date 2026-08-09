@@ -52,7 +52,7 @@ trap 'rm -rf "$tmp"' EXIT
 
 rsync_args=(-a --exclude='node_modules' --exclude='运行日志' --exclude='.pnpm-store' --exclude='.reasonix' --exclude='reasonix.toml' --exclude='迁移打包' --exclude='.wrangler' --exclude='.vinext' --exclude='.next' --exclude='.DS_Store' --exclude='Thumbs.db')
 # 精确排除 dist（避免误伤 apps/web/dist 之外的包内 dist）与 data/raw
-rsync_args+=(--exclude='apps/web/dist' --exclude='node_modules/.vite')
+rsync_args+=(--exclude='apps/web/dist' --exclude='node_modules/.vite' --exclude='.runtime')
 if [[ "$INCLUDE_RAW" -eq 0 ]]; then
   rsync_args+=(--exclude='data/raw')
 fi

@@ -64,8 +64,45 @@ if (Test-PlatformRunning) {
   Start-Sleep -Seconds 2
 }
 
-# Node.js 检查
+# Node.js 检查：缺失时自动下载便携版到项目内 .runtime\node（免安装、免管理员、不污染系统）
+# 下载源：官方 nodejs.org 优先，npmmirror 镜像兜底（国内更快）
 $node = Get-Command node -ErrorAction SilentlyContinue
+if (-not $node) {
+  $rt = Join-Path $ProjectDir '.runtime'
+  $nodeDir = Join-Path $rt 'node'
+  $nodeExe = Join-Path $nodeDir 'node.exe'
+  if (-not (Test-Path $nodeExe)) {
+    Write-Host "o  未找到 Node.js，正在自动下载便携版（约 30MB）……"
+    $ver = 'v22.14.0'
+    $zip = Join-Path $env:TEMP "node-$ver-win-x64.zip"
+    $ok = $false
+    foreach ($base in @('https://nodejs.org/dist', 'https://npmmirror.com/mirrors/node')) {
+      $url = "$base/$ver/node-$ver-win-x64.zip"
+      Write-Host "o  下载 $url"
+      & curl.exe -L --fail --silent --show-error -o $zip $url
+      if ($LASTEXITCODE -eq 0 -and (Test-Path $zip)) { $ok = $true; break }
+    }
+    if (-not $ok) {
+      Write-Host "X  自动下载 Node.js 失败（网络不通？）。"
+      Write-Host "   请手动安装 Node.js（>= 22.13）：https://nodejs.org/ 后重试。"
+      Write-Host ""
+      exit 1
+    }
+    New-Item -ItemType Directory -Force -Path $rt | Out-Null
+    Expand-Archive -Path $zip -DestinationPath $rt -Force
+    Remove-Item -Force $zip
+    $unpacked = Get-ChildItem $rt -Directory | Where-Object { $_.Name -like 'node-v*-win-x64' } | Select-Object -First 1
+    if ($unpacked) {
+      if (Test-Path $nodeDir) { Remove-Item -Recurse -Force $nodeDir }
+      Move-Item $unpacked.FullName $nodeDir
+    }
+  }
+  if (Test-Path $nodeExe) {
+    Write-Host "o  已就绪 Node.js（便携版，位于 $nodeDir）"
+    $env:Path = "$nodeDir;$env:Path"
+    $node = Get-Command node -ErrorAction SilentlyContinue
+  }
+}
 if (-not $node) {
   Write-Host "X  未找到 Node.js，请先安装 Node.js（>= 22.13）：https://nodejs.org/"
   Write-Host ""
