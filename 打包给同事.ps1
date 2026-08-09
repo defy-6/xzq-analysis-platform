@@ -41,7 +41,8 @@ Write-Host "o  提示：打包前建议先运行「一键拉取.bat」，确保�
 Write-Host "o  正在复制项目（排除运行时产物）……"
 
 $stamp = Get-Date -Format "yyyyMMdd"
-$outDir = Split-Path -Parent $ProjectDir
+$outDir = Join-Path $ProjectDir '迁移打包'
+New-Item -ItemType Directory -Force -Path $outDir | Out-Null
 $out = Join-Path $outDir "xzq-platform-win-$stamp.tar.gz"
 $tmp = Join-Path $env:TEMP ("xzq-pack-" + [guid]::NewGuid().ToString("N"))
 $stage = Join-Path $tmp "xzq-platform"
