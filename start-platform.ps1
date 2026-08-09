@@ -14,6 +14,13 @@ $PidFile    = Join-Path $LogDir 'frontend.pid'
 
 New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
 
+# 路径含空格/括号提示（如解压重名自动加的 "(2)"），此类路径易引发部分工具异常
+if ($ProjectDir -match '[\s()（）]') {
+  Write-Host "!  提示：当前项目路径含空格或括号：$ProjectDir"
+  Write-Host "   建议将项目移动到无空格路径（如 D:\xzq-platform）后使用，避免偶发异常。"
+  Write-Host ""
+}
+
 Write-Host ""
 Write-Host "========================================"
 Write-Host "  厦漳泉都市圈综合分析平台"
@@ -209,9 +216,9 @@ for ($i = 0; $i -lt 120; $i++) {
 }
 
 if (-not $url) {
-  Write-Host "X  平台启动失败（60 秒内未就绪），请查看：$FrontendLog"
-  if (Test-Path $FrontendLog) { Get-Content $FrontendLog -Tail 30 | ForEach-Object { Write-Host $_ } }
-  if (Test-Path $FrontendErr)  { Get-Content $FrontendErr  -Tail 30 | ForEach-Object { Write-Host $_ } }
+  Write-Host "X  平台启动失败（120 秒内未就绪），请查看：$FrontendLog"
+  if (Test-Path $FrontendLog) { Get-Content $FrontendLog -Tail 30 | ForEach-Object { Write-Host $_ } } else { Write-Host "（frontend.log 不存在）" }
+  if (Test-Path $FrontendErr)  { Get-Content $FrontendErr  -Tail 30 | ForEach-Object { Write-Host $_ } } else { Write-Host "（frontend.err.log 不存在）" }
   Write-Host ""
   exit 1
 }

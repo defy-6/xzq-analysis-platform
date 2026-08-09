@@ -237,7 +237,7 @@ for i in {1..120}; do
 done
 
 if [[ -z "$URL" ]] || ! url_ready "$URL"; then
-  print "✗ 平台启动失败（60 秒内未就绪），请查看：$FRONTEND_LOG"
+  print "✗ 平台启动失败（120 秒内未就绪），请查看：$FRONTEND_LOG"
   print ""
   print "---------------- 日志末尾 ----------------"
   tail -n 30 "$FRONTEND_LOG"
