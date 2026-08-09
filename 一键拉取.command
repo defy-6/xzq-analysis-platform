@@ -51,11 +51,19 @@ needs_install() {
 
 if needs_install; then
   print "• 依赖有更新（lockfile 已变化），正在安装前端依赖……"
-  command -v pnpm >/dev/null 2>&1 || {
-    print "✗ 未找到 pnpm，请先安装：npm install -g pnpm"
+  if ! command -v pnpm >/dev/null 2>&1; then
+    print "• 未找到 pnpm，正在自动安装（corepack）……"
+    corepack enable pnpm >/dev/null 2>&1 || true
+  fi
+  if ! command -v pnpm >/dev/null 2>&1; then
+    print "• corepack 不可用，尝试 npm install -g pnpm……"
+    npm install -g pnpm >/dev/null 2>&1 || true
+  fi
+  if ! command -v pnpm >/dev/null 2>&1; then
+    print "✗ 自动安装 pnpm 失败。请先安装 Node.js 后重试，或手动执行：npm install -g pnpm"
     read -k 1 "?按回车退出……"
     exit 1
-  }
+  fi
   (cd "$WEB_DIR" && pnpm install)
   if [[ $? -ne 0 ]]; then
     print "✗ 依赖安装失败，请重试或检查网络。"

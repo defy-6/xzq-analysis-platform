@@ -72,10 +72,22 @@ if (-not $node) {
   exit 1
 }
 
-# 包管理器检查：统一使用 pnpm（与仓库锁文件 pnpm-lock.yaml 一致）
+# 包管理器检查：统一使用 pnpm（与仓库锁文件 pnpm-lock.yaml 一致）。
+# 缺失时自动安装（corepack 优先，npm -g 兜底），让同事只需装 Node.js。
 $pnpm = Get-Command pnpm -ErrorAction SilentlyContinue
 if (-not $pnpm) {
-  Write-Host "X  未找到 pnpm，请先安装：npm install -g pnpm"
+  Write-Host "o  未找到 pnpm，正在自动安装（corepack）……"
+  & corepack enable pnpm 2>$null
+  $pnpm = Get-Command pnpm -ErrorAction SilentlyContinue
+}
+if (-not $pnpm) {
+  Write-Host "o  corepack 不可用，尝试 npm install -g pnpm……"
+  & npm install -g pnpm 2>$null
+  $pnpm = Get-Command pnpm -ErrorAction SilentlyContinue
+}
+if (-not $pnpm) {
+  Write-Host "X  自动安装 pnpm 失败。请先安装 Node.js（https://nodejs.org/）后重试，"
+  Write-Host "   或手动执行：npm install -g pnpm"
   Write-Host ""
   exit 1
 }

@@ -91,7 +91,17 @@ fi
 
 PNPM_BIN="$(command -v pnpm 2>/dev/null || true)"
 if [[ -z "$PNPM_BIN" ]]; then
-  print "✗ 未找到 pnpm，无法启动平台。请先安装：npm install -g pnpm"
+  print "• 未找到 pnpm，正在自动安装（corepack）……"
+  corepack enable pnpm >/dev/null 2>&1 || true
+  PNPM_BIN="$(command -v pnpm 2>/dev/null || true)"
+fi
+if [[ -z "$PNPM_BIN" ]]; then
+  print "• corepack 不可用，尝试 npm install -g pnpm……"
+  npm install -g pnpm >/dev/null 2>&1 || true
+  PNPM_BIN="$(command -v pnpm 2>/dev/null || true)"
+fi
+if [[ -z "$PNPM_BIN" ]]; then
+  print "✗ 自动安装 pnpm 失败。请先安装 Node.js 后重试，或手动执行：npm install -g pnpm"
   print ""
   pause_before_exit
   exit 1
