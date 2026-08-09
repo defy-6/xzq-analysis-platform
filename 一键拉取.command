@@ -39,6 +39,34 @@ if [[ $code -ne 0 ]]; then
   exit 1
 fi
 
+# 跨系统协作：mac 与 Windows 各自维护 node_modules，
+# pull 后若 lockfile 变化则自动重装依赖，避免启动时依赖不同步报错。
+WEB_DIR="$PROJECT_DIR/apps/web"
+needs_install() {
+  [[ -x "$WEB_DIR/node_modules/.bin/vinext" ]] || return 0
+  [[ -f "$WEB_DIR/pnpm-lock.yaml" && -f "$WEB_DIR/node_modules/.modules.yaml" ]] || return 0
+  [[ "$WEB_DIR/pnpm-lock.yaml" -nt "$WEB_DIR/node_modules/.modules.yaml" ]] && return 0
+  return 1
+}
+
+if needs_install; then
+  print "• 依赖有更新（lockfile 已变化），正在安装前端依赖……"
+  command -v pnpm >/dev/null 2>&1 || {
+    print "✗ 未找到 pnpm，请先安装：npm install -g pnpm"
+    read -k 1 "?按回车退出……"
+    exit 1
+  }
+  (cd "$WEB_DIR" && pnpm install)
+  if [[ $? -ne 0 ]]; then
+    print "✗ 依赖安装失败，请重试或检查网络。"
+    read -k 1 "?按回车退出……"
+    exit 1
+  fi
+  print "• 依赖安装完成 ✓"
+else
+  print "• 依赖无变化，无需安装 ✓"
+fi
+
 print ""
 print "========================================"
 print "  拉取完成 ✓"

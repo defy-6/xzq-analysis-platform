@@ -79,9 +79,19 @@ if (-not $pnpm) {
   exit 1
 }
 
-# 首次运行或依赖缺失时安装前端依赖
-if (-not (Test-Path (Join-Path $WebDir 'node_modules\.bin\vinext.cmd'))) {
-  Write-Host "o  首次运行，正在安装前端依赖……"
+# 首次运行、依赖缺失、或 git pull 更新了 lockfile 时安装/同步前端依赖。
+# 跨系统协作：mac 与 Windows 各自维护 node_modules，lockfile 变化时必须重装，
+# 否则 vite 优化缓存会引用旧的 pnpm 哈希路径，启动后页面报 Failed to resolve import。
+function Test-NeedsInstall {
+  if (-not (Test-Path (Join-Path $WebDir 'node_modules\.bin\vinext.cmd'))) { return $true }
+  $lock      = Join-Path $WebDir 'pnpm-lock.yaml'
+  $installed = Join-Path $WebDir 'node_modules\.modules.yaml'
+  if (-not (Test-Path $lock) -or -not (Test-Path $installed)) { return $true }
+  return ((Get-Item $lock).LastWriteTime -gt (Get-Item $installed).LastWriteTime)
+}
+
+if (Test-NeedsInstall) {
+  Write-Host "o  依赖需安装/更新（首次运行或 lockfile 已变化），正在 pnpm install……"
   Push-Location $WebDir
   & $pnpm.Source install 2>&1 | Out-File -Append -Encoding utf8 $FrontendLog
   $installExit = $LASTEXITCODE

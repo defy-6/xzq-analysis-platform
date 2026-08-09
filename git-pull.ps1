@@ -39,6 +39,39 @@ if ($LASTEXITCODE -ne 0) {
   exit 1
 }
 
+# 跨系统协作：mac 与 Windows 各自维护 node_modules，
+# pull 后若 lockfile 变化则自动重装依赖，避免启动时依赖不同步报错。
+$WebDir = Join-Path $ProjectDir 'apps\web'
+function Test-NeedsInstall {
+  if (-not (Test-Path (Join-Path $WebDir 'node_modules\.bin\vinext.cmd'))) { return $true }
+  $lock      = Join-Path $WebDir 'pnpm-lock.yaml'
+  $installed = Join-Path $WebDir 'node_modules\.modules.yaml'
+  if (-not (Test-Path $lock) -or -not (Test-Path $installed)) { return $true }
+  return ((Get-Item $lock).LastWriteTime -gt (Get-Item $installed).LastWriteTime)
+}
+
+if (Test-NeedsInstall) {
+  Write-Host "o  依赖有更新（lockfile 已变化），正在安装前端依赖……"
+  $pnpm = Get-Command pnpm -ErrorAction SilentlyContinue
+  if (-not $pnpm) {
+    Write-Host "X  未找到 pnpm，请先安装：npm install -g pnpm"
+    Read-Host "按回车退出"
+    exit 1
+  }
+  Push-Location $WebDir
+  & $pnpm.Source install
+  $installExit = $LASTEXITCODE
+  Pop-Location
+  if ($installExit -ne 0) {
+    Write-Host "X  依赖安装失败，请重试或检查网络。"
+    Read-Host "按回车退出"
+    exit 1
+  }
+  Write-Host "o  依赖安装完成"
+} else {
+  Write-Host "o  依赖无变化，无需安装"
+}
+
 Write-Host ""
 Write-Host "========================================"
 Write-Host "  拉取完成 ✓"

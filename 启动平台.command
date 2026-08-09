@@ -84,9 +84,18 @@ if [[ -z "$PNPM_BIN" ]]; then
   exit 1
 fi
 
-# 首次运行或依赖缺失时安装前端依赖
-if [[ ! -x "$WEB_DIR/node_modules/.bin/vinext" ]]; then
-  print "• 首次运行，正在安装前端依赖……"
+# 首次运行、依赖缺失、或 git pull 更新了 lockfile 时安装/同步前端依赖。
+# 跨系统协作：mac 与 Windows 各自维护 node_modules，lockfile 变化时必须重装，
+# 否则 vite 优化缓存会引用旧的 pnpm 哈希路径，启动后页面报 Failed to resolve import。
+needs_install() {
+  [[ -x "$WEB_DIR/node_modules/.bin/vinext" ]] || return 0
+  [[ -f "$WEB_DIR/pnpm-lock.yaml" && -f "$WEB_DIR/node_modules/.modules.yaml" ]] || return 0
+  [[ "$WEB_DIR/pnpm-lock.yaml" -nt "$WEB_DIR/node_modules/.modules.yaml" ]] && return 0
+  return 1
+}
+
+if needs_install; then
+  print "• 依赖需安装/更新（首次运行或 lockfile 已变化），正在 pnpm install……"
   (cd "$WEB_DIR" && "$PNPM_BIN" install) >>"$FRONTEND_LOG" 2>&1
   if [[ $? -ne 0 ]]; then
     print "✗ 前端依赖安装失败，请查看：$FRONTEND_LOG"
