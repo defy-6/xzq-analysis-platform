@@ -70,7 +70,8 @@ if (Test-NeedsInstall) {
     } else {
       Write-Host "o  未找到 pnpm，正在安装……"
     }
-    & corepack enable pnpm 2>$null
+    $env:COREPACK_NPM_REGISTRY = 'https://registry.npmmirror.com/'
+  & corepack enable pnpm 2>$null
     $pnpm = Get-UsablePnpm
     if (-not $pnpm) {
       Write-Host "o  corepack 不可用，尝试 npm install -g pnpm@latest……"

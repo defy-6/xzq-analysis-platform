@@ -166,6 +166,7 @@ if [[ $pnpm_ok -eq 0 ]]; then
   if [[ -z "$PNPM_BIN" ]]; then
     print "• 未找到 pnpm，正在安装（corepack）……"
   fi
+  export COREPACK_NPM_REGISTRY="https://registry.npmmirror.com/"
   corepack enable pnpm >/dev/null 2>&1 || true
   PNPM_BIN="$(command -v pnpm 2>/dev/null || true)"
   if [[ -n "$PNPM_BIN" ]]; then
@@ -200,10 +201,11 @@ needs_install() {
 }
 
 if needs_install; then
-  print "• 依赖需安装/更新（首次运行或 lockfile 已变化），正在 pnpm install……"
-  (cd "$WEB_DIR" && "$PNPM_BIN" install) >>"$FRONTEND_LOG" 2>&1
-  if [[ $? -ne 0 ]]; then
-    print "✗ 前端依赖安装失败，请查看：$FRONTEND_LOG"
+  print "• 依赖需安装/更新（首次约 2~5 分钟，已配国内镜像加速；请勿关闭窗口，耐心等待）……"
+  # --reporter=append-only：逐行显示下载/安装进度（实时可见，不再像"卡住"）
+  (cd "$WEB_DIR" && "$PNPM_BIN" install --reporter=append-only) 2>&1 | tee -a "$FRONTEND_LOG"
+  if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
+    print "✗ 前端依赖安装失败（网络中断？可关闭重试，已下载部分会缓存复用）。"
     print ""
     pause_before_exit
     exit 1

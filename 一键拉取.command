@@ -50,7 +50,7 @@ needs_install() {
 }
 
 if needs_install; then
-  print "• 依赖有更新（lockfile 已变化），正在安装前端依赖……"
+  print "• 依赖有更新（lockfile 已变化），正在安装前端依赖（已配国内镜像加速，约 2~5 分钟）……"
   # pnpm 检查：项目 lockfile 为 v9.0，需 pnpm >= 9；缺失或过旧时自动安装新版
   pnpm_ok=0
   PNPM_BIN="$(command -v pnpm 2>/dev/null || true)"
@@ -63,6 +63,7 @@ if needs_install; then
   fi
   if [[ $pnpm_ok -eq 0 ]]; then
     [[ -z "$PNPM_BIN" ]] && print "• 未找到 pnpm，正在安装（corepack）……"
+    export COREPACK_NPM_REGISTRY="https://registry.npmmirror.com/"
     corepack enable pnpm >/dev/null 2>&1 || true
     PNPM_BIN="$(command -v pnpm 2>/dev/null || true)"
     if [[ -n "$PNPM_BIN" ]]; then
@@ -84,9 +85,9 @@ if needs_install; then
     read -k 1 "?按回车退出……"
     exit 1
   fi
-  (cd "$WEB_DIR" && pnpm install)
+  (cd "$WEB_DIR" && pnpm install --reporter=append-only)
   if [[ $? -ne 0 ]]; then
-    print "✗ 依赖安装失败，请重试或检查网络。"
+    print "✗ 依赖安装失败（网络中断？可重试，已下载部分会缓存复用）。"
     read -k 1 "?按回车退出……"
     exit 1
   fi

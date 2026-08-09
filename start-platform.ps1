@@ -140,6 +140,7 @@ if (-not $pnpm) {
   } else {
     Write-Host "o  未找到 pnpm，正在安装……"
   }
+  $env:COREPACK_NPM_REGISTRY = 'https://registry.npmmirror.com/'
   & corepack enable pnpm 2>$null
   $pnpm = Get-UsablePnpm
   if (-not $pnpm) {
@@ -166,13 +167,14 @@ function Test-NeedsInstall {
 }
 
 if (Test-NeedsInstall) {
-  Write-Host "o  依赖需安装/更新（首次运行或 lockfile 已变化），正在 pnpm install……"
+  Write-Host "o  依赖需安装/更新（首次约 2~5 分钟，已配国内镜像加速；请勿关闭窗口，耐心等待）……"
   Push-Location $WebDir
-  & $pnpm.Source install 2>&1 | Out-File -Append -Encoding utf8 $FrontendLog
+  # --reporter=append-only：逐行显示下载/安装进度（实时可见，不再像"卡住"）
+  & $pnpm.Source install --reporter=append-only
   $installExit = $LASTEXITCODE
   Pop-Location
   if ($installExit -ne 0) {
-    Write-Host "X  前端依赖安装失败，请查看：$FrontendLog"
+    Write-Host "X  前端依赖安装失败（网络中断？可关闭重试，已下载部分会缓存复用）。"
     Write-Host ""
     exit 1
   }
