@@ -25,7 +25,7 @@ function Test-Url([string]$url) {
   # Windows 10 1803+ 自带 curl.exe；老系统退回 Invoke-WebRequest
   try {
     if (Get-Command curl.exe -ErrorAction SilentlyContinue) {
-      & curl.exe -fsS --max-time 2 $url *> $null
+      & curl.exe -fsS --max-time 5 $url *> $null
       return ($LASTEXITCODE -eq 0)
     } else {
       $r = Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 2
@@ -193,11 +193,12 @@ $proc = Start-Process -FilePath $node.Source `
   -WindowStyle Hidden -PassThru
 $proc.Id | Out-File -Encoding ascii $PidFile
 
-# 等待服务就绪：从日志解析真实地址并探测
+# 等待服务就绪：从日志解析真实地址并探测（首次启动 vite 需扫描依赖+冷编译，可能超过 1 分钟，故等 120 秒）
 $url = $null
-for ($i = 0; $i -lt 60; $i++) {
+for ($i = 0; $i -lt 120; $i++) {
   $candidate = Get-PlatformUrl
   if ($candidate -and (Test-Url $candidate)) { $url = $candidate; break }
+  if ($i -gt 0 -and ($i % 10) -eq 0) { Write-Host "o  等待服务就绪（已 $i 秒，首次启动较慢，请耐心）……" }
   Start-Sleep -Seconds 1
 }
 

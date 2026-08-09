@@ -90,7 +90,7 @@ print "========================================"
 print ""
 
 url_ready() {
-  /usr/bin/curl -fsS --max-time 2 "$1" >/dev/null 2>&1
+  /usr/bin/curl -fsS --max-time 5 "$1" >/dev/null 2>&1
 }
 
 # vinext 启动时会输出 Local 地址；端口 3000 被占用时它会自动改用下一端口，
@@ -217,12 +217,15 @@ cd "$WEB_DIR" || exit 1
 nohup "$NODE_BIN" scripts/start_web.mjs >>"$FRONTEND_LOG" 2>&1 &
 print -r -- "$!" >"$PID_FILE"
 
-# 等待服务就绪：从日志解析真实地址并探测
+# 等待服务就绪：从日志解析真实地址并探测（首次启动 vite 需扫描依赖+冷编译，可能超过 1 分钟，故等 120 秒）
 URL=""
-for i in {1..60}; do
+for i in {1..120}; do
   URL="$(platform_local_url)"
   if [[ -n "$URL" ]] && url_ready "$URL"; then
     break
+  fi
+  if (( i % 10 == 0 )); then
+    print "• 等待服务就绪（已 $i 秒，首次启动较慢，请耐心）……"
   fi
   /bin/sleep 1
 done
