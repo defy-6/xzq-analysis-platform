@@ -63,10 +63,12 @@ function Get-PlatformUrl {
   return $null
 }
 
-# 兜底：日志解析失败时直接探测 3000-3010 端口（vite 端口占用会自动 +1，就在这个区间）
+# 兜底：日志解析失败时直接探测 3000-3010 端口（vite 端口占用会自动 +1，就在这个区间）。
+# 用 localhost 而非 127.0.0.1：Test-Url 内部会依次试 localhost/127.0.0.1/[::1]，
+# 覆盖 vite 只绑 IPv4 或只绑 IPv6 两种情况。
 function Find-VitePort {
   foreach ($p in 3000..3010) {
-    if (Test-Url "http://127.0.0.1:$p/") { return "http://localhost:$p/" }
+    if (Test-Url "http://localhost:$p/") { return "http://localhost:$p/" }
   }
   return $null
 }

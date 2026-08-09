@@ -96,10 +96,12 @@ print "========================================"
 print ""
 
 url_ready() {
-  # localhost 可能解析到 IPv6(::1)而 vite 只绑定 IPv4;依次探测原样/127.0.0.1
+  # localhost 可能解析到 IPv6(::1)而 vite 只绑定 IPv4，反之亦然；
+  # 依次探测原样/127.0.0.1/[::1]，覆盖两种绑定情况
   /usr/bin/curl -fsS --max-time 3 "$1" >/dev/null 2>&1 && return 0
   if [[ "$1" == *localhost* ]]; then
-    /usr/bin/curl -fsS --max-time 3 "${1/localhost/127.0.0.1}" >/dev/null 2>&1
+    /usr/bin/curl -fsS --max-time 3 "${1/localhost/127.0.0.1}" >/dev/null 2>&1 && return 0
+    /usr/bin/curl -fsS --max-time 3 "${1/localhost/[::1]}" >/dev/null 2>&1
   else
     return 1
   fi
@@ -237,7 +239,7 @@ for i in {1..120}; do
     # 日志解析失败/地址不可达时，每 3 秒直接扫描 3000-3010 端口兜底
     if (( i % 3 == 0 )); then
       for p in {3000..3010}; do
-        if url_ready "http://127.0.0.1:$p/"; then
+        if url_ready "http://localhost:$p/"; then
           URL="http://localhost:$p/"
           break
         fi
