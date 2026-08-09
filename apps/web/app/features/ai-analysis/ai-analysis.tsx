@@ -1364,7 +1364,7 @@ export default function AiAnalysisModule() {
         <div className="aiPanelHead"><h3>追问</h3><small>{activeTopic ? `基于「${TOPICS.find((t) => t.id === activeTopic)?.title}」回答` : "基于平台数据自由提问"}</small></div>
         {reportConflict && <div className="aiConflictNotice">⚠️ 本次回答与背景报告存在差异，AI 已标注「与背景报告不一致」并给出依据；建议核对后更新审核稿或将该修正标记为认可结论。</div>}
         <div className="aiChatHistory" ref={chatRef} onMouseUp={handleReportMouseUp}>
-          {chatHistory.length === 0 && <p className="aiChatEmpty">可对报告或平台数据继续提问，例如：“为什么海沧—龙海是厦漳方向第一核心？”“石井镇在哪些产业上最突出？”</p>}
+          {chatHistory.length === 0 && <p className="aiChatEmpty">可对报告或平台数据继续提问，例如：“为什么海沧—龙海是厦漳方向第一核心？”“晋江市在哪些产业链上最突出？”“哪个区县的医疗健康 POI 排第一？”“洛江区石化产业的单条投资额有多高？”</p>}
           {chatHistory.map((m, i) => (
             <div key={i} className={`aiChatMessage ${m.role}`}>
               {m.role === "user" ? <b>问</b> : <b>答</b>}

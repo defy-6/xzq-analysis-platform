@@ -285,17 +285,17 @@ type Loader = (file: string) => Promise<unknown>;
 
 const TOOL_SCHEMAS: Record<string, { description: string; parameters: Record<string, unknown> }> = {
   query_enterprise: {
-    description: "查询厦漳泉企业关系（投资/分支/专利）：mode=pair（默认）按无向区县对聚合返回 TOP（条数+金额，万元）；mode=industry 按行业/产业链聚合返回行业 TOP（适合'企业联系分布在哪些行业'类问题）。可按关系类型、行业/产业链、区县、跨市/市内筛选。",
+    description: "查询厦漳泉企业关系（投资/分支/专利）：mode=pair（默认）按无向区县对聚合返回 TOP（条数+金额，万元）；mode=industry 按行业/产业链聚合（指定产业链名则按产业链，返回条数/金额/单条平均/跨市占比）；mode=county 按区县视角聚合——配合 origin_county 查'某区县在哪些行业/产业链突出'，配合 industry_name 查'某产业链在哪些区县强'（参与口径：源或目标都计入，含单条平均与跨市占比）。可按关系类型、跨市/市内筛选。",
     parameters: {
       type: "object",
       properties: {
         relation: { type: "string", enum: ["投资", "分支", "专利"], description: "关系类型，不传为全部" },
-        mode: { type: "string", enum: ["pair", "industry"], description: "聚合模式：pair=按区县对（默认），industry=按行业" },
+        mode: { type: "string", enum: ["pair", "industry", "county"], description: "聚合模式：pair=按区县对（默认），industry=按行业/产业链，county=按区县视角（配 origin_county 或 industry_name）" },
         cross_scope: { type: "string", enum: ["跨市", "市内", "全部"], description: "跨市=两端不同城市，市内=同城" },
         industry_name: { type: "string", description: "行业名称（一级行业名如“制造业”“金融业”，或产业链名如“建材家居”“纺织鞋服与消费品”“先进装备制造”）" },
         industry_code: { type: "string", description: "行业代码（如 C13、J66、C34）" },
         origin_city: { type: "string", enum: ["厦门市", "漳州市", "泉州市"] },
-        origin_county: { type: "string", description: "起点区县名" },
+        origin_county: { type: "string", description: "起点区县名；mode=county 时指要分析的区县（参与口径）" },
         dest_county: { type: "string", description: "终点区县名" },
         sort_by: { type: "string", enum: ["count", "amount"] },
         top_n: { type: "integer", description: "返回条数，默认 10，最大 30" },
@@ -343,13 +343,14 @@ const TOOL_SCHEMAS: Record<string, { description: string; parameters: Record<str
     },
   },
   query_services: {
-    description: "查询区县公共服务设施（POI）：全部区县 POI 总量/每万人水平排名、多区县对比（counties 逗号分隔，如“鲤城区,丰泽区,晋江市”，支持“泉州市区”等口语别名）、或某区县/类别的 POI 中类明细。",
+    description: "查询区县公共服务设施（POI）：全部区县 POI 总量/每万人水平排名、多区县对比（counties 逗号分隔，如“鲤城区,丰泽区,晋江市”，支持“泉州市区”等口语别名）、或某区县/类别的 POI 中类明细。functional=true 时按功能分类（教育文化/医疗健康/商业消费/产业就业/物流服务/文旅生活/餐饮休闲等 9 类）查询，返回区县数量/每万人/28 区县排名/均值倍数，适合'哪个区县的医疗健康 POI 最突出'类问题。",
     parameters: {
       type: "object",
       properties: {
         county: { type: "string", description: "区县名；不传返回全部区县排名" },
         counties: { type: "string", description: "多区县对比，逗号分隔（如“鲤城区,丰泽区,晋江市”）；“泉州市区”=鲤城区+丰泽区，“厦门岛内/市区”=思明区+湖里区，“漳州市区”=芗城区+龙文区" },
-        category: { type: "string", description: "POI 大类或中类名（如“商业服务”“教育培训”“医疗保健服务”“停车场”）" },
+        category: { type: "string", description: "POI 大类或中类名（如“商业服务”“教育培训”“医疗保健服务”“停车场”）；functional=true 时指功能分类名（如“教育文化”“医疗健康”“商业消费”）" },
+        functional: { type: "boolean", description: "true=按功能分类查询（9 类，返回排名/均值倍数）" },
         measure: { type: "string", enum: ["count", "per10k"], description: "排序口径：count=POI 总量（默认），per10k=每万常住人口 POI（公平比较不同规模区县）" },
         top_n: { type: "integer", description: "默认 10，最大 30" },
       },
@@ -414,31 +415,81 @@ async function runEnterprise(args: Record<string, unknown>, load: Loader): Promi
   const data = (await load("query-enterprise.json")) as { meta: { chains: Record<string, string> }; records: (string | number)[][] };
   const chains = data.meta.chains;
   const has = (v: unknown) => typeof v === "string" && v.trim() !== "" && v !== "全部";
-  let rows = data.records;
-  if (has(args.relation)) rows = rows.filter((r) => r[0] === args.relation);
-  if (has(args.cross_scope)) rows = rows.filter((r) => (args.cross_scope === "跨市" ? r[4] !== r[6] : r[4] === r[6]));
-  if (has(args.industry_code)) rows = rows.filter((r) => r[2] === args.industry_code);
-  if (has(args.industry_name)) {
-    const name = String(args.industry_name);
-    const chainCodes = Object.entries(chains).filter(([, n]) => n === name).map(([code]) => code);
-    rows = rows.filter((r) => r[3] === name || (chainCodes.length && chainCodes.includes(String(r[2]))));
+  const topN = Math.min(Number(args.top_n ?? 10) || 10, 30);
+  const metric = args.sort_by === "amount" ? "amount" : "count";
+  const chainName = has(args.industry_name) && Object.values(chains).includes(String(args.industry_name)) ? String(args.industry_name) : "";
+  const chainCodes = Object.entries(chains).filter(([, n]) => n === chainName).map(([code]) => code);
+  const chainOf = (code: unknown) => (typeof code === "string" ? chains[code] ?? "" : "");
+  const pct = (n: number, d: number) => (d ? Math.round((n / d) * 100) / 100 : null);
+  // 记录含 level 0-3 多粒度行（同一笔资金会在不同 level 重复），聚合前必须按 level 过滤：
+  // 一级行业取 level 1，产业链/二级行业取 level 2，避免混级重复计数
+  const filterRows = (base: (string | number)[][]) => {
+    let rows = base;
+    if (has(args.relation)) rows = rows.filter((r) => r[0] === args.relation);
+    if (has(args.cross_scope)) rows = rows.filter((r) => (args.cross_scope === "跨市" ? r[4] !== r[6] : r[4] === r[6]));
+    if (chainName) rows = rows.filter((r) => r[1] === 2 && chainCodes.includes(String(r[2])));
+    else if (has(args.industry_name)) rows = rows.filter((r) => (r[1] === 1 || r[1] === 2) && r[3] === args.industry_name);
+    else if (has(args.industry_code)) rows = rows.filter((r) => r[1] === 2 && r[2] === args.industry_code);
+    return rows;
+  };
+
+  // mode=county 区县视角：某区县在哪些产业链/行业突出（指定 origin_county），
+  // 或某产业链/行业在哪些区县强（指定 industry_name），或各区县总规模 TOP。
+  // 参与语义：区县作为源或目标都计入；条数×金额并重，含单条均值与跨市占比。
+  if (args.mode === "county" || args.mode === "区县") {
+    let rows = filterRows(data.records);
+    if (!chainName && !has(args.industry_name) && !has(args.industry_code)) rows = rows.filter((r) => r[1] === 2); // 未指定 → 二级（产业链优先）视角
+    const targetCounty = has(args.origin_county) ? String(args.origin_county) : "";
+    const byIndustry = chainName !== "" || has(args.industry_name) || has(args.industry_code);
+    const keyOf = (r: (string | number)[]) => (chainName ? chainName : has(args.industry_name) ? String(args.industry_name) : chainOf(r[2]) || String(r[3]));
+    const agg = new Map<string, { count: number; amount: number; crossCount: number }>();
+    const addSide = (countyKey: string, countyName: string, r: (string | number)[]) => {
+      if (targetCounty && countyName !== targetCounty) return;
+      const key = byIndustry ? `${countyName}::${keyOf(r)}` : countyKey;
+      const s = agg.get(key) ?? { count: 0, amount: 0, crossCount: 0 };
+      const c = Number(r[8]);
+      s.count += c; s.amount += Number(r[9]);
+      if (r[4] !== r[6]) s.crossCount += c;
+      agg.set(key, s);
+    };
+    for (const r of rows) {
+      const k1 = `${r[4]}·${r[5]}`, k2 = `${r[6]}·${r[7]}`;
+      if (k1 === k2) { addSide(k1, String(r[5]), r); continue; } // 同区县市内记录只计一次
+      addSide(k1, String(r[5]), r);
+      addSide(k2, String(r[7]), r);
+    }
+    const keyOf2 = metric === "count" ? "条数" : "金额万元";
+    const top = [...agg.entries()]
+      .map(([key, s]) => {
+        const [county, ind] = key.split("::");
+        return { 区县: county, ...(byIndustry ? { 产业: ind } : {}), 条数: s.count, 金额万元: Math.round(s.amount), 单条平均万元: s.count ? Math.round(s.amount / s.count) : null, 跨市条数: s.crossCount, 跨市占比: pct(s.crossCount, s.count) };
+      })
+      .sort((x, y) => Number(y[keyOf2]) - Number(x[keyOf2]))
+      .slice(0, topN);
+    return { 模式: "按区县聚合（参与口径：源或目标都计入）", 范围: args.cross_scope ?? "全部", 关系类型: args.relation ?? "全部", "区县/产业TOP": top };
   }
+
+  let rows = filterRows(data.records);
   if (has(args.origin_city)) rows = rows.filter((r) => r[4] === args.origin_city);
   if (has(args.origin_county)) rows = rows.filter((r) => r[5] === args.origin_county);
   if (has(args.dest_county)) rows = rows.filter((r) => r[7] === args.dest_county);
-  const topN = Math.min(Number(args.top_n ?? 10) || 10, 30);
-  const metric = args.sort_by === "amount" ? "amount" : "count";
   if (args.mode === "industry" || args.mode === "行业") {
-    // 按一级行业名聚合（适合"企业联系在哪些行业"类问题）
-    const aggInd = new Map<string, { count: number; amount: number }>();
+    // 按产业链/一级行业聚合：指定产业链名→按该链（level 2）；指定行业名→按该行业；未指定→一级行业（level 1）
+    if (!chainName && !has(args.industry_name) && !has(args.industry_code)) rows = rows.filter((r) => r[1] === 1);
+    const keyOf = (r: (string | number)[]) => (chainName ? chainName : has(args.industry_name) ? String(args.industry_name) : String(r[3]));
+    const aggInd = new Map<string, { count: number; amount: number; crossCount: number }>();
     for (const r of rows) {
-      const name = String(r[3]);
-      const s = aggInd.get(name) ?? { count: 0, amount: 0 };
-      s.count += Number(r[8]); s.amount += Number(r[9]); aggInd.set(name, s);
+      const key = keyOf(r);
+      const s = aggInd.get(key) ?? { count: 0, amount: 0, crossCount: 0 };
+      const c = Number(r[8]);
+      s.count += c; s.amount += Number(r[9]);
+      if (r[4] !== r[6]) s.crossCount += c;
+      aggInd.set(key, s);
     }
-    const top = [...aggInd.entries()].map(([行业, s]) => ({ 行业, count: s.count, amount: Math.round(s.amount) }))
-      .sort((x, y) => Number(y[metric]) - Number(x[metric])).slice(0, topN);
-    return { 关系类型: args.relation ?? "全部", 范围: args.cross_scope ?? "全部", 模式: "按行业聚合", 行业TOP: top };
+    const keyOf2 = metric === "count" ? "条数" : "金额万元";
+    const top = [...aggInd.entries()].map(([产业, s]) => ({ 产业, 条数: s.count, 金额万元: Math.round(s.amount), 单条平均万元: s.count ? Math.round(s.amount / s.count) : null, 跨市条数: s.crossCount, 跨市占比: pct(s.crossCount, s.count) }))
+      .sort((x, y) => Number(y[keyOf2]) - Number(x[keyOf2])).slice(0, topN);
+    return { 关系类型: args.relation ?? "全部", 范围: args.cross_scope ?? "全部", 模式: chainName ? `按产业链聚合（${chainName}）` : "按行业聚合", 产业TOP: top };
   }
   const agg = new Map<string, { count: number; amount: number }>();
   for (const r of rows) {
@@ -547,6 +598,17 @@ async function runServices(args: Record<string, unknown>, load: Loader): Promise
   const measure = args.measure === "per10k" ? "per10k" : "count";
   const county = has(args.county) ? String(args.county) : "";
   const countyList = expandCounties(args.counties);
+  // 功能分类 POI 查询（functional=true）：教育文化/医疗健康/商业消费/产业就业/物流服务等 9 类，
+  // 返回区县数量/每万人/28 区县排名/均值倍数（与摘要 byFunctionalCounty 同口径）
+  if (args.functional === true || args.functional === "true" || args.functional === "功能") {
+    const summary = (await load("summary.json")) as { services?: { byFunctionalCounty?: { county: string; category: string; count: number; perWan: number | null; rank: number; totalCounties: number; multiple: number | null }[] } };
+    let rows = [...(summary.services?.byFunctionalCounty ?? [])];
+    if (has(args.category)) rows = rows.filter((r) => r.category === args.category);
+    if (county) rows = rows.filter((r) => r.county === county);
+    const top = [...rows].sort((x, y) => y.count - x.count).slice(0, topN)
+      .map((r) => ({ 区县: r.county, 功能: r.category, POI数量: r.count, 每万人: r.perWan, "28区县排名": r.rank, 均值倍数: r.multiple }));
+    return { 模式: "功能分类POI", 功能TOP: top };
+  }
   // 某区县或某 POI 类别 → 中类明细
   if (county || has(args.category)) {
     let rows = data.records;
