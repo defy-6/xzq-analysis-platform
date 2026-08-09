@@ -50,13 +50,25 @@ function Test-Url([string]$url) {
   return $false
 }
 
-# vinext 启动时会输出 Local 地址；端口 3000 被占用时它会自动改用下一端口，
-# 因此必须从本项目日志解析真实地址，而不是写死 3000。
+# vinext 启动时会输出 Local 地址；端口 3000 被占用时它会自动改用下一端口。
+# 从日志解析真实地址：用 ReadAllText 按 UTF-8 读（Select-String 在 Windows 上
+# 对含 ANSI 转义/特殊编码的日志可能匹配失败，导致探测永远为空）。
 function Get-PlatformUrl {
   if (-not (Test-Path $FrontendLog)) { return $null }
-  return (Select-String -Path $FrontendLog -Pattern 'http://localhost:\d+/' -AllMatches |
-          ForEach-Object { $_.Matches.Value } |
-          Select-Object -Last 1)
+  try {
+    $raw = [System.IO.File]::ReadAllText($FrontendLog, [System.Text.Encoding]::UTF8)
+    $m = [regex]::Matches($raw, 'http://localhost:\d+/')
+    if ($m.Count -gt 0) { return $m[$m.Count - 1].Value }
+  } catch { }
+  return $null
+}
+
+# 兜底：日志解析失败时直接探测 3000-3010 端口（vite 端口占用会自动 +1，就在这个区间）
+function Find-VitePort {
+  foreach ($p in 3000..3010) {
+    if (Test-Url "http://127.0.0.1:$p/") { return "http://localhost:$p/" }
+  }
+  return $null
 }
 
 # 通过命令行匹配判断本平台是否已在运行（避免误判其他项目的 node 服务）
@@ -213,10 +225,14 @@ $proc = Start-Process -FilePath $node.Source `
   -WindowStyle Hidden -PassThru
 $proc.Id | Out-File -Encoding ascii $PidFile
 
-# 等待服务就绪：从日志解析真实地址并探测（首次启动 vite 需扫描依赖+冷编译，可能超过 1 分钟，故等 120 秒）
+# 等待服务就绪：日志解析真实地址 + 端口扫描兜底（首次启动 vite 需扫描依赖+冷编译，可能超过 1 分钟，故等 120 秒）
 $url = $null
 for ($i = 0; $i -lt 120; $i++) {
   $candidate = Get-PlatformUrl
+  if (-not $candidate -or -not (Test-Url $candidate)) {
+    # 日志解析失败/地址不可达时，每 3 秒直接扫描 3000-3010 端口兜底
+    if (($i % 3) -eq 0) { $candidate = Find-VitePort }
+  }
   if ($candidate -and (Test-Url $candidate)) { $url = $candidate; break }
   if ($i -gt 0 -and ($i % 10) -eq 0) { Write-Host "o  等待服务就绪（已 $i 秒，首次启动较慢，请耐心）……" }
   Start-Sleep -Seconds 1

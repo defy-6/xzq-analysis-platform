@@ -229,10 +229,21 @@ cd "$WEB_DIR" || exit 1
 nohup "$NODE_BIN" scripts/start_web.mjs >>"$FRONTEND_LOG" 2>&1 &
 print -r -- "$!" >"$PID_FILE"
 
-# 等待服务就绪：从日志解析真实地址并探测（首次启动 vite 需扫描依赖+冷编译，可能超过 1 分钟，故等 120 秒）
+# 等待服务就绪：日志解析真实地址 + 端口扫描兜底（首次启动 vite 需扫描依赖+冷编译，可能超过 1 分钟，故等 120 秒）
 URL=""
 for i in {1..120}; do
   URL="$(platform_local_url)"
+  if [[ -z "$URL" ]] || ! url_ready "$URL"; then
+    # 日志解析失败/地址不可达时，每 3 秒直接扫描 3000-3010 端口兜底
+    if (( i % 3 == 0 )); then
+      for p in {3000..3010}; do
+        if url_ready "http://127.0.0.1:$p/"; then
+          URL="http://localhost:$p/"
+          break
+        fi
+      done
+    fi
+  fi
   if [[ -n "$URL" ]] && url_ready "$URL"; then
     break
   fi
