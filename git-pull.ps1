@@ -23,11 +23,13 @@ if (-not $git) {
   $gitExe = Join-Path $gitDir 'cmd\git.exe'
   if (-not (Test-Path $gitExe)) {
     Write-Host "o  未找到 git，正在自动下载便携版（MinGit，约 45MB）……"
-    $ver = '2.47.1'
-    $zip = Join-Path $env:TEMP "MinGit-$ver.zip"
+    # 注意：git-for-windows 的 release tag 带 .windows.1 后缀（如 v2.47.1.windows.1）
+    $tag = 'v2.47.1.windows.1'
+    $file = 'MinGit-2.47.1-64-bit.zip'
+    $zip = Join-Path $env:TEMP $file
     $ok = $false
-    foreach ($prefix in @('https://github.com/git-for-windows/git/releases/download', 'https://mirror.ghproxy.com/https://github.com/git-for-windows/git/releases/download')) {
-      $url = "$prefix/v$ver/MinGit-$ver-64-bit.zip"
+    foreach ($prefix in @('https://mirrors.huaweicloud.com/git-for-windows', 'https://github.com/git-for-windows/git/releases/download', 'https://mirror.ghproxy.com/https://github.com/git-for-windows/git/releases/download')) {
+      $url = "$prefix/$tag/$file"
       Write-Host "o  下载 $url"
       & curl.exe -L --fail --silent --show-error -o $zip $url
       if ($LASTEXITCODE -eq 0 -and (Test-Path $zip) -and (Get-Item $zip).Length -gt 1MB) { $ok = $true; break }
