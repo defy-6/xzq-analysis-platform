@@ -52,22 +52,36 @@ function Test-NeedsInstall {
 
 if (Test-NeedsInstall) {
   Write-Host "o  依赖有更新（lockfile 已变化），正在安装前端依赖……"
-  $pnpm = Get-Command pnpm -ErrorAction SilentlyContinue
+  # pnpm 检查：项目 lockfile 为 v9.0，需 pnpm >= 9；缺失或过旧时自动安装新版
+  function Get-UsablePnpm {
+    $p = Get-Command pnpm -ErrorAction SilentlyContinue
+    if ($p) {
+      $v = (& $p.Source --version 2>$null | Select-Object -First 1)
+      if ($v -match '^(\d+)' -and [int]$matches[1] -ge 9) { return $p }
+    }
+    return $null
+  }
+  $pnpm = Get-UsablePnpm
   if (-not $pnpm) {
-    Write-Host "o  未找到 pnpm，正在自动安装（corepack）……"
+    $oldPnpm = Get-Command pnpm -ErrorAction SilentlyContinue
+    if ($oldPnpm) {
+      $oldV = (& $oldPnpm.Source --version 2>$null | Select-Object -First 1)
+      Write-Host "o  系统 pnpm 版本过旧（$oldV，需 >= 9），正在安装新版……"
+    } else {
+      Write-Host "o  未找到 pnpm，正在安装……"
+    }
     & corepack enable pnpm 2>$null
-    $pnpm = Get-Command pnpm -ErrorAction SilentlyContinue
-  }
-  if (-not $pnpm) {
-    Write-Host "o  corepack 不可用，尝试 npm install -g pnpm……"
-    & npm install -g pnpm 2>$null
-    $pnpm = Get-Command pnpm -ErrorAction SilentlyContinue
-  }
-  if (-not $pnpm) {
-    Write-Host "X  自动安装 pnpm 失败。请先安装 Node.js（https://nodejs.org/）后重试，"
-    Write-Host "   或手动执行：npm install -g pnpm"
-    Read-Host "按回车退出"
-    exit 1
+    $pnpm = Get-UsablePnpm
+    if (-not $pnpm) {
+      Write-Host "o  corepack 不可用，尝试 npm install -g pnpm@latest……"
+      & npm install -g pnpm@latest 2>$null
+      $pnpm = Get-UsablePnpm
+    }
+    if (-not $pnpm) {
+      Write-Host "X  自动安装 pnpm 失败。请手动执行：npm install -g pnpm 后重试。"
+      Read-Host "按回车退出"
+      exit 1
+    }
   }
   Push-Location $WebDir
   & $pnpm.Source install

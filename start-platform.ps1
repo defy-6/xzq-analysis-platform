@@ -64,15 +64,25 @@ if (Test-PlatformRunning) {
   Start-Sleep -Seconds 2
 }
 
-# Node.js 检查：缺失时自动下载便携版到项目内 .runtime\node（免安装、免管理员、不污染系统）
-# 下载源：官方 nodejs.org 优先，npmmirror 镜像兜底（国内更快）
+# Node.js 检查：需 >= 22.13（项目 engines 要求）。
+# 缺失或版本过旧时，自动下载便携版到项目内 .runtime\node（免安装、免管理员、不污染系统）。
+# 下载源：官方 nodejs.org 优先，npmmirror 镜像兜底（国内更快）。
 $node = Get-Command node -ErrorAction SilentlyContinue
-if (-not $node) {
+$nodeOk = $false
+if ($node) {
+  $nv = (& $node.Source --version 2>$null | Select-Object -First 1)
+  if ($nv -match '^v(\d+)\.(\d+)') {
+    $nMaj = [int]$matches[1]; $nMin = [int]$matches[2]
+    if ($nMaj -gt 22 -or ($nMaj -eq 22 -and $nMin -ge 13)) { $nodeOk = $true }
+  }
+  if (-not $nodeOk) { Write-Host "o  系统 Node.js 版本过旧（$nv，需 >= 22.13），改用便携版……" }
+}
+if (-not $nodeOk) {
   $rt = Join-Path $ProjectDir '.runtime'
   $nodeDir = Join-Path $rt 'node'
   $nodeExe = Join-Path $nodeDir 'node.exe'
   if (-not (Test-Path $nodeExe)) {
-    Write-Host "o  未找到 Node.js，正在自动下载便携版（约 30MB）……"
+    Write-Host "o  正在自动下载便携版 Node.js（约 30MB）……"
     $ver = 'v22.14.0'
     $zip = Join-Path $env:TEMP "node-$ver-win-x64.zip"
     $ok = $false
@@ -101,32 +111,47 @@ if (-not $node) {
     Write-Host "o  已就绪 Node.js（便携版，位于 $nodeDir）"
     $env:Path = "$nodeDir;$env:Path"
     $node = Get-Command node -ErrorAction SilentlyContinue
+    $nodeOk = $true
   }
 }
-if (-not $node) {
-  Write-Host "X  未找到 Node.js，请先安装 Node.js（>= 22.13）：https://nodejs.org/"
+if (-not $nodeOk) {
+  Write-Host "X  未找到可用的 Node.js（>= 22.13），请手动安装：https://nodejs.org/"
   Write-Host ""
   exit 1
 }
 
 # 包管理器检查：统一使用 pnpm（与仓库锁文件 pnpm-lock.yaml 一致）。
-# 缺失时自动安装（corepack 优先，npm -g 兜底），让同事只需装 Node.js。
-$pnpm = Get-Command pnpm -ErrorAction SilentlyContinue
+# 项目 lockfile 为 v9.0，要求 pnpm >= 9；系统 pnpm 缺失或过旧时自动安装新版
+# （corepack 优先，npm -g 兜底）。
+function Get-UsablePnpm {
+  $p = Get-Command pnpm -ErrorAction SilentlyContinue
+  if ($p) {
+    $v = (& $p.Source --version 2>$null | Select-Object -First 1)
+    if ($v -match '^(\d+)' -and [int]$matches[1] -ge 9) { return $p }
+  }
+  return $null
+}
+$pnpm = Get-UsablePnpm
 if (-not $pnpm) {
-  Write-Host "o  未找到 pnpm，正在自动安装（corepack）……"
+  $oldPnpm = Get-Command pnpm -ErrorAction SilentlyContinue
+  if ($oldPnpm) {
+    $oldV = (& $oldPnpm.Source --version 2>$null | Select-Object -First 1)
+    Write-Host "o  系统 pnpm 版本过旧（$oldV，需 >= 9 才能读取项目 lockfile），正在安装新版……"
+  } else {
+    Write-Host "o  未找到 pnpm，正在安装……"
+  }
   & corepack enable pnpm 2>$null
-  $pnpm = Get-Command pnpm -ErrorAction SilentlyContinue
-}
-if (-not $pnpm) {
-  Write-Host "o  corepack 不可用，尝试 npm install -g pnpm……"
-  & npm install -g pnpm 2>$null
-  $pnpm = Get-Command pnpm -ErrorAction SilentlyContinue
-}
-if (-not $pnpm) {
-  Write-Host "X  自动安装 pnpm 失败。请先安装 Node.js（https://nodejs.org/）后重试，"
-  Write-Host "   或手动执行：npm install -g pnpm"
-  Write-Host ""
-  exit 1
+  $pnpm = Get-UsablePnpm
+  if (-not $pnpm) {
+    Write-Host "o  corepack 不可用，尝试 npm install -g pnpm@latest……"
+    & npm install -g pnpm@latest 2>$null
+    $pnpm = Get-UsablePnpm
+  }
+  if (-not $pnpm) {
+    Write-Host "X  自动安装 pnpm 失败。请手动执行：npm install -g pnpm 后重试。"
+    Write-Host ""
+    exit 1
+  }
 }
 
 # 首次运行、依赖缺失、或 git pull 更新了 lockfile 时安装/同步前端依赖。

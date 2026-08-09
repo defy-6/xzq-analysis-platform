@@ -12,11 +12,71 @@ LOG_DIR="$PROJECT_DIR/运行日志"
 FRONTEND_LOG="$LOG_DIR/frontend.log"
 PID_FILE="$LOG_DIR/frontend.pid"
 
-# 优先使用系统 Node.js；仅在系统缺失时回退到旧版本地缓存路径
+# Node.js 检查：需 >= 22.13（项目 engines 要求）。
+# 优先使用系统 Node；缺失或版本过旧时，自动下载便携版到项目内 .runtime/node（免安装）。
 NODE_BIN="$(command -v node 2>/dev/null || true)"
-if [[ -z "$NODE_BIN" ]] && [[ -x "/Users/defy/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node" ]]; then
-  NODE_BIN="/Users/defy/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
+node_ok=0
+if [[ -n "$NODE_BIN" ]]; then
+  nv="$("$NODE_BIN" --version 2>/dev/null)"
+  if [[ "$nv" =~ ^v([0-9]+)\.([0-9]+) ]]; then
+    if (( ${match[1]} > 22 )) || (( ${match[1]} == 22 && ${match[2]} >= 13 )); then
+      node_ok=1
+    fi
+  fi
+  if [[ $node_ok -eq 0 ]]; then
+    print "• 系统 Node.js 版本过旧（$nv，需 >= 22.13），改用便携版……"
+  fi
+fi
+# 旧版本地缓存路径回退（仅系统缺失时）
+if [[ -z "$NODE_BIN" ]] && [[ -x "$HOME/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node" ]]; then
+  NODE_BIN="$HOME/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
   export PATH="$(dirname "$NODE_BIN"):$PATH"
+  node_ok=1
+fi
+if [[ $node_ok -eq 0 ]]; then
+  RT_DIR="$PROJECT_DIR/.runtime"
+  NODE_DIR="$RT_DIR/node"
+  PORTABLE_NODE="$NODE_DIR/bin/node"
+  if [[ ! -x "$PORTABLE_NODE" ]]; then
+    print "• 正在自动下载便携版 Node.js（约 25MB）……"
+    NODE_VER="v22.14.0"
+    TARBALL="$RT_DIR/node-$NODE_VER.tar.gz"
+    mkdir -p "$RT_DIR"
+    ok=0
+    for base in "https://nodejs.org/dist" "https://npmmirror.com/mirrors/node"; do
+      url="$base/$NODE_VER/node-$NODE_VER-darwin-arm64.tar.gz"
+      print "• 下载 $url"
+      if /usr/bin/curl -fsSL --max-time 300 -o "$TARBALL" "$url"; then
+        ok=1
+        break
+      fi
+    done
+    if [[ $ok -eq 1 ]]; then
+      tar -xzf "$TARBALL" -C "$RT_DIR"
+      rm -f "$TARBALL"
+      unpacked="$(ls -d "$RT_DIR"/node-v*-darwin-arm64 2>/dev/null | head -n 1)"
+      if [[ -n "$unpacked" ]]; then
+        rm -rf "$NODE_DIR"
+        mv "$unpacked" "$NODE_DIR"
+      fi
+    else
+      print "✗ 自动下载 Node.js 失败（网络不通？）。请手动安装 Node.js（>= 22.13）：https://nodejs.org/"
+      print ""
+      pause_before_exit
+      exit 1
+    fi
+  fi
+  if [[ -x "$PORTABLE_NODE" ]]; then
+    NODE_BIN="$PORTABLE_NODE"
+    export PATH="$(dirname "$NODE_BIN"):$PATH"
+    node_ok=1
+  fi
+fi
+if [[ $node_ok -eq 0 ]]; then
+  print "✗ 未找到可用的 Node.js（>= 22.13）。请手动安装：https://nodejs.org/"
+  print ""
+  pause_before_exit
+  exit 1
 fi
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 
@@ -89,19 +149,41 @@ if [[ -n "$running" ]]; then
   fi
 fi
 
+# pnpm 检查：项目 lockfile 为 v9.0，需 pnpm >= 9；缺失或过旧时自动安装新版
+# （corepack 优先，npm -g 兜底）。
+pnpm_ok=0
 PNPM_BIN="$(command -v pnpm 2>/dev/null || true)"
-if [[ -z "$PNPM_BIN" ]]; then
-  print "• 未找到 pnpm，正在自动安装（corepack）……"
+if [[ -n "$PNPM_BIN" ]]; then
+  pv="$("$PNPM_BIN" --version 2>/dev/null)"
+  if [[ "$pv" =~ ^([0-9]+) ]] && (( ${match[1]} >= 9 )); then
+    pnpm_ok=1
+  fi
+  if [[ $pnpm_ok -eq 0 ]]; then
+    print "• 系统 pnpm 版本过旧（$pv，需 >= 9 才能读取项目 lockfile），正在安装新版……"
+  fi
+fi
+if [[ $pnpm_ok -eq 0 ]]; then
+  if [[ -z "$PNPM_BIN" ]]; then
+    print "• 未找到 pnpm，正在安装（corepack）……"
+  fi
   corepack enable pnpm >/dev/null 2>&1 || true
   PNPM_BIN="$(command -v pnpm 2>/dev/null || true)"
+  if [[ -n "$PNPM_BIN" ]]; then
+    pv="$("$PNPM_BIN" --version 2>/dev/null)"
+    if [[ "$pv" =~ ^([0-9]+) ]] && (( ${match[1]} >= 9 )); then pnpm_ok=1; fi
+  fi
 fi
-if [[ -z "$PNPM_BIN" ]]; then
-  print "• corepack 不可用，尝试 npm install -g pnpm……"
-  npm install -g pnpm >/dev/null 2>&1 || true
+if [[ $pnpm_ok -eq 0 ]]; then
+  print "• corepack 不可用，尝试 npm install -g pnpm@latest……"
+  npm install -g pnpm@latest >/dev/null 2>&1 || true
   PNPM_BIN="$(command -v pnpm 2>/dev/null || true)"
+  if [[ -n "$PNPM_BIN" ]]; then
+    pv="$("$PNPM_BIN" --version 2>/dev/null)"
+    if [[ "$pv" =~ ^([0-9]+) ]] && (( ${match[1]} >= 9 )); then pnpm_ok=1; fi
+  fi
 fi
-if [[ -z "$PNPM_BIN" ]]; then
-  print "✗ 自动安装 pnpm 失败。请先安装 Node.js 后重试，或手动执行：npm install -g pnpm"
+if [[ $pnpm_ok -eq 0 ]]; then
+  print "✗ 自动安装 pnpm 失败。请手动执行：npm install -g pnpm 后重试。"
   print ""
   pause_before_exit
   exit 1

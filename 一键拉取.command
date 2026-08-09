@@ -51,16 +51,36 @@ needs_install() {
 
 if needs_install; then
   print "• 依赖有更新（lockfile 已变化），正在安装前端依赖……"
-  if ! command -v pnpm >/dev/null 2>&1; then
-    print "• 未找到 pnpm，正在自动安装（corepack）……"
+  # pnpm 检查：项目 lockfile 为 v9.0，需 pnpm >= 9；缺失或过旧时自动安装新版
+  pnpm_ok=0
+  PNPM_BIN="$(command -v pnpm 2>/dev/null || true)"
+  if [[ -n "$PNPM_BIN" ]]; then
+    pv="$("$PNPM_BIN" --version 2>/dev/null)"
+    if [[ "$pv" =~ ^([0-9]+) ]] && (( ${match[1]} >= 9 )); then pnpm_ok=1; fi
+    if [[ $pnpm_ok -eq 0 ]]; then
+      print "• 系统 pnpm 版本过旧（$pv，需 >= 9 才能读取项目 lockfile），正在安装新版……"
+    fi
+  fi
+  if [[ $pnpm_ok -eq 0 ]]; then
+    [[ -z "$PNPM_BIN" ]] && print "• 未找到 pnpm，正在安装（corepack）……"
     corepack enable pnpm >/dev/null 2>&1 || true
+    PNPM_BIN="$(command -v pnpm 2>/dev/null || true)"
+    if [[ -n "$PNPM_BIN" ]]; then
+      pv="$("$PNPM_BIN" --version 2>/dev/null)"
+      if [[ "$pv" =~ ^([0-9]+) ]] && (( ${match[1]} >= 9 )); then pnpm_ok=1; fi
+    fi
   fi
-  if ! command -v pnpm >/dev/null 2>&1; then
-    print "• corepack 不可用，尝试 npm install -g pnpm……"
-    npm install -g pnpm >/dev/null 2>&1 || true
+  if [[ $pnpm_ok -eq 0 ]]; then
+    print "• corepack 不可用，尝试 npm install -g pnpm@latest……"
+    npm install -g pnpm@latest >/dev/null 2>&1 || true
+    PNPM_BIN="$(command -v pnpm 2>/dev/null || true)"
+    if [[ -n "$PNPM_BIN" ]]; then
+      pv="$("$PNPM_BIN" --version 2>/dev/null)"
+      if [[ "$pv" =~ ^([0-9]+) ]] && (( ${match[1]} >= 9 )); then pnpm_ok=1; fi
+    fi
   fi
-  if ! command -v pnpm >/dev/null 2>&1; then
-    print "✗ 自动安装 pnpm 失败。请先安装 Node.js 后重试，或手动执行：npm install -g pnpm"
+  if [[ $pnpm_ok -eq 0 ]]; then
+    print "✗ 自动安装 pnpm 失败。请手动执行：npm install -g pnpm 后重试。"
     read -k 1 "?按回车退出……"
     exit 1
   fi
