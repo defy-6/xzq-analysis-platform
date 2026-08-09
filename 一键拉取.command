@@ -33,11 +33,38 @@ print "• 正在从 origin 拉取……"
 git pull
 code=$?
 if [[ $code -ne 0 ]]; then
-  print ""
-  print "✗ 拉取失败。可能原因：网络无法连接 GitHub、存在合并冲突或未提交的改动。"
-  print "  请重试；若提示冲突，可先提交或暂存本地改动后再运行。"
-  read -k 1 "?按回车退出……"
-  exit 1
+  # 拉取失败且存在本地改动（多为解压包旧版本/运行时自动写入的日志，无个人内容）：
+  # 自动暂存 → 重拉 → 尝试恢复；恢复冲突则放弃本地改动，以仓库版本为准。
+  dirty="$(git status --porcelain 2>/dev/null)"
+  if [[ -n "$dirty" ]]; then
+    print "• 拉取因本地改动冲突失败，自动暂存后重试……"
+    git stash push -m "一键拉取-冲突自动暂存" >/dev/null 2>&1
+    git pull
+    code=$?
+    if [[ $code -eq 0 ]]; then
+      print "• 尝试恢复本地改动……"
+      git stash pop 2>&1 | head -5
+      # 注意：pop 冲突时退出码也是 0，须用 unmerged 状态判断
+      unmerged="$(git ls-files -u 2>/dev/null)"
+      if [[ -n "$unmerged" ]]; then
+        print "• 本地改动与更新冲突（多为解压旧版本/运行时日志），已放弃本地改动，以仓库版本为准。"
+        git reset --hard >/dev/null 2>&1
+        git stash drop >/dev/null 2>&1
+      fi
+    else
+      print "• 拉取仍失败，恢复本地改动。"
+      git stash pop >/dev/null 2>&1
+    fi
+  fi
+  git pull >/dev/null 2>&1
+  code=$?
+  if [[ $code -ne 0 ]]; then
+    print ""
+    print "✗ 拉取失败。可能原因：网络无法连接 GitHub 或存在无法自动处理的冲突。"
+    print "  请重试；若仍失败，检查网络或联系打包方。"
+    read -k 1 "?按回车退出……"
+    exit 1
+  fi
 fi
 
 # 跨系统协作：mac 与 Windows 各自维护 node_modules，

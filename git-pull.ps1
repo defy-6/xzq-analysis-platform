@@ -66,11 +66,36 @@ Write-Host "o  当前分支：$branch"
 Write-Host "o  正在从 origin 拉取……"
 git pull
 if ($LASTEXITCODE -ne 0) {
-  Write-Host ""
-  Write-Host "X  拉取失败。可能原因：网络无法连接 GitHub、存在合并冲突或未提交的改动。"
-  Write-Host "   请重试；若提示冲突，可先提交或暂存本地改动后再运行。"
-  Read-Host "按回车退出"
-  exit 1
+  # 拉取失败且存在本地改动（多为解压包的旧版本/运行时自动写入的日志，无个人内容）：
+  # 自动暂存 → 重拉 → 尝试恢复；恢复冲突则放弃本地改动，以仓库版本为准。
+  $dirty = git status --porcelain 2>$null
+  if ($dirty) {
+    Write-Host "o  拉取因本地改动冲突失败，自动暂存后重试……"
+    git stash push -m "一键拉取-冲突自动暂存" 2>$null
+    git pull
+    if ($LASTEXITCODE -eq 0) {
+      Write-Host "o  尝试恢复本地改动……"
+      git stash pop 2>&1 | Out-Host
+      # 注意：pop 冲突时退出码也是 0，须用 unmerged 状态判断
+      $unmerged = git ls-files -u 2>$null
+      if ($unmerged) {
+        Write-Host "o  本地改动与更新冲突（多为解压旧版本/运行时日志），已放弃本地改动，以仓库版本为准。"
+        git reset --hard 2>$null
+        git stash drop 2>$null
+      }
+    } else {
+      Write-Host "o  拉取仍失败，恢复本地改动。"
+      git stash pop 2>&1 | Out-Host
+    }
+  }
+  git pull 2>$null
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host ""
+    Write-Host "X  拉取失败。可能原因：网络无法连接 GitHub 或存在无法自动处理的冲突。"
+    Write-Host "   请重试；若仍失败，检查网络或联系打包方。"
+    Read-Host "按回车退出"
+    exit 1
+  }
 }
 
 # 跨系统协作：mac 与 Windows 各自维护 node_modules，
