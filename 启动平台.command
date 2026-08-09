@@ -50,8 +50,7 @@ pause_before_exit() {
 # 已在运行则直接打开浏览器（后台守护，窗口关闭后平台仍运行）
 # 判断依据：本项目记录在 PID 文件的进程存活且其工作目录为本项目 apps/web。
 # 不能用 pgrep -f "scripts/start_web.mjs"——其他项目（如城乡融合评估系统）也用
-# 同样的相对路径启动命令，会跨项目误判；同时解析出的地址须探测可达，否则视为
-# 残留进程，清理后重新启动。
+# 同样的相对路径启动命令，会跨项目误判。
 platform_pid="$(cat "$PID_FILE" 2>/dev/null || true)"
 running=""
 if [[ -n "$platform_pid" ]] && kill -0 "$platform_pid" 2>/dev/null; then
@@ -62,18 +61,32 @@ if [[ -n "$platform_pid" ]] && kill -0 "$platform_pid" 2>/dev/null; then
   fi
 fi
 
-if [[ -n "$running" ]]; then
-  URL="$(platform_local_url)"
-  if [[ -n "$URL" ]] && url_ready "$URL"; then
-    print "✓ 平台已在运行，直接打开：$URL"
-    open "$URL"
-    print ""
-    pause_before_exit
-    exit 0
+# 递归结束进程树：先杀子进程再杀自身（vinext dev 会 fork 子进程监听端口，
+# 只杀主进程会导致端口残留、每次双击端口递增；默认 SIGTERM，可传 KILL 强杀）
+kill_tree() {
+  local pid=$1 sig=${2:-TERM}
+  if command -v pgrep >/dev/null 2>&1; then
+    for child in $(pgrep -P "$pid" 2>/dev/null || true); do
+      kill_tree "$child" "$sig"
+    done
   fi
-  print "⚠ 检测到平台进程但服务不可达，正在清理并重新启动……"
-  kill "$platform_pid" 2>/dev/null || true
-  /bin/sleep 1
+  kill -s "$sig" "$pid" 2>/dev/null || true
+}
+
+# 双击一键启动 = 重启到最新代码：若平台已在运行，先停止旧进程再启动新实例
+if [[ -n "$running" ]]; then
+  print "• 检测到平台正在运行（PID $platform_pid），正在停止旧进程并重新启动……"
+  kill_tree "$platform_pid"
+  for _ in {1..10}; do
+    kill -0 "$platform_pid" 2>/dev/null || break
+    /bin/sleep 1
+  done
+  if kill -0 "$platform_pid" 2>/dev/null; then
+    print "⚠ 旧进程未正常退出，强制结束……"
+    kill_tree "$platform_pid" KILL
+    kill -9 "$platform_pid" 2>/dev/null || true
+    /bin/sleep 1
+  fi
 fi
 
 PNPM_BIN="$(command -v pnpm 2>/dev/null || true)"

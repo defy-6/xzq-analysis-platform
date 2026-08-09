@@ -53,14 +53,15 @@ function Test-PlatformRunning {
   return ($null -ne $p)
 }
 
-# 已在运行则直接打开浏览器
+# 双击一键启动 = 重启到最新代码：若平台已在运行，先停止旧进程（含子进程树）再启动新实例
 if (Test-PlatformRunning) {
-  $url = Get-PlatformUrl
-  if (-not $url) { $url = 'http://localhost:3000/' }
-  Write-Host "OK  平台已在运行，直接打开：$url"
-  Start-Process $url
-  Write-Host ""
-  exit 0
+  $p = Get-CimInstance Win32_Process -Filter "Name='node.exe'" -ErrorAction SilentlyContinue |
+       Where-Object { $_.CommandLine -match 'start_web\.mjs' } |
+       Select-Object -First 1
+  Write-Host "o  检测到平台正在运行（PID $($p.ProcessId)），正在停止旧进程并重新启动……"
+  # /T 连子进程树一起结束，避免端口残留；/F 强制
+  & taskkill /PID $p.ProcessId /T /F 2>$null
+  Start-Sleep -Seconds 2
 }
 
 # Node.js 检查
