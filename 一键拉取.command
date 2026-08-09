@@ -30,23 +30,25 @@ fi
 print "• 当前分支：$branch"
 
 print "• 正在从 origin 拉取……"
-git pull
+pull_out="$(git pull 2>&1)"
 code=$?
 if [[ $code -ne 0 ]]; then
-  # 拉取失败且存在本地改动（多为解压包旧版本/运行时自动写入的日志，无个人内容）：
-  # 自动暂存 → 重拉 → 尝试恢复；恢复冲突则放弃本地改动，以仓库版本为准。
-  dirty="$(git status --porcelain 2>/dev/null)"
-  if [[ -n "$dirty" ]]; then
-    print "• 拉取因本地改动冲突失败，自动暂存后重试……"
+  # 区分错误类型：网络/仓库问题 vs 本地改动冲突
+  if [[ "$pull_out" == *"Your local changes"* || "$pull_out" == *"would be overwritten"* || "$pull_out" == *"unmerged"* ]]; then
+    print "• 检测到本地改动与远端冲突，自动暂存后重试……"
     git stash push -m "一键拉取-冲突自动暂存" >/dev/null 2>&1
-    git pull
+    # stash 可能未清空部分改动（如文件模式/行尾差异），用 reset 兜底
+    if [[ -n "$(git status --porcelain 2>/dev/null)" ]]; then
+      print "• 仍有本地改动未暂存（多为解压旧版本/运行时日志），已按仓库版本重置。"
+      git reset --hard HEAD >/dev/null 2>&1
+    fi
+    pull_out="$(git pull 2>&1)"
     code=$?
     if [[ $code -eq 0 ]]; then
       print "• 尝试恢复本地改动……"
       git stash pop 2>&1 | head -5
       # 注意：pop 冲突时退出码也是 0，须用 unmerged 状态判断
-      unmerged="$(git ls-files -u 2>/dev/null)"
-      if [[ -n "$unmerged" ]]; then
+      if [[ -n "$(git ls-files -u 2>/dev/null)" ]]; then
         print "• 本地改动与更新冲突（多为解压旧版本/运行时日志），已放弃本地改动，以仓库版本为准。"
         git reset --hard >/dev/null 2>&1
         git stash drop >/dev/null 2>&1
@@ -55,16 +57,17 @@ if [[ $code -ne 0 ]]; then
       print "• 拉取仍失败，恢复本地改动。"
       git stash pop >/dev/null 2>&1
     fi
+  else
+    # 网络或其他错误：直接显示，不执行 stash
+    print "• 拉取失败（网络或仓库问题）："
+    print "$pull_out" | head -3
   fi
-  git pull >/dev/null 2>&1
-  code=$?
-  if [[ $code -ne 0 ]]; then
-    print ""
-    print "✗ 拉取失败。可能原因：网络无法连接 GitHub 或存在无法自动处理的冲突。"
-    print "  请重试；若仍失败，检查网络或联系打包方。"
-    read -k 1 "?按回车退出……"
-    exit 1
-  fi
+fi
+if [[ $code -ne 0 ]]; then
+  print ""
+  print "✗ 拉取失败。请检查网络后重试；若仍失败，联系打包方。"
+  read -k 1 "?按回车退出……"
+  exit 1
 fi
 
 # 跨系统协作：mac 与 Windows 各自维护 node_modules，

@@ -70,21 +70,24 @@ if (-not $branch) {
 Write-Host "o  当前分支：$branch"
 
 Write-Host "o  正在从 origin 拉取……"
-git pull
-if ($LASTEXITCODE -ne 0) {
-  # 拉取失败且存在本地改动（多为解压包的旧版本/运行时自动写入的日志，无个人内容）：
-  # 自动暂存 → 重拉 → 尝试恢复；恢复冲突则放弃本地改动，以仓库版本为准。
-  $dirty = git status --porcelain 2>$null
-  if ($dirty) {
-    Write-Host "o  拉取因本地改动冲突失败，自动暂存后重试……"
+$pullOut = (git pull 2>&1 | Out-String)
+$pullFailed = ($LASTEXITCODE -ne 0)
+if ($pullFailed) {
+  # 区分错误类型：网络/仓库问题 vs 本地改动冲突
+  if ($pullOut -match 'Your local changes|would be overwritten|unmerged|not up to date') {
+    Write-Host "o  检测到本地改动与远端冲突，自动暂存后重试……"
     git stash push -m "一键拉取-冲突自动暂存" 2>$null
-    git pull
+    # stash 可能未清空部分改动（如文件模式/行尾差异），用 reset 兜底
+    if (git status --porcelain 2>$null) {
+      Write-Host "o  仍有本地改动未暂存（多为解压旧版本/运行时日志），已按仓库版本重置。"
+      git reset --hard HEAD 2>$null
+    }
+    $pullOut2 = (git pull 2>&1 | Out-String)
     if ($LASTEXITCODE -eq 0) {
       Write-Host "o  尝试恢复本地改动……"
       git stash pop 2>&1 | Out-Host
       # 注意：pop 冲突时退出码也是 0，须用 unmerged 状态判断
-      $unmerged = git ls-files -u 2>$null
-      if ($unmerged) {
+      if (git ls-files -u 2>$null) {
         Write-Host "o  本地改动与更新冲突（多为解压旧版本/运行时日志），已放弃本地改动，以仓库版本为准。"
         git reset --hard 2>$null
         git stash drop 2>$null
@@ -92,16 +95,19 @@ if ($LASTEXITCODE -ne 0) {
     } else {
       Write-Host "o  拉取仍失败，恢复本地改动。"
       git stash pop 2>&1 | Out-Host
+      $pullFailed = $true
     }
+  } else {
+    # 网络或其他错误：直接显示，不执行 stash
+    Write-Host "o  拉取失败（网络或仓库问题）："
+    ($pullOut.Trim() -split "`r?`n" | Select-Object -First 3) | ForEach-Object { Write-Host "   $_" }
   }
-  git pull 2>$null
-  if ($LASTEXITCODE -ne 0) {
-    Write-Host ""
-    Write-Host "X  拉取失败。可能原因：网络无法连接 GitHub 或存在无法自动处理的冲突。"
-    Write-Host "   请重试；若仍失败，检查网络或联系打包方。"
-    Read-Host "按回车退出"
-    exit 1
-  }
+}
+if ($pullFailed) {
+  Write-Host ""
+  Write-Host "X  拉取失败。请检查网络后重试；若仍失败，联系打包方。"
+  Read-Host "按回车退出"
+  exit 1
 }
 
 # 跨系统协作：mac 与 Windows 各自维护 node_modules，
