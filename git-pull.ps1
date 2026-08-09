@@ -47,6 +47,12 @@ if (-not $git) {
     Write-Host "o  已就绪 git（便携版，位于 $gitDir）"
     $env:Path = "$gitDir\cmd;$env:Path"
     $git = Get-Command git -ErrorAction SilentlyContinue
+    # 永久加入用户 PATH：新开的终端也能直接用 git
+    $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+    if ($userPath -notlike "*$gitDir\cmd*") {
+      [Environment]::SetEnvironmentVariable('Path', "$gitDir\cmd;$userPath", 'User')
+      Write-Host "o  已把便携 git 目录加入系统 PATH（$gitDir\cmd，新开终端生效）"
+    }
   }
 }
 if (-not $git) {
